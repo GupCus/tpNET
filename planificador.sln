@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{060B48C0-6027-487E-B997-908524A4A162}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominio", "Dominio\Dominio.csproj", "{ECB4635A-EC57-4BD4-BEE3-A9F83297D42E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Escritorio", "Escritorio\Escritorio.csproj", "{33F148F9-FF15-4C93-8DAA-3D91E56CCF12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{060B48C0-6027-487E-B997-908524A4A162}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060B48C0-6027-487E-B997-908524A4A162}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060B48C0-6027-487E-B997-908524A4A162}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060B48C0-6027-487E-B997-908524A4A162}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECB4635A-EC57-4BD4-BEE3-A9F83297D42E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECB4635A-EC57-4BD4-BEE3-A9F83297D42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECB4635A-EC57-4BD4-BEE3-A9F83297D42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECB4635A-EC57-4BD4-BEE3-A9F83297D42E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33F148F9-FF15-4C93-8DAA-3D91E56CCF12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33F148F9-FF15-4C93-8DAA-3D91E56CCF12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33F148F9-FF15-4C93-8DAA-3D91E56CCF12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33F148F9-FF15-4C93-8DAA-3D91E56CCF12}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAC13C51-7DBA-4AF9-8750-EDDCE505D601}
+	EndGlobalSection
+EndGlobal

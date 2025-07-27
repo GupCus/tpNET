@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Una tarea tiene varios gastos, donde cada gasto corresponde a un integrante y a alguna categoriaGasto">
+    <Position X="9.354" Y="4.948" Height="0.875" Width="2.554" />
+  </Comment>
+  <Comment CommentText="Un grupo está compuesto de varios participantes, los participantes pueden pertenecer a varios grupos.&#xD;&#xA;&#xD;&#xA;Un grupo puede tener varios planes donde cada plan se compone de diferentes tareas">
+    <Position X="2.062" Y="2.531" Height="1.292" Width="2.304" />
+  </Comment>
+  <Class Name="Dominio.Participante">
+    <Position X="7.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAIAAABAgAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Participante.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dominio.Grupo">
+    <Position X="5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAQAAAA=</HashCode>
+      <FileName>Grupo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dominio.Gasto">
+    <Position X="7.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAJAAAAAAAAACBAAAAAAAA=</HashCode>
+      <FileName>Gasto.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CategoriaGasto" />
+      <Property Name="Participante" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="Dominio.Tarea">
+    <Position X="7" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAIAAAAAAAoAABAAABAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Tarea.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dominio.Plan">
+    <Position X="4.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACACAAAAAAAAAAAAAAAAgAABAgAAAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Plan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dominio.CategoriaGasto">
+    <Position X="4.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>CategoriaGasto.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dominio.Administrador">
+    <Position X="10.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Administrador.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
