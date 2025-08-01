@@ -5,7 +5,9 @@ using System.Text;
 
 namespace Dominio
 {
-    public class Administrador : Usuario
+    public abstract class BaseClass
     {
+        public int? Id { get; set; }
+
     }
 }

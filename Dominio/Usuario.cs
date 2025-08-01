@@ -5,14 +5,14 @@ using System.Text;
 
 namespace Dominio
 {
-    public class Participante
+    public class Usuario : BaseClass
     {
-        public int Id { get; set; }
         public List<Grupo> Grupos { get; set; }
         public string Nombre { get; set; }
         public string Mail { get; set; }
         //VER: como se manejan las contraseñas
         public string Contrasena { get; set; }
+
 
     }
 }

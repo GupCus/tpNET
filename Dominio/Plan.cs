@@ -5,9 +5,8 @@ using System.Text;
 
 namespace Dominio
 {
-    public class Plan
+    public class Plan : BaseClass
     {
-        public int Id { get; set; }
         public List<Tarea> Tareas { get; set; }
         public string Nombre { get; set; }
         public DateOnly FechaInicio { get; set; }

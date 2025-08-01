@@ -6,57 +6,63 @@
   <Comment CommentText="Un grupo está compuesto de varios participantes, los participantes pueden pertenecer a varios grupos.&#xD;&#xA;&#xD;&#xA;Un grupo puede tener varios planes donde cada plan se compone de diferentes tareas">
     <Position X="2.062" Y="2.531" Height="1.292" Width="2.304" />
   </Comment>
-  <Class Name="Dominio.Participante">
+  <Class Name="Dominio.Usuario">
     <Position X="7.5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAIAAABAgAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
-      <FileName>Participante.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAIAAABAgAAAAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <FileName>Usuario.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dominio.Grupo">
     <Position X="5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAQAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAIAAAAAAgA=</HashCode>
       <FileName>Grupo.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dominio.Gasto">
     <Position X="7.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAJAAAAAAAAACBAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAJAAAAAAAAAABEAAAAAAA=</HashCode>
       <FileName>Gasto.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="CategoriaGasto" />
-      <Property Name="Participante" />
     </ShowAsAssociation>
   </Class>
   <Class Name="Dominio.Tarea">
     <Position X="7" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAIAAAAAAAoAABAAABAAAAAAAAAAAAAAg=</HashCode>
+      <HashCode>AABAAAAAAAAAIACAAAAAoAABAQABAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Tarea.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dominio.Plan">
     <Position X="4.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACACAAAAAAAAAAAAAAAAgAABAgAAAAAAAAAAAAAgAAA=</HashCode>
+      <HashCode>ACAAAAAAAAAAAAAAAAAAgAABAgAAAAAAAAAAAAAgAAA=</HashCode>
       <FileName>Plan.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dominio.CategoriaGasto">
     <Position X="4.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <HashCode>AABAAAAAAAAAAACAAAAAAAABAQAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>CategoriaGasto.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dominio.Administrador">
-    <Position X="10.5" Y="2" Width="1.5" />
+    <Position X="10" Y="2" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Administrador.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Dominio.BaseClass">
+    <Position X="6" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BaseClass.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

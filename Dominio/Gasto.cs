@@ -5,10 +5,10 @@ using System.Text;
 
 namespace Dominio
 {
-    public class Gasto
+    public class Gasto : BaseClass
     {
         public CategoriaGasto CategoriaGasto { get; set; }
-        public Participante Participante { get; set; }
+        public Usuario Usuario { get; set; }
         public float Monto { get; set; }
         public string Descripcion { get; set; }
         public DateTime FechaHora { get; set; }

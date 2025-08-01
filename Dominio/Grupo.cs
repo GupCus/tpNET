@@ -1,13 +1,12 @@
 ﻿namespace Dominio
 {
-    public class Grupo
+    public class Grupo : BaseClass
     {
-        public int Id { get; set; }
-        public List<Participante> Participantes { get; set; }
+        public List<Usuario> Usuarios { get; set; }
 
         public List<Plan> Planes { get; set; }
 
         public string Nombre { get; set; }
-        
+
     }
 }
