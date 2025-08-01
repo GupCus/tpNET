@@ -1,4 +1,4 @@
-# TP IDE (.NET)
+# TPI IDE (.NET)
 
 Sistema de planificación de viajes grupales y control de gastos
 
@@ -15,15 +15,18 @@ Sistema de planificación de viajes grupales y control de gastos
 
 ### 📝 Descripción
 
-Aplicación real: viajes de amigos, egresados, escapadas, viajes familiares  
-**Usuarios:** Usuario común / Administrador del grupo
+Este sistema tiene como objetivo facilitar la gestión viajes de amigos, escapadas o viajes familiares, entre otros.
+¿Organizas todo el viaje por WhatsApp?¿Tenés ideas y gastos anotados por todos lados?¿No sabés que le corresponde a cada uno?
+Todo usuario puede formar parte de algún grupo de viaje (o varios si desea) o si está ansioso podra ser el administrador de un grupo que cree. 
+Los amigos son para siempre, ¿no? Cada grupo puede proponer la cantidad de viajes/planes que desee.
+Los planes se componen de unidades basicas "Tareas", cada tarea nuclea cualquier idea que se proponga durante el viaje, además podrás tener registrados los gastos que se produjeron y quien se hizo cargo.
+¡No más peleas! Al finalizar un viaje, se generará un reporte de los saldos de los viajantes.
 
 ---
 
 ### ✅ Funcionalidades principales
 
 - **Creación de grupos de viaje** (ej. “Viaje Bariloche 2025”)
-- **Alta de participantes** dentro del grupo
 - **Creación de plan** por día o actividad
 - **Tareas compartidas** con responsables y fechas (comprar pasajes, hacer check-in)
 - **Carga de gastos grupales** con:
@@ -31,41 +34,12 @@ Aplicación real: viajes de amigos, egresados, escapadas, viajes familiares
   - División automática o manual entre participantes
   - Cálculo de saldos individuales: quién le debe a quién
 - **Recordatorios** de tareas o actividades del itinerario
-- Mensajes o comentarios por gasto o tarea
-
----
-
-### 📋 ABMs 
-
-- Grupos de viaje
-- Participantes
-- Plan (día y actividad)
-- Tareas
-- Gastos
-- Categorías de gasto
-
----
+- **Descansá a tus amigos!** Cada tarea tendrá un apartado de comentarios.
+- **Primero la trampa...** Ranking de "quién puso más" y "quién puso menos" en el grupo
 
 ### 📊 Reportes
 
-- Gasto total por persona y monto pagado por cada uno (gráfico de barras)
+- Gasto total por persona y monto pagado por cada uno
 - Quién le debe a quién (gráfico de saldos y deudas cruzadas)
 - Gastos por categoría (comida, transporte, alojamiento, etc.)
 
----
-
-### 🔐 Requisitos técnicos y de arquitectura
-
-- **Login** con rol común / administrador del grupo
-- **Autorización:** solo el admin puede editar gastos y participantes
-- **Validaciones:**
-  - Monto positivo, participantes existentes
-  - División exacta de gastos o aviso de redondeo
-
----
-
-### 💡 Ideas extra
-
-- Simulación de liquidación de gastos (qué transferencias hacer para saldar deudas)
-- Ranking de “quién puso más” en el grupo
-- Votación de actividades por miembro (opcional)
