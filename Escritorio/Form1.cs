@@ -11,7 +11,7 @@ namespace Escritorio
         //Inicializacion httpclient
         private readonly HttpClient httpClient = new()
         {
-            BaseAddress = new Uri("http://localhost:5024")
+            BaseAddress = new Uri("http://localhost:5032")
         };
         //Constructor
         public Form1()
@@ -31,8 +31,8 @@ namespace Escritorio
 
             CategoriaGasto cg = new()
             {
-                Tipo = string.IsNullOrEmpty(txtApellido.Text) ? "Alimentos" : txtApellido.Text,
-                Descripcion = string.IsNullOrEmpty(txtNombre.Text) ? "Descripcion" : txtNombre.Text,
+                Tipo = string.IsNullOrEmpty(txtTipo.Text) ? "Alimentos" : txtTipo.Text,
+                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,
             };
 
             return cg;
@@ -49,8 +49,8 @@ namespace Escritorio
             {
 
                 txtID.Text = cg.Id.ToString();
-                txtNombre.Text = cg.Tipo;
-                txtApellido.Text = cg.Descripcion;
+                txtTipo.Text = cg.Tipo;
+                txtDescripcion.Text = cg.Descripcion;
 
                 Modificar.Enabled = true;
                 Eliminar.Enabled = true;
@@ -69,7 +69,7 @@ namespace Escritorio
         private async void GetCategorias()
         {
             IEnumerable<CategoriaGasto>? cgs =
-            await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagasto");
+            await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagastos");
             this.dgvCategoria.DataSource = cgs;
         }
 
@@ -78,14 +78,14 @@ namespace Escritorio
         {
             txtID.Text = "";
             CategoriaGasto cg = this.LimpiarCategoria();
-            await httpClient.PostAsJsonAsync("categoriagasto", cg);
+            await httpClient.PostAsJsonAsync("categoriagastos", cg);
             this.GetCategorias();
         }
         //PUT Categoria
         private async void Modificar_Click(object sender, EventArgs e)
         {
             CategoriaGasto cg = this.LimpiarCategoria();
-            await httpClient.PutAsJsonAsync($"categoriagasto/{((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id}", cg);
+            await httpClient.PutAsJsonAsync($"categoriagastos/{((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id}", cg);
             this.GetCategorias();
         }
 
@@ -100,7 +100,7 @@ namespace Escritorio
             //Hacer click de vuelta para ejecutar esto
             else
             {
-                await httpClient.DeleteAsync($"categoriagasto/{((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id}");
+                await httpClient.DeleteAsync($"categoriagastos/{((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id}");
                 this.GetCategorias();
                 Eliminar.Text = "ELIMINAR CATEGORIA";
                 confirmarEliminar = false;

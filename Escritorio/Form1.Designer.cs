@@ -32,8 +32,8 @@
             Cargar = new Button();
             label1 = new Label();
             label2 = new Label();
-            txtNombre = new TextBox();
-            txtApellido = new TextBox();
+            txtTipo = new TextBox();
+            txtDescripcion = new TextBox();
             label3 = new Label();
             label6 = new Label();
             txtID = new Label();
@@ -85,21 +85,21 @@
             label2.TabIndex = 3;
             label2.Text = "Tipo";
             // 
-            // txtNombre
+            // txtTipo
             // 
-            txtNombre.Location = new Point(12, 365);
-            txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(247, 27);
-            txtNombre.TabIndex = 4;
-            txtNombre.DoubleClick += Txt_Click;
+            txtTipo.Location = new Point(12, 365);
+            txtTipo.Name = "txtTipo";
+            txtTipo.Size = new Size(247, 27);
+            txtTipo.TabIndex = 4;
+            txtTipo.DoubleClick += Txt_Click;
             // 
-            // txtApellido
+            // txtDescripcion
             // 
-            txtApellido.Location = new Point(284, 365);
-            txtApellido.Name = "txtApellido";
-            txtApellido.Size = new Size(247, 27);
-            txtApellido.TabIndex = 6;
-            txtApellido.DoubleClick += Txt_Click;
+            txtDescripcion.Location = new Point(284, 365);
+            txtDescripcion.Name = "txtDescripcion";
+            txtDescripcion.Size = new Size(247, 27);
+            txtDescripcion.TabIndex = 6;
+            txtDescripcion.DoubleClick += Txt_Click;
             // 
             // label3
             // 
@@ -186,9 +186,9 @@
             Controls.Add(Modificar);
             Controls.Add(txtID);
             Controls.Add(label6);
-            Controls.Add(txtApellido);
+            Controls.Add(txtDescripcion);
             Controls.Add(label3);
-            Controls.Add(txtNombre);
+            Controls.Add(txtTipo);
             Controls.Add(label2);
             Controls.Add(label1);
             Controls.Add(Cargar);
@@ -207,8 +207,8 @@
         private Button Cargar;
         private Label label1;
         private Label label2;
-        private TextBox txtNombre;
-        private TextBox txtApellido;
+        private TextBox txtTipo;
+        private TextBox txtDescripcion;
         private Label label3;
         private Label label6;
         private Label txtID;
