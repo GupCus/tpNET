@@ -37,5 +37,6 @@ namespace Dominio
             Descripcion = descripcion;
             Estado = estado;
         }
+        public Tarea() { }
     }
 }
