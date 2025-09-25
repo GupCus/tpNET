@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Dominio;
 
 namespace Repository
@@ -19,7 +20,7 @@ namespace Repository
                                         Initial Catalog=Planificador;
                                         Integrated Security=true;
                                         TrustServerCertificate=True");
-
+            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
         }
 
     }

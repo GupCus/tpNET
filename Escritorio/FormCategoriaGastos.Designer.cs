@@ -1,6 +1,6 @@
 ﻿namespace Escritorio
 {
-    partial class Form1
+    partial class FormCategoriaGastos
     {
         /// <summary>
         ///  Required designer variable.
@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            dgvCategoria = new DataGridView();
+            components = new System.ComponentModel.Container();
+            categoriaGastoBindingSource = new BindingSource(components);
             Cargar = new Button();
             label1 = new Label();
             label2 = new Label();
@@ -36,24 +37,21 @@
             txtDescripcion = new TextBox();
             label3 = new Label();
             label6 = new Label();
-            txtID = new Label();
             Modificar = new Button();
             label7 = new Label();
             Eliminar = new Button();
-            Buscar = new Button();
+            descripcionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            tipoDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            idDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            dgvCategoria = new DataGridView();
+            txtID = new Label();
+            ((System.ComponentModel.ISupportInitialize)categoriaGastoBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dgvCategoria).BeginInit();
             SuspendLayout();
             // 
-            // dgvCategoria
+            // categoriaGastoBindingSource
             // 
-            dgvCategoria.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvCategoria.Location = new Point(12, 64);
-            dgvCategoria.Name = "dgvCategoria";
-            dgvCategoria.ReadOnly = true;
-            dgvCategoria.RowHeadersWidth = 51;
-            dgvCategoria.Size = new Size(813, 242);
-            dgvCategoria.TabIndex = 0;
-            dgvCategoria.SelectionChanged += dgvCategoria_SelectionChanged;
+            categoriaGastoBindingSource.DataSource = typeof(Dominio.CategoriaGasto);
             // 
             // Cargar
             // 
@@ -89,6 +87,7 @@
             // 
             txtTipo.Location = new Point(12, 365);
             txtTipo.Name = "txtTipo";
+            txtTipo.PlaceholderText = "Tipo";
             txtTipo.Size = new Size(247, 27);
             txtTipo.TabIndex = 4;
             txtTipo.DoubleClick += Txt_Click;
@@ -97,6 +96,7 @@
             // 
             txtDescripcion.Location = new Point(284, 365);
             txtDescripcion.Name = "txtDescripcion";
+            txtDescripcion.PlaceholderText = "Descripción";
             txtDescripcion.Size = new Size(247, 27);
             txtDescripcion.TabIndex = 6;
             txtDescripcion.DoubleClick += Txt_Click;
@@ -120,14 +120,6 @@
             label6.TabIndex = 11;
             label6.Text = "Categoría";
             // 
-            // txtID
-            // 
-            txtID.AutoSize = true;
-            txtID.Location = new Point(129, 317);
-            txtID.Name = "txtID";
-            txtID.Size = new Size(0, 20);
-            txtID.TabIndex = 12;
-            // 
             // Modificar
             // 
             Modificar.Enabled = false;
@@ -142,7 +134,7 @@
             // label7
             // 
             label7.AutoSize = true;
-            label7.Location = new Point(116, 317);
+            label7.Location = new Point(549, 342);
             label7.Name = "label7";
             label7.Size = new Size(31, 20);
             label7.TabIndex = 14;
@@ -154,37 +146,71 @@
             Eliminar.Enabled = false;
             Eliminar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Eliminar.ForeColor = SystemColors.MenuText;
-            Eliminar.Location = new Point(549, 408);
+            Eliminar.Location = new Point(549, 365);
             Eliminar.Name = "Eliminar";
-            Eliminar.Size = new Size(276, 62);
+            Eliminar.Size = new Size(276, 105);
             Eliminar.TabIndex = 15;
             Eliminar.Text = "ELIMINAR CATEGORÍA";
             Eliminar.UseVisualStyleBackColor = false;
             Eliminar.Click += Eliminar_Click;
             // 
-            // Buscar
+            // descripcionDataGridViewTextBoxColumn
             // 
-            Buscar.BackColor = Color.White;
-            Buscar.Enabled = false;
-            Buscar.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            Buscar.ForeColor = SystemColors.MenuText;
-            Buscar.Location = new Point(549, 340);
-            Buscar.Name = "Buscar";
-            Buscar.Size = new Size(276, 62);
-            Buscar.TabIndex = 16;
-            Buscar.Text = "Buscar categoría";
-            Buscar.UseVisualStyleBackColor = false;
+            descripcionDataGridViewTextBoxColumn.DataPropertyName = "Descripcion";
+            descripcionDataGridViewTextBoxColumn.HeaderText = "Descripcion";
+            descripcionDataGridViewTextBoxColumn.MinimumWidth = 6;
+            descripcionDataGridViewTextBoxColumn.Name = "descripcionDataGridViewTextBoxColumn";
+            descripcionDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // Form1
+            // tipoDataGridViewTextBoxColumn
+            // 
+            tipoDataGridViewTextBoxColumn.DataPropertyName = "Tipo";
+            tipoDataGridViewTextBoxColumn.HeaderText = "Tipo";
+            tipoDataGridViewTextBoxColumn.MinimumWidth = 6;
+            tipoDataGridViewTextBoxColumn.Name = "tipoDataGridViewTextBoxColumn";
+            tipoDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // idDataGridViewTextBoxColumn
+            // 
+            idDataGridViewTextBoxColumn.DataPropertyName = "Id";
+            idDataGridViewTextBoxColumn.HeaderText = "Id";
+            idDataGridViewTextBoxColumn.MinimumWidth = 6;
+            idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            idDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // dgvCategoria
+            // 
+            dgvCategoria.AllowUserToOrderColumns = true;
+            dgvCategoria.AutoGenerateColumns = false;
+            dgvCategoria.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvCategoria.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvCategoria.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, tipoDataGridViewTextBoxColumn, descripcionDataGridViewTextBoxColumn });
+            dgvCategoria.DataSource = categoriaGastoBindingSource;
+            dgvCategoria.Location = new Point(12, 64);
+            dgvCategoria.Name = "dgvCategoria";
+            dgvCategoria.ReadOnly = true;
+            dgvCategoria.RowHeadersWidth = 51;
+            dgvCategoria.Size = new Size(813, 242);
+            dgvCategoria.TabIndex = 0;
+            dgvCategoria.SelectionChanged += dgvCategoria_SelectionChanged;
+            // 
+            // txtID
+            // 
+            txtID.AutoSize = true;
+            txtID.Location = new Point(667, 342);
+            txtID.Name = "txtID";
+            txtID.Size = new Size(0, 20);
+            txtID.TabIndex = 17;
+            // 
+            // FormCategoriaGastos
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(837, 492);
-            Controls.Add(Buscar);
+            Controls.Add(txtID);
             Controls.Add(Eliminar);
             Controls.Add(label7);
             Controls.Add(Modificar);
-            Controls.Add(txtID);
             Controls.Add(label6);
             Controls.Add(txtDescripcion);
             Controls.Add(label3);
@@ -193,17 +219,16 @@
             Controls.Add(label1);
             Controls.Add(Cargar);
             Controls.Add(dgvCategoria);
-            Name = "Form1";
+            Name = "FormCategoriaGastos";
             Text = "Gestión API";
             Load += Form1_Load;
+            ((System.ComponentModel.ISupportInitialize)categoriaGastoBindingSource).EndInit();
             ((System.ComponentModel.ISupportInitialize)dgvCategoria).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
-
-        private DataGridView dgvCategoria;
         private Button Cargar;
         private Label label1;
         private Label label2;
@@ -211,10 +236,14 @@
         private TextBox txtDescripcion;
         private Label label3;
         private Label label6;
-        private Label txtID;
         private Button Modificar;
         private Label label7;
         private Button Eliminar;
-        private Button Buscar;
+        private BindingSource categoriaGastoBindingSource;
+        private DataGridViewTextBoxColumn descripcionDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn tipoDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn idDataGridViewTextBoxColumn;
+        private DataGridView dgvCategoria;
+        private Label txtID;
     }
 }

@@ -1,31 +1,32 @@
 using Dominio;
+using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Escritorio
 {
-    public partial class Form1 : Form
+    public partial class FormCategoriaGastos : Form
     {
+        /* Lógica del form */
         private bool confirmarEliminar = false;
-        //Inicializacion httpclient
+
         private readonly HttpClient httpClient = new()
         {
             BaseAddress = new Uri("http://localhost:5032")
         };
-        //Constructor
-        public Form1()
+
+        public FormCategoriaGastos()
         {
             InitializeComponent();
         }
 
-        //Evento Load
         private void Form1_Load(object sender, EventArgs e)
         {
             this.GetCategorias();
         }
 
-        //Metodo que se encarga de manipular el objeto alumno antes de ser enviado
+        //Metodo que se encarga de sanitizar la categoria para no enviar nulos
         private CategoriaGasto LimpiarCategoria()
         {
 
@@ -42,7 +43,7 @@ namespace Escritorio
         {
             ((TextBox)sender).Text = "";
         }
-        //Al Seleccionar un alumno (fila), se rescatan sus datos a la UI
+        //Al Seleccionar una categoria (fila), se rescatan sus datos a la UI
         private void dgvCategoria_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvCategoria.CurrentRow != null && dgvCategoria.CurrentRow.DataBoundItem is CategoriaGasto cg)
@@ -65,11 +66,11 @@ namespace Escritorio
             }
         }
 
+        /* API CategoriasGastos */
         //GET ALL Categorias || Actualización de la tabla principal
         private async void GetCategorias()
         {
-            IEnumerable<CategoriaGasto>? cgs =
-            await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagastos");
+            var cgs = await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagastos");
             this.dgvCategoria.DataSource = cgs;
         }
 
@@ -89,7 +90,7 @@ namespace Escritorio
             this.GetCategorias();
         }
 
-        //DELETE alumno
+        //DELETE Categoria
         private async void Eliminar_Click(object sender, EventArgs e)
         {
             if (!confirmarEliminar)

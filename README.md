@@ -16,10 +16,13 @@ Sistema de planificación de viajes grupales y control de gastos
 ### 📝 Descripción
 
 Este sistema tiene como objetivo facilitar la gestión viajes de amigos, escapadas o viajes familiares, entre otros.
+
 ¿Organizas todo el viaje por WhatsApp?¿Tenés ideas y gastos anotados por todos lados?¿No sabés que le corresponde a cada uno?
-Todo usuario puede formar parte de algún grupo de viaje (o varios si desea) o si está ansioso podra ser el administrador de un grupo que cree. 
+Todo usuario puede formar parte de algún grupo de viaje (o varios si desea) o si está ansioso podra ser el administrador de un grupo que cree.
+
 Los amigos son para siempre, ¿no? Cada grupo puede proponer la cantidad de viajes/planes que desee.
 Los planes se componen de unidades basicas "Tareas", cada tarea nuclea cualquier idea que se proponga durante el viaje, además podrás tener registrados los gastos que se produjeron y quien se hizo cargo.
+
 ¡No más peleas! Al finalizar un viaje, se generará un reporte de los saldos de los viajantes.
 
 ---

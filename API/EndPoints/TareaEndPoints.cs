@@ -1,4 +1,5 @@
 ﻿using Dominio;
+using Repository;
 
 namespace API.EndPoints
 {
@@ -9,50 +10,48 @@ namespace API.EndPoints
             // ==================== CRUD TAREAS ====================
 
             //GetALL
-            app.MapGet("/tarea/", () =>
-            Results.Ok(Tarea.RepoMemory));
+            app.MapGet("/tarea/", async () =>
+            Results.Ok(await TareaRepository.GetAll()));
 
             //GetOne
-            app.MapGet("/tarea/{id}", (int id) =>
-            Tarea.RepoMemory.Find(t => t.Id == id) is Tarea t
+            app.MapGet("/tarea/{id}", async (int id) =>
+            await TareaRepository.GetOne(id) is Tarea t
             ? Results.Ok(t)
             : Results.NotFound(new { message = $"Tarea con ID {id} no encontrada" }));
 
+
             //Post
-            app.MapPost("/tarea/", (Tarea t) =>
+            app.MapPost("/tarea/", async (Tarea t) =>
             {
-                t.Id = Tarea.ObtenerProximoId();
-                Tarea.RepoMemory.Add(t);
-                return Results.Created($"/tarea/{t.Id}", t);
+                var nt = await TareaRepository.Post(t);
+                return Results.Created($"/tarea/{nt.Id}", nt);
             });
 
             //Put
-            app.MapPut("/tarea/{id}", (int id, Tarea tarea) =>
+            app.MapPut("/tarea/{id}", async (int id, Tarea t) =>
             {
-                var index = Tarea.RepoMemory.FindIndex(t => t.Id == id);
-                if (index == -1)
+                t.Id = id;
+                var mt = await TareaRepository.Put(t);
+                if (mt == null)
                 {
                     return Results.NotFound(new { message = $"Tarea con ID {id} no encontrada" });
                 }
                 else
                 {
-                    tarea.Id = id;
-                    Tarea.RepoMemory[index] = tarea;
                     return Results.NoContent();
                 }
             });
 
             //Delete
-            app.MapDelete("/tarea/{id}", (int id) =>
+            app.MapDelete("/tarea/{id}", async (int id) =>
             {
-                if (Tarea.RepoMemory.Find(t => t.Id == id) is Tarea tarea)
+                if (await TareaRepository.Delete(id) == null)
                 {
-                    Tarea.RepoMemory.Remove(tarea);
-                    return Results.NoContent();
+                    return Results.NotFound(new { message = $"Tarea con ID {id} no encontrada" });
                 }
                 else
                 {
-                    return Results.NotFound(new { message = $"Tarea con ID {id} no encontrada" });
+                    return Results.NoContent();
                 }
             });
         }
