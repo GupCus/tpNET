@@ -31,23 +31,23 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="Dominio.Tarea">
-    <Position X="7" Y="4.5" Width="1.5" />
+    <Position X="7.5" Y="4" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AABAAAAAAAAAIACAAAAAoAABAQABAAAAAAAAAAAAAAg=</HashCode>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAoAABAAABAAAAAAAAAAAAAAg=</HashCode>
       <FileName>Tarea.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dominio.Plan">
     <Position X="4.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAAAAAAAAAgAABAgAAAAAAAAAAAAAgAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAgAABAgAAAAAAAAAAAAAgAAA=</HashCode>
       <FileName>Plan.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Dominio.CategoriaGasto">
     <Position X="4.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AABAAAAAAAAAAACAAAAAAAABAQAAAAAAAAAAAAAAAAQ=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAQ=</HashCode>
       <FileName>CategoriaGasto.cs</FileName>
     </TypeIdentifier>
   </Class>

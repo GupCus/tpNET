@@ -43,8 +43,8 @@ namespace Repository
                 Gasto? gModif = await bd.Gasto.FindAsync(g.Id);
                 if (gModif != null)
                 {
-                    gModif.CategoriaGasto = g.CategoriaGasto;
-                    gModif.Usuario = g.Usuario;
+                    gModif.CategoriaGastoId = g.CategoriaGastoId;
+                    gModif.UsuarioId = g.UsuarioId;
                     gModif.Monto = g.Monto;
                     gModif.Descripcion = g.Descripcion;
                     gModif.FechaHora = g.FechaHora;

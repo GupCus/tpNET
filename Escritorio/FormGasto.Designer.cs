@@ -36,21 +36,22 @@
             descripcionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             fechaHoraDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             montoDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            categoriaGastoDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
-            usuarioDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             gastoBindingSource = new BindingSource(components);
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
             label6 = new Label();
             btnNuevo = new Button();
-            label2 = new Label();
             btnModificar = new Button();
-            label3 = new Label();
-            txtDescripcion = new TextBox();
             label4 = new Label();
-            label5 = new Label();
+            label3 = new Label();
             txtMonto = new TextBox();
+            txtDescripcion = new TextBox();
+            label2 = new Label();
+            label5 = new Label();
             txtFechaHora = new DateTimePicker();
+            cmbCategoria = new ComboBox();
+            label8 = new Label();
+            cmbUsuario = new ComboBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             btnEliminar = new Button();
             tableLayoutPanel5 = new TableLayoutPanel();
@@ -102,7 +103,7 @@
             dgvGasto.AutoGenerateColumns = false;
             dgvGasto.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvGasto.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvGasto.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, descripcionDataGridViewTextBoxColumn, fechaHoraDataGridViewTextBoxColumn, montoDataGridViewTextBoxColumn, categoriaGastoDataGridViewTextBoxColumn, usuarioDataGridViewTextBoxColumn });
+            dgvGasto.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, descripcionDataGridViewTextBoxColumn, fechaHoraDataGridViewTextBoxColumn, montoDataGridViewTextBoxColumn });
             dgvGasto.DataSource = gastoBindingSource;
             dgvGasto.Dock = DockStyle.Fill;
             dgvGasto.Location = new Point(10, 77);
@@ -141,20 +142,6 @@
             montoDataGridViewTextBoxColumn.MinimumWidth = 6;
             montoDataGridViewTextBoxColumn.Name = "montoDataGridViewTextBoxColumn";
             // 
-            // categoriaGastoDataGridViewTextBoxColumn
-            // 
-            categoriaGastoDataGridViewTextBoxColumn.DataPropertyName = "CategoriaGasto";
-            categoriaGastoDataGridViewTextBoxColumn.HeaderText = "Categoría";
-            categoriaGastoDataGridViewTextBoxColumn.MinimumWidth = 6;
-            categoriaGastoDataGridViewTextBoxColumn.Name = "categoriaGastoDataGridViewTextBoxColumn";
-            // 
-            // usuarioDataGridViewTextBoxColumn
-            // 
-            usuarioDataGridViewTextBoxColumn.DataPropertyName = "Usuario";
-            usuarioDataGridViewTextBoxColumn.HeaderText = "Usuario";
-            usuarioDataGridViewTextBoxColumn.MinimumWidth = 6;
-            usuarioDataGridViewTextBoxColumn.Name = "usuarioDataGridViewTextBoxColumn";
-            // 
             // gastoBindingSource
             // 
             gastoBindingSource.DataSource = typeof(Dominio.Gasto);
@@ -182,26 +169,31 @@
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 4F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48F));
             tableLayoutPanel3.Controls.Add(label6, 0, 0);
-            tableLayoutPanel3.Controls.Add(btnNuevo, 0, 5);
-            tableLayoutPanel3.Controls.Add(label2, 0, 1);
-            tableLayoutPanel3.Controls.Add(btnModificar, 2, 5);
+            tableLayoutPanel3.Controls.Add(btnNuevo, 0, 7);
+            tableLayoutPanel3.Controls.Add(btnModificar, 2, 7);
+            tableLayoutPanel3.Controls.Add(label4, 0, 1);
             tableLayoutPanel3.Controls.Add(label3, 2, 1);
+            tableLayoutPanel3.Controls.Add(txtMonto, 0, 2);
             tableLayoutPanel3.Controls.Add(txtDescripcion, 2, 2);
-            tableLayoutPanel3.Controls.Add(label4, 0, 3);
+            tableLayoutPanel3.Controls.Add(label2, 0, 3);
             tableLayoutPanel3.Controls.Add(label5, 2, 3);
-            tableLayoutPanel3.Controls.Add(txtMonto, 2, 4);
             tableLayoutPanel3.Controls.Add(txtFechaHora, 0, 4);
+            tableLayoutPanel3.Controls.Add(cmbCategoria, 2, 4);
+            tableLayoutPanel3.Controls.Add(label8, 0, 5);
+            tableLayoutPanel3.Controls.Add(cmbUsuario, 0, 6);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 0);
             tableLayoutPanel3.Margin = new Padding(0);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 6;
+            tableLayoutPanel3.RowCount = 8;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.Size = new Size(632, 250);
             tableLayoutPanel3.TabIndex = 0;
             // 
@@ -211,45 +203,45 @@
             label6.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             label6.Location = new Point(3, 0);
             label6.Name = "label6";
-            label6.Size = new Size(65, 28);
+            label6.Size = new Size(64, 28);
             label6.TabIndex = 12;
             label6.Text = "Gasto";
             // 
             // btnNuevo
             // 
             btnNuevo.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            btnNuevo.Location = new Point(10, 165);
+            btnNuevo.Location = new Point(10, 199);
             btnNuevo.Margin = new Padding(10);
             btnNuevo.Name = "btnNuevo";
-            btnNuevo.Size = new Size(283, 75);
+            btnNuevo.Size = new Size(283, 41);
             btnNuevo.TabIndex = 0;
             btnNuevo.Text = "Cargar Nuevo";
             btnNuevo.UseVisualStyleBackColor = true;
             btnNuevo.Click += btnNuevo_Click;
             // 
-            // label2
-            // 
-            label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            label2.AutoSize = true;
-            label2.Location = new Point(30, 28);
-            label2.Margin = new Padding(30, 0, 3, 0);
-            label2.Name = "label2";
-            label2.Size = new Size(270, 20);
-            label2.TabIndex = 17;
-            label2.Text = "Fecha y Hora";
-            label2.TextAlign = ContentAlignment.BottomLeft;
-            // 
             // btnModificar
             // 
             btnModificar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            btnModificar.Location = new Point(338, 165);
+            btnModificar.Location = new Point(338, 199);
             btnModificar.Margin = new Padding(10);
             btnModificar.Name = "btnModificar";
-            btnModificar.Size = new Size(284, 75);
+            btnModificar.Size = new Size(284, 41);
             btnModificar.TabIndex = 1;
             btnModificar.Text = "Modificar";
             btnModificar.UseVisualStyleBackColor = true;
             btnModificar.Click += btnModificar_Click;
+            // 
+            // label4
+            // 
+            label4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label4.AutoSize = true;
+            label4.Location = new Point(30, 28);
+            label4.Margin = new Padding(30, 0, 3, 0);
+            label4.Name = "label4";
+            label4.Size = new Size(270, 20);
+            label4.TabIndex = 20;
+            label4.Text = "Monto";
+            label4.TextAlign = ContentAlignment.BottomLeft;
             // 
             // label3
             // 
@@ -263,6 +255,15 @@
             label3.Text = "Descripción";
             label3.TextAlign = ContentAlignment.BottomLeft;
             // 
+            // txtMonto
+            // 
+            txtMonto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            txtMonto.Location = new Point(20, 51);
+            txtMonto.Margin = new Padding(20, 3, 20, 3);
+            txtMonto.Name = "txtMonto";
+            txtMonto.Size = new Size(263, 27);
+            txtMonto.TabIndex = 23;
+            // 
             // txtDescripcion
             // 
             txtDescripcion.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -272,17 +273,17 @@
             txtDescripcion.Size = new Size(264, 27);
             txtDescripcion.TabIndex = 19;
             // 
-            // label4
+            // label2
             // 
-            label4.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            label4.AutoSize = true;
-            label4.Location = new Point(30, 81);
-            label4.Margin = new Padding(30, 0, 3, 0);
-            label4.Name = "label4";
-            label4.Size = new Size(270, 20);
-            label4.TabIndex = 20;
-            label4.Text = "Monto";
-            label4.TextAlign = ContentAlignment.BottomLeft;
+            label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label2.AutoSize = true;
+            label2.Location = new Point(30, 81);
+            label2.Margin = new Padding(30, 0, 3, 0);
+            label2.Name = "label2";
+            label2.Size = new Size(270, 20);
+            label2.TabIndex = 17;
+            label2.Text = "Fecha y Hora";
+            label2.TextAlign = ContentAlignment.BottomLeft;
             // 
             // label5
             // 
@@ -293,27 +294,52 @@
             label5.Name = "label5";
             label5.Size = new Size(271, 20);
             label5.TabIndex = 22;
-            label5.Text = "Categoría (pendiente)";
+            label5.Text = "Categoría";
             label5.TextAlign = ContentAlignment.BottomLeft;
-            // 
-            // txtMonto
-            // 
-            txtMonto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txtMonto.Location = new Point(20, 104);
-            txtMonto.Margin = new Padding(20, 3, 20, 3);
-            txtMonto.Name = "txtMonto";
-            txtMonto.Size = new Size(263, 27);
-            txtMonto.TabIndex = 23;
             // 
             // txtFechaHora
             // 
             txtFechaHora.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            txtFechaHora.Location = new Point(20, 51);
+            txtFechaHora.Location = new Point(20, 104);
             txtFechaHora.Margin = new Padding(20, 3, 20, 3);
             txtFechaHora.MinDate = new DateTime(2025, 9, 24, 0, 0, 0, 0);
             txtFechaHora.Name = "txtFechaHora";
             txtFechaHora.Size = new Size(263, 27);
             txtFechaHora.TabIndex = 25;
+            // 
+            // cmbCategoria
+            // 
+            cmbCategoria.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cmbCategoria.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbCategoria.FormattingEnabled = true;
+            cmbCategoria.Location = new Point(328, 104);
+            cmbCategoria.Margin = new Padding(0, 3, 40, 3);
+            cmbCategoria.Name = "cmbCategoria";
+            cmbCategoria.Size = new Size(264, 28);
+            cmbCategoria.TabIndex = 26;
+            // 
+            // label8
+            // 
+            label8.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label8.AutoSize = true;
+            label8.Location = new Point(30, 135);
+            label8.Margin = new Padding(30, 0, 3, 0);
+            label8.Name = "label8";
+            label8.Size = new Size(270, 20);
+            label8.TabIndex = 28;
+            label8.Text = "Usuario";
+            label8.TextAlign = ContentAlignment.BottomLeft;
+            // 
+            // cmbUsuario
+            // 
+            cmbUsuario.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cmbUsuario.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbUsuario.FormattingEnabled = true;
+            cmbUsuario.Location = new Point(20, 158);
+            cmbUsuario.Margin = new Padding(20, 3, 20, 3);
+            cmbUsuario.Name = "cmbUsuario";
+            cmbUsuario.Size = new Size(263, 28);
+            cmbUsuario.TabIndex = 27;
             // 
             // tableLayoutPanel4
             // 
@@ -427,5 +453,10 @@
         private DateTimePicker txtFechaHora;
         private TableLayoutPanel tableLayoutPanel5;
         private Label txtID;
+
+        // NUEVAS DECLARACIONES AGREGADAS
+        private ComboBox cmbCategoria;
+        private ComboBox cmbUsuario;
+        private Label label8; // Para la etiqueta de Usuario
     }
 }
