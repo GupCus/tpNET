@@ -12,4 +12,10 @@
     <ProjectReference Include="..\Dominio\Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="FormGasto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

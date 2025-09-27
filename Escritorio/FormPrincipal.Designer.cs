@@ -32,7 +32,7 @@
             titulo = new Label();
             tableLayoutPanel1 = new TableLayoutPanel();
             btnTareas = new Button();
-            button3 = new Button();
+            btnGasto = new Button();
             button1 = new Button();
             tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
@@ -71,7 +71,7 @@
             tableLayoutPanel1.Controls.Add(btnCategoriaGastos, 1, 1);
             tableLayoutPanel1.Controls.Add(titulo, 1, 0);
             tableLayoutPanel1.Controls.Add(btnTareas, 1, 2);
-            tableLayoutPanel1.Controls.Add(button3, 1, 3);
+            tableLayoutPanel1.Controls.Add(btnGasto, 1, 3);
             tableLayoutPanel1.Controls.Add(button1, 1, 4);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(0, 0);
@@ -97,15 +97,16 @@
             btnTareas.UseVisualStyleBackColor = true;
             btnTareas.Click += btnTareas_Click;
             // 
-            // button3
+            // btnGasto
             // 
-            button3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            button3.Location = new Point(269, 164);
-            button3.Name = "button3";
-            button3.Size = new Size(260, 29);
-            button3.TabIndex = 3;
-            button3.Text = "button3";
-            button3.UseVisualStyleBackColor = true;
+            btnGasto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            btnGasto.Location = new Point(269, 164);
+            btnGasto.Name = "btnGasto";
+            btnGasto.Size = new Size(260, 29);
+            btnGasto.TabIndex = 3;
+            btnGasto.Text = "Gasto";
+            btnGasto.UseVisualStyleBackColor = true;
+            btnGasto.Click += btnGasto_Click;
             // 
             // button1
             // 
@@ -137,7 +138,7 @@
         private Label titulo;
         private TableLayoutPanel tableLayoutPanel1;
         private Button btnTareas;
-        private Button button3;
+        private Button btnGasto;
         private Button button1;
     }
 }
