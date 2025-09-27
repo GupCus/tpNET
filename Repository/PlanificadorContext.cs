@@ -8,6 +8,7 @@ namespace Repository
     {
         public DbSet<CategoriaGasto> CategoriaGastos { get; set; }
         public DbSet<Tarea> Tarea { get; set; }
+        public DbSet<Usuario> Usuario { get; set; }
 
         public DbSet<Gasto> Gasto { get; set; }
 

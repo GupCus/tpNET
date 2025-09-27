@@ -26,7 +26,7 @@ namespace API
             //Map endpoints
 
             app.MapGet("/", () => Results.Redirect("/swagger/"));
-
+            app.MapUsuarioEndPoints();
             app.MapCategoriaGastosEndpoints();
             app.MapTareaEndPoints();
             app.MapGastoEndPoints();

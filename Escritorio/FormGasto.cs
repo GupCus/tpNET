@@ -19,11 +19,12 @@ namespace Escritorio
 
         private readonly HttpClient httpClient = new()
         {
-            BaseAddress = new Uri("http://localhost:5032")
+            BaseAddress = new Uri("http://localhost:7126")
         };
 
         public FormGasto()
         {
+            
             InitializeComponent();
         }
 

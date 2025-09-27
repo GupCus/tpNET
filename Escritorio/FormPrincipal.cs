@@ -31,5 +31,10 @@ namespace Escritorio
         {
             new FormGasto().ShowDialog();
         }
+
+        private void btnUsuario_Click(object sender, EventArgs e)
+        {
+            new FormUsuario().ShowDialog(); 
+        }
     }
 }
