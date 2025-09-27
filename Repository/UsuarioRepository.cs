@@ -20,6 +20,25 @@ namespace Repository
             }
 
         }
+        public static async Task CreateAdmin()
+        {
+            using (PlanificadorContext bd = new())
+            {
+                var adminExistente = await bd.Usuario.FirstOrDefaultAsync(u => u.Nombre == "admin" && u.Contrasena=="123");
+
+                if (adminExistente==null)
+                {
+                    var admin = new Usuario
+                    {
+                        Nombre = "admin",
+                        Contrasena = "123",
+                        Mail = "admin@admin.com"
+                    };
+                    await bd.Usuario.AddAsync(admin);
+                    await bd.SaveChangesAsync();
+                }
+            }
+        }
         public static async Task<Usuario?> GetOne(int id)
         {
             using (PlanificadorContext bd = new())
