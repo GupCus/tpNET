@@ -11,7 +11,7 @@ namespace Repository
         public DbSet<Usuario> Usuario { get; set; }
 
         public DbSet<Gasto> Gasto { get; set; }
-
+        public DbSet<Grupo> Grupo { get;set; }
         internal PlanificadorContext()
         {
             Database.EnsureCreated();

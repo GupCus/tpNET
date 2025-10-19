@@ -15,6 +15,7 @@ namespace Escritorio
         public FormPrincipal()
         {
             InitializeComponent();
+            this.IsMdiContainer = true;
         }
 
         private void btnCategoriaGastos_Click(object sender, EventArgs e)
@@ -34,7 +35,57 @@ namespace Escritorio
 
         private void btnUsuario_Click(object sender, EventArgs e)
         {
-            new FormUsuario().ShowDialog(); 
+            new FormUsuario().ShowDialog();
         }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+
+
+        private void gastosToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FormGasto form = new FormGasto();
+            form.MdiParent = this;
+            form.Dock = DockStyle.Fill;
+            form.Show();
+        }
+
+        private void categoriasDeGastosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormCategoriaGastos form = new FormCategoriaGastos();
+            form.MdiParent = this;
+            form.Dock = DockStyle.Fill;
+            form.Show();
+        }
+
+        private void usuariosToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            FormUsuario form = new FormUsuario();
+            form.MdiParent = this;
+            form.Dock = DockStyle.Fill;
+            form.Show();
+        }
+
+        private void tareasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormTarea form = new FormTarea();
+            form.MdiParent = this;
+            form.Dock = DockStyle.Fill;
+            form.Show();
+        }
+
+        private void FormPrincipal_Resize(object sender, EventArgs e)
+        {
+            
+        
+            if (this.ActiveMdiChild != null)
+            {
+                this.ActiveMdiChild.Dock = DockStyle.Fill; 
+            }
+        
+    }
     }
 }

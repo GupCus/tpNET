@@ -20,6 +20,7 @@ namespace Escritorio
         public FormUsuario()
         {
             InitializeComponent();
+
         }
         private readonly HttpClient client = new HttpClient()
         {
@@ -84,7 +85,7 @@ namespace Escritorio
                 }
             }
         }
-       
+
 
         private void Cancelar_Click(object sender, EventArgs e)
         {
@@ -101,7 +102,7 @@ namespace Escritorio
                 Usuario u = this.LimpiarUsuario();
                 await client.PostAsJsonAsync("usuario", u);
                 await this.GetUsuarios();
-                
+
             }
             catch (Exception ex)
             {
@@ -135,6 +136,19 @@ namespace Escritorio
             }
         }
 
-        
+        private void panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void txtNombre_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

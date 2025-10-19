@@ -28,124 +28,129 @@
         /// </summary>
         private void InitializeComponent()
         {
-            btnCategoriaGastos = new Button();
-            titulo = new Label();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            btnTareas = new Button();
-            btnGasto = new Button();
-            btnUsuario = new Button();
-            tableLayoutPanel1.SuspendLayout();
+            miniToolStrip = new MenuStrip();
+            categoriaGastosToolStripMenuItem = new ToolStripMenuItem();
+            gastosToolStripMenuItem = new ToolStripMenuItem();
+            usuariosToolStripMenuItem = new ToolStripMenuItem();
+            tareaToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1 = new MenuStrip();
+            menuStrip2 = new MenuStrip();
+            gastosToolStripMenuItem1 = new ToolStripMenuItem();
+            categoriasDeGastosToolStripMenuItem = new ToolStripMenuItem();
+            usuariosToolStripMenuItem1 = new ToolStripMenuItem();
+            tareasToolStripMenuItem = new ToolStripMenuItem();
+            menuStrip1.SuspendLayout();
+            menuStrip2.SuspendLayout();
             SuspendLayout();
             // 
-            // btnCategoriaGastos
+            // miniToolStrip
             // 
-            btnCategoriaGastos.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            btnCategoriaGastos.Location = new Point(236, 63);
-            btnCategoriaGastos.Margin = new Padding(3, 2, 3, 2);
-            btnCategoriaGastos.Name = "btnCategoriaGastos";
-            btnCategoriaGastos.Size = new Size(227, 22);
-            btnCategoriaGastos.TabIndex = 0;
-            btnCategoriaGastos.Text = "Categoria Gastos";
-            btnCategoriaGastos.UseVisualStyleBackColor = true;
-            btnCategoriaGastos.Click += btnCategoriaGastos_Click;
+            miniToolStrip.AccessibleName = "Selección de nuevo elemento";
+            miniToolStrip.AccessibleRole = AccessibleRole.ComboBox;
+            miniToolStrip.AutoSize = false;
+            miniToolStrip.Dock = DockStyle.None;
+            miniToolStrip.Location = new Point(294, 2);
+            miniToolStrip.Name = "miniToolStrip";
+            miniToolStrip.Size = new Size(570, 24);
+            miniToolStrip.TabIndex = 5;
             // 
-            // titulo
+            // categoriaGastosToolStripMenuItem
             // 
-            titulo.Anchor = AnchorStyles.Bottom;
-            titulo.AutoSize = true;
-            titulo.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            titulo.ImageAlign = ContentAlignment.MiddleRight;
-            titulo.Location = new Point(255, 29);
-            titulo.Name = "titulo";
-            titulo.Size = new Size(189, 32);
-            titulo.TabIndex = 1;
-            titulo.Text = "Listado de APIs";
-            titulo.TextAlign = ContentAlignment.BottomCenter;
+            categoriaGastosToolStripMenuItem.Name = "categoriaGastosToolStripMenuItem";
+            categoriaGastosToolStripMenuItem.Size = new Size(12, 20);
             // 
-            // tableLayoutPanel1
+            // gastosToolStripMenuItem
             // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.ColumnCount = 3;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33333F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
-            tableLayoutPanel1.Controls.Add(btnCategoriaGastos, 1, 1);
-            tableLayoutPanel1.Controls.Add(titulo, 1, 0);
-            tableLayoutPanel1.Controls.Add(btnTareas, 1, 2);
-            tableLayoutPanel1.Controls.Add(btnGasto, 1, 3);
-            tableLayoutPanel1.Controls.Add(btnUsuario, 1, 4);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(0, 0);
-            tableLayoutPanel1.Margin = new Padding(3, 2, 3, 2);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 6;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 18.181818F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 9.090909F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 9.090909F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 9.090909F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 9.090909F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 45.4545441F));
-            tableLayoutPanel1.Size = new Size(700, 338);
-            tableLayoutPanel1.TabIndex = 2;
+            gastosToolStripMenuItem.Name = "gastosToolStripMenuItem";
+            gastosToolStripMenuItem.Size = new Size(12, 20);
             // 
-            // btnTareas
+            // usuariosToolStripMenuItem
             // 
-            btnTareas.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            btnTareas.Location = new Point(236, 93);
-            btnTareas.Margin = new Padding(3, 2, 3, 2);
-            btnTareas.Name = "btnTareas";
-            btnTareas.Size = new Size(227, 22);
-            btnTareas.TabIndex = 2;
-            btnTareas.Text = "Tarea";
-            btnTareas.UseVisualStyleBackColor = true;
-            btnTareas.Click += btnTareas_Click;
+            usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
+            usuariosToolStripMenuItem.Size = new Size(12, 20);
             // 
-            // btnGasto
+            // tareaToolStripMenuItem
             // 
-            btnGasto.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            btnGasto.Location = new Point(236, 123);
-            btnGasto.Margin = new Padding(3, 2, 3, 2);
-            btnGasto.Name = "btnGasto";
-            btnGasto.Size = new Size(227, 22);
-            btnGasto.TabIndex = 3;
-            btnGasto.Text = "Gasto";
-            btnGasto.UseVisualStyleBackColor = true;
-            btnGasto.Click += btnGasto_Click;
+            tareaToolStripMenuItem.Name = "tareaToolStripMenuItem";
+            tareaToolStripMenuItem.Size = new Size(12, 20);
             // 
-            // btnUsuario
+            // menuStrip1
             // 
-            btnUsuario.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            btnUsuario.Location = new Point(236, 153);
-            btnUsuario.Margin = new Padding(3, 2, 3, 2);
-            btnUsuario.Name = "btnUsuario";
-            btnUsuario.Size = new Size(227, 22);
-            btnUsuario.TabIndex = 4;
-            btnUsuario.Text = "Usuario";
-            btnUsuario.UseVisualStyleBackColor = true;
-            btnUsuario.Click += btnUsuario_Click;
+            menuStrip1.Items.AddRange(new ToolStripItem[] { categoriaGastosToolStripMenuItem, gastosToolStripMenuItem, usuariosToolStripMenuItem, tareaToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(570, 24);
+            menuStrip1.TabIndex = 5;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // menuStrip2
+            // 
+            menuStrip2.Items.AddRange(new ToolStripItem[] { gastosToolStripMenuItem1, categoriasDeGastosToolStripMenuItem, usuariosToolStripMenuItem1, tareasToolStripMenuItem });
+            menuStrip2.Location = new Point(0, 0);
+            menuStrip2.Name = "menuStrip2";
+            menuStrip2.Size = new Size(700, 24);
+            menuStrip2.TabIndex = 0;
+            menuStrip2.Text = "menuStrip2";
+            // 
+            // gastosToolStripMenuItem1
+            // 
+            gastosToolStripMenuItem1.Name = "gastosToolStripMenuItem1";
+            gastosToolStripMenuItem1.Size = new Size(54, 20);
+            gastosToolStripMenuItem1.Text = "Gastos";
+            gastosToolStripMenuItem1.Click += gastosToolStripMenuItem1_Click;
+            // 
+            // categoriasDeGastosToolStripMenuItem
+            // 
+            categoriasDeGastosToolStripMenuItem.Name = "categoriasDeGastosToolStripMenuItem";
+            categoriasDeGastosToolStripMenuItem.Size = new Size(128, 20);
+            categoriasDeGastosToolStripMenuItem.Text = "Categorias de gastos";
+            categoriasDeGastosToolStripMenuItem.Click += categoriasDeGastosToolStripMenuItem_Click;
+            // 
+            // usuariosToolStripMenuItem1
+            // 
+            usuariosToolStripMenuItem1.Name = "usuariosToolStripMenuItem1";
+            usuariosToolStripMenuItem1.Size = new Size(64, 20);
+            usuariosToolStripMenuItem1.Text = "Usuarios";
+            usuariosToolStripMenuItem1.Click += usuariosToolStripMenuItem1_Click;
+            // 
+            // tareasToolStripMenuItem
+            // 
+            tareasToolStripMenuItem.Name = "tareasToolStripMenuItem";
+            tareasToolStripMenuItem.Size = new Size(52, 20);
+            tareasToolStripMenuItem.Text = "Tareas";
+            tareasToolStripMenuItem.Click += tareasToolStripMenuItem_Click;
             // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 338);
-            Controls.Add(tableLayoutPanel1);
+            Controls.Add(menuStrip2);
+            MainMenuStrip = menuStrip2;
             Margin = new Padding(3, 2, 3, 2);
             Name = "FormPrincipal";
             Text = "Planificador";
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
+            Resize += FormPrincipal_Resize;
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
+            menuStrip2.ResumeLayout(false);
+            menuStrip2.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private Button btnCategoriaGastos;
-        private Label titulo;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Button btnTareas;
-        private Button btnGasto;
-        private Button btnUsuario;
+        private MenuStrip miniToolStrip;
+        private ToolStripMenuItem categoriaGastosToolStripMenuItem;
+        private ToolStripMenuItem gastosToolStripMenuItem;
+        private ToolStripMenuItem usuariosToolStripMenuItem;
+        private ToolStripMenuItem tareaToolStripMenuItem;
+        private MenuStrip menuStrip1;
+        private MenuStrip menuStrip2;
+        private ToolStripMenuItem gastosToolStripMenuItem1;
+        private ToolStripMenuItem categoriasDeGastosToolStripMenuItem;
+        private ToolStripMenuItem usuariosToolStripMenuItem1;
+        private ToolStripMenuItem tareasToolStripMenuItem;
     }
 }

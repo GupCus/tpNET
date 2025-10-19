@@ -26,6 +26,7 @@ namespace Escritorio
         public FormGasto()
         {
             InitializeComponent();
+            
         }
 
         private async void FormGasto_Load(object sender, EventArgs e)

@@ -30,7 +30,7 @@ namespace API
             app.MapCategoriaGastosEndpoints();
             app.MapTareaEndPoints();
             app.MapGastoEndPoints();
-
+            app.MapGrupoEndPoints();
             app.Run();
         }
     }
