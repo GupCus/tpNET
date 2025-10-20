@@ -1,5 +1,7 @@
 using API.EndPoints;
-
+using Microsoft.EntityFrameworkCore;
+using Repository;
+using Services;
 namespace API
 {
     public class Program
@@ -10,10 +12,23 @@ namespace API
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
             builder.Services.AddHttpLogging(o => { });
+            builder.Services.AddDbContext<PlanificadorContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
 
+            
+            builder.Services.AddScoped<UsuarioRepository>();
+            builder.Services.AddScoped<UsuarioService>();
             var app = builder.Build();
+            using (var scope = app.Services.CreateScope())
+            {
+                var context = scope.ServiceProvider.GetRequiredService<PlanificadorContext>();
+                context.Database.EnsureCreated();
+            }
 
-            // Estaba en el ejemplo, agrega el logger http y el https redirection.
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

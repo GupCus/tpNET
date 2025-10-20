@@ -12,18 +12,29 @@ namespace Repository
 
         public DbSet<Gasto> Gasto { get; set; }
         public DbSet<Grupo> Grupo { get;set; }
-        internal PlanificadorContext()
+
+        public PlanificadorContext(DbContextOptions<PlanificadorContext> options)
+       : base(options)
         {
-            Database.EnsureCreated();
+            
         }
+
+        public PlanificadorContext()
+        {
+            
+        }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;
                                         Initial Catalog=Planificador;
                                         Integrated Security=true;
                                         TrustServerCertificate=True");
-            optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+                optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+            }
         }
 
     }

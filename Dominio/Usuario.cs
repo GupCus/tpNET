@@ -13,6 +13,10 @@ namespace Dominio
         //VER: como se manejan las contraseñas
         public string Contrasena { get; set; }
 
-
+        public Usuario(string mail,string nombre)
+        {
+            this.Mail = mail;
+            this.Nombre = nombre;
+        }
     }
 }

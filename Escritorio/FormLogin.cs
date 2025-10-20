@@ -9,20 +9,23 @@ using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dominio;
+using API.Clients;
 
 
 namespace Escritorio
 {
     public partial class FormLogin : Form
     {
+        private readonly UsuarioClient usuarioClient;
         public FormLogin()
         {
             InitializeComponent();
+            usuarioClient = new UsuarioClient(new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7126/")
+            });
         }
-        private readonly HttpClient client = new HttpClient()
-        {
-            BaseAddress = new Uri("https://localhost:7126/")
-        };
+        
         private  async void btnIniciar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
@@ -30,7 +33,8 @@ namespace Escritorio
                 MessageBox.Show("Por favor ingrese usuario y contraseña.");
                 return;
             }
-            var users = await client.GetFromJsonAsync<IEnumerable<Usuario>>("usuario");
+            var users = await usuarioClient.GetAllAsync();
+            Console.WriteLine(users.Count());
            var usuario=users.FirstOrDefault(u=>u.Nombre==txtUsername.Text && u.Contrasena==txtPassword.Text);
             if (usuario != null)
             {

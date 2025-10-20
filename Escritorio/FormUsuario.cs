@@ -11,21 +11,26 @@ using System.Windows.Forms;
 using Dominio;
 using System.Reflection.Metadata.Ecma335;
 using System.Net.Http;
+using DTOs;
+using API.Clients;
 namespace Escritorio
 {
     public partial class FormUsuario : Form
     {
         private bool confirma = false;
-
+        private readonly UsuarioClient usuarioClient;
         public FormUsuario()
         {
             InitializeComponent();
+            HttpClient client = new HttpClient
+            {
+                BaseAddress = new Uri("https://localhost:7126/")
+            };
 
+            
+            usuarioClient = new UsuarioClient(client);
         }
-        private readonly HttpClient client = new HttpClient()
-        {
-            BaseAddress = new Uri("https://localhost:7126/")
-        };
+       
         private async void FormUsuario_Load(object sender, EventArgs e)
         {
 
@@ -35,7 +40,7 @@ namespace Escritorio
         {
             try
             {
-                var users = await client.GetFromJsonAsync<IEnumerable<Usuario>>("usuario");
+                var users = await usuarioClient.GetAllAsync();
                 this.dgvUsuario.DataSource = users;
             }
             catch (HttpRequestException ex)
@@ -48,13 +53,14 @@ namespace Escritorio
             }
         }
 
-        private Usuario LimpiarUsuario()
+        private UsuarioDTO LimpiarUsuario()
         {
-            Usuario user = new Usuario
+            UsuarioDTO user = new UsuarioDTO
             {
+                Id = string.IsNullOrEmpty(txtID.Text) ? 0 : int.Parse(txtID.Text),
                 Nombre = string.IsNullOrEmpty(txtNombre.Text) ? "Juan Perez" : txtNombre.Text,
                 Mail = string.IsNullOrEmpty(txtMail.Text) ? "jperez@gmail.com" : txtMail.Text,
-                Contrasena = "123"
+                
             };
             return user;
         }
@@ -70,7 +76,7 @@ namespace Escritorio
         }
         private void dgvUsuario_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvUsuario.CurrentRow != null && dgvUsuario.CurrentRow.DataBoundItem is Usuario u)
+            if (dgvUsuario.CurrentRow != null && dgvUsuario.CurrentRow.DataBoundItem is UsuarioDTO u)
             {
                 txtID.Text = u.Id.ToString();
                 txtNombre.Text = u.Nombre;
@@ -99,8 +105,8 @@ namespace Escritorio
             txtID.Text = "";
             try
             {
-                Usuario u = this.LimpiarUsuario();
-                await client.PostAsJsonAsync("usuario", u);
+                UsuarioDTO u = this.LimpiarUsuario();
+                await usuarioClient.AddAsync( u);
                 await this.GetUsuarios();
 
             }
@@ -113,9 +119,9 @@ namespace Escritorio
 
         private async void Editar_Click(object sender, EventArgs e)
         {
-            Usuario u = this.LimpiarUsuario();
-            await client.PutAsJsonAsync($"usuario/{((Usuario)dgvUsuario.CurrentRow.DataBoundItem).Id}", u);
-            this.GetUsuarios();
+            UsuarioDTO u = this.LimpiarUsuario();
+            await usuarioClient.UpdateAsync(u);
+            await this.GetUsuarios();
 
         }
 
@@ -129,8 +135,9 @@ namespace Escritorio
 
             else
             {
-                await client.DeleteAsync($"usuario/{((Usuario)dgvUsuario.CurrentRow.DataBoundItem).Id}");
-                this.GetUsuarios();
+                int id = int.Parse(txtID.Text);
+                await usuarioClient.DeleteAsync(id);
+                await this.GetUsuarios();
                 Eliminar.Text = "Eliminar";
                 confirma = false;
             }

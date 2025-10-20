@@ -5,84 +5,92 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Dominio;
+using System.ComponentModel;
+using System.Diagnostics;
+using DTOs;
 
 namespace Repository
 {
     public class UsuarioRepository
     {
 
-
-        public static async Task<Usuario[]?> GetAll()
+        private readonly PlanificadorContext bd;
+        public UsuarioRepository(PlanificadorContext context)
         {
-            using (PlanificadorContext bd = new())
-            {
-                return await bd.Usuario.ToArrayAsync();
-            }
-
+            bd = context;
         }
-        public static async Task CreateAdmin()
-        {
-            using (PlanificadorContext bd = new())
-            {
-                var adminExistente = await bd.Usuario.FirstOrDefaultAsync(u => u.Nombre == "admin" && u.Contrasena=="123");
-
-                if (adminExistente==null)
-                {
-                    var admin = new Usuario
-                    {
-                        Nombre = "admin",
-                        Contrasena = "123",
-                        Mail = "admin@admin.com"
-                    };
-                    await bd.Usuario.AddAsync(admin);
-                    await bd.SaveChangesAsync();
-                }
-            }
-        }
-        public static async Task<Usuario?> GetOne(int id)
-        {
-            using (PlanificadorContext bd = new())
-            {
-                return await bd.Usuario.FindAsync(id);
-            }
-        }
-        public static async Task<Usuario?> Add(Usuario user)
+        public  async Task<IEnumerable<Usuario>> GetAll()
         {
             
-            using (PlanificadorContext bd = new())
-            {
+            
+                return await bd.Usuario.ToListAsync();
+            
+
+        }
+        public  async Task CreateAdmin()
+        {
+            
+                var adminExistente = await bd.Usuario.FirstOrDefaultAsync(u => u.Nombre == "admin" && u.Contrasena == "123");
+
+                if (adminExistente == null)
+                {
+                var admin = new Usuario("admin@admin.com", "admin");
+                admin.Contrasena = "123";
+                    await bd.Usuario.AddAsync(admin);
+                    await bd.SaveChangesAsync();
+                
+            }
+        }
+        public  async Task<Usuario?> GetOne(int id)
+        {
+            
+               return await bd.Usuario.FindAsync(id);
+            
+        }
+        public  async Task<Usuario?> Add(Usuario user)
+        {      
+
+            
                 await bd.Usuario.AddAsync(user);
                 await bd.SaveChangesAsync();
                 return user;
-            }
+            
         }
-        public static async Task<Usuario?> Update(Usuario user)
+        public  async Task<bool> Update(Usuario usuario)
         {
-            using (PlanificadorContext bd = new())
-            {
-                Usuario? userAModificar = await bd.Usuario.FindAsync(user.Id);
-                userAModificar.Nombre = user.Nombre;
-                userAModificar.Mail = user.Mail;
-                userAModificar.Contrasena = user.Contrasena;
-                userAModificar.Grupos = user.Grupos;
+            
+                Usuario? userAModificar = await bd.Usuario.FindAsync(usuario.Id);
+            if (userAModificar == null) return false;
+            userAModificar.Nombre = usuario.Nombre;
+            userAModificar.Mail = usuario.Mail;
                 await bd.SaveChangesAsync();
-                return await bd.Usuario.FindAsync(user.Id);
+                return true;
 
-            }
+            
         }
-        public static async Task<int?> Delete(int id)
+        public  async Task<bool> Delete(int id)
         {
-            using (PlanificadorContext bd = new())
-            {
+            
                 Usuario? userABorrar = await bd.Usuario.FindAsync(id);
                 if (userABorrar != null)
                 {
                     bd.Usuario.Remove(userABorrar);
-                    return await bd.SaveChangesAsync();
-
+                     await bd.SaveChangesAsync();
+                return true;
                 }
-                return null;
-            }
+                return false;
+            
         }
+        public  bool EmailExists(string email, int? id = null)
+        {
+            
+                var query = bd.Usuario.Where(u => u.Mail.ToLower() == email.ToLower());
+                if (id.HasValue)
+                {
+                    query = query.Where(u => u.Id != id.Value);
+                }
+                return query.Any();
+            }
+        
     }
 }

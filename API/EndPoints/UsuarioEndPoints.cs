@@ -1,34 +1,36 @@
-﻿using Repository;
+﻿using Services;
 using Dominio;
 using System.Diagnostics.Eventing.Reader;
+using DTOs;
 namespace API.EndPoints
 {
     public static class UsuarioEndPoints
     { public static void MapUsuarioEndPoints(this WebApplication app)
         {
-            app.MapGet("/usuario/", async () =>
+            app.MapGet("/usuario/", async (UsuarioService usuarioService) =>
             {
-                var users = await UsuarioRepository.GetAll();
-                Console.WriteLine($"Usuarios en DB: {users?.Length}");
+                var users = await usuarioService.GetAll();
+
                 return Results.Ok(users);
             });
-            app.MapGet("/usuario/{id}", async (int id) =>
+            app.MapGet("/usuario/{id}", async (int id, UsuarioService usuarioService) =>
+            {
 
-                await UsuarioRepository.GetOne(id) is Usuario user ?
-                Results.Ok(user) :
-                Results.NotFound(new { message = $"user with ID {id} not found" }));
+                var user = await usuarioService.GetOneAsync(id);
+                if (user == null) { return Results.NotFound(new  { message = $"Usuario con id {id} no se encuentra" }); }
+                else { return Results.Ok(user); }
+            });
 
-
-            app.MapPost("/usuario", async (Usuario user) => {
-                var u = await UsuarioRepository.Add(user);
+            app.MapPost("/usuario", async (UsuarioDTO user , UsuarioService usuarioService) => {
+                var u = await usuarioService.Add(user);
                 return Results.Created($"usuario/{u.Id}", u);
             });
 
-            app.MapPut("/usuario/{id}", async (int id, Usuario user) =>
+            app.MapPut("/usuario/{id}", async (int id, UsuarioUpdateDTO dto, UsuarioService usuarioService) =>
             {
-                user.Id = id;
-                var u = await UsuarioRepository.Update(user);
-                if (u == null)
+                dto.Id = id;
+                bool actualizado = await usuarioService.Update(dto);
+                if (actualizado == false)
                 {
                     return Results.NotFound(new { message = $"Usuario con ID {id} no encontrado" });
 
@@ -38,9 +40,10 @@ namespace API.EndPoints
                     return Results.NoContent();
                 }
             });
-            app.MapDelete("/usuario/{id}", async (int id) =>
+            app.MapDelete("/usuario/{id}", async (int id,UsuarioService usuarioService) =>
             {
-                if (await UsuarioRepository.Delete(id) == null)
+                bool eliminado = await usuarioService.Delete(id);
+                if (!eliminado)
                 {
                     return Results.NotFound(new { message = $"couldnt delete user with ID {id}"
                     });
