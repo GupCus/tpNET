@@ -17,12 +17,11 @@ namespace Services
                 throw new ArgumentException($"Ya existe una categoría con el tipo '{dto.Tipo}'.");
 
             var fechaAlta = DateTime.Now;
-            var entidad = new CategoriaGasto(0, dto.Tipo, dto.Descripcion, fechaAlta);
+            var entidad = new CategoriaGasto(0, dto.Tipo, dto.Descripcion);
 
             repo.Add(entidad);
 
             dto.Id = entidad.Id;
-            dto.FechaAlta = entidad.FechaAlta;
             return dto;
         }
 
@@ -43,7 +42,6 @@ namespace Services
                 Id = c.Id,
                 Tipo = c.Tipo,
                 Descripcion = c.Descripcion,
-                FechaAlta = c.FechaAlta
             };
         }
 
@@ -56,7 +54,6 @@ namespace Services
                 Id = c.Id,
                 Tipo = c.Tipo,
                 Descripcion = c.Descripcion,
-                FechaAlta = c.FechaAlta
             }).ToList();
         }
 
@@ -66,7 +63,7 @@ namespace Services
             if (repo.NameExists(dto.Tipo, dto.Id))
                 throw new ArgumentException($"Ya existe otra categoría con el tipo '{dto.Tipo}'.");
 
-            var entidad = new CategoriaGasto(dto.Id, dto.Tipo, dto.Descripcion, dto.FechaAlta);
+            var entidad = new CategoriaGasto(dto.Id, dto.Tipo, dto.Descripcion);
             return repo.Update(entidad);
         }
 
@@ -79,7 +76,6 @@ namespace Services
                 Id = c.Id,
                 Tipo = c.Tipo,
                 Descripcion = c.Descripcion,
-                FechaAlta = c.FechaAlta
             });
         }
     }

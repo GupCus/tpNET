@@ -13,12 +13,9 @@ namespace Escritorio
         [STAThread]
         static async Task Main()
         {
-            TPIContext context = new TPIContext();
-            //UsuarioRepository usuarioRepository = new UsuarioRepository(context);
-
             ApplicationConfiguration.Initialize();
-            //await usuarioRepository.CreateAdmin();
-            Application.Run(new FormLogin());
+            Application.Run(new FormPrincipal());
+
         }
     }
 }

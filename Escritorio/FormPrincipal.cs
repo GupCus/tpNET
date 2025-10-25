@@ -17,6 +17,14 @@ namespace Escritorio
             InitializeComponent();
             this.IsMdiContainer = true;
         }
+        private void FormPrincipal_Shown(object sender, EventArgs e)
+        {
+            FormLogin appLogin = new();
+            if (appLogin.ShowDialog() != DialogResult.OK)
+            {
+                this.Dispose();
+            }
+        }
 
         private void btnCategoriaGastos_Click(object sender, EventArgs e)
         {
@@ -79,13 +87,15 @@ namespace Escritorio
 
         private void FormPrincipal_Resize(object sender, EventArgs e)
         {
-            
-        
+
+
             if (this.ActiveMdiChild != null)
             {
-                this.ActiveMdiChild.Dock = DockStyle.Fill; 
+                this.ActiveMdiChild.Dock = DockStyle.Fill;
             }
-        
-    }
+
+        }
+
+
     }
 }

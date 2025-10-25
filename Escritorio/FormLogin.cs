@@ -27,19 +27,30 @@ namespace Escritorio
         {
             if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
             {
-                MessageBox.Show("Por favor ingrese usuario y contraseña.");
+                MessageBox.Show("Por favor ingrese usuario y contraseña.",
+                    "Advertencia",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return;
             }
 
             if (usuarioService.Login(txtUsername.Text, txtPassword.Text))
             {
-                MessageBox.Show("¡Usted ha ingresado correctamente!");
-                FormPrincipal formPrincipal = new FormPrincipal();
-                formPrincipal.Show();
-                this.Hide();
-
+                MessageBox.Show("¡Usted ha ingresado correctamente!",
+                    "Login Exitoso",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                return;
             }
-            else { MessageBox.Show("Usuario y/o contraseña incorrectos..."); }
+            else {
+
+                MessageBox.Show("Usuario y/o contraseña incorrectos",
+                    "Login",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
         }
     }
 }

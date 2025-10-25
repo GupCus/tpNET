@@ -37,9 +37,10 @@
             // 
             // btnIniciar
             // 
-            btnIniciar.Location = new Point(124, 155);
+            btnIniciar.Location = new Point(249, 56);
+            btnIniciar.Margin = new Padding(3, 4, 3, 4);
             btnIniciar.Name = "btnIniciar";
-            btnIniciar.Size = new Size(100, 24);
+            btnIniciar.Size = new Size(114, 89);
             btnIniciar.TabIndex = 0;
             btnIniciar.Text = "Iniciar sesion";
             btnIniciar.UseVisualStyleBackColor = true;
@@ -48,50 +49,58 @@
             // lblUsername
             // 
             lblUsername.AutoSize = true;
-            lblUsername.Location = new Point(145, 24);
+            lblUsername.Location = new Point(50, 32);
             lblUsername.Name = "lblUsername";
-            lblUsername.Size = new Size(60, 15);
+            lblUsername.Size = new Size(139, 20);
             lblUsername.TabIndex = 1;
-            lblUsername.Text = "Username";
+            lblUsername.Text = "Nombre de Usuario";
             lblUsername.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // lblPass
             // 
             lblPass.AutoSize = true;
-            lblPass.Location = new Point(145, 84);
+            lblPass.Location = new Point(50, 112);
             lblPass.Name = "lblPass";
-            lblPass.Size = new Size(57, 15);
+            lblPass.Size = new Size(83, 20);
             lblPass.TabIndex = 2;
-            lblPass.Text = "Password";
+            lblPass.Text = "Contraseña";
             lblPass.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // txtUsername
             // 
-            txtUsername.Location = new Point(124, 42);
+            txtUsername.Location = new Point(50, 56);
+            txtUsername.Margin = new Padding(3, 4, 3, 4);
             txtUsername.Name = "txtUsername";
-            txtUsername.Size = new Size(100, 23);
+            txtUsername.Size = new Size(114, 27);
             txtUsername.TabIndex = 3;
             // 
             // txtPassword
             // 
-            txtPassword.Location = new Point(124, 102);
+            txtPassword.Location = new Point(50, 136);
+            txtPassword.Margin = new Padding(3, 4, 3, 4);
             txtPassword.Name = "txtPassword";
             txtPassword.PasswordChar = '*';
-            txtPassword.Size = new Size(100, 23);
+            txtPassword.Size = new Size(114, 27);
             txtPassword.TabIndex = 4;
             // 
             // FormLogin
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(373, 231);
+            ClientSize = new Size(426, 210);
             Controls.Add(txtPassword);
             Controls.Add(txtUsername);
             Controls.Add(lblPass);
             Controls.Add(lblUsername);
             Controls.Add(btnIniciar);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "FormLogin";
-            Text = "FormLogin";
+            SizeGripStyle = SizeGripStyle.Hide;
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Inicio de Sesión";
             ResumeLayout(false);
             PerformLayout();
         }

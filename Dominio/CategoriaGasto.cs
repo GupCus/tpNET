@@ -7,14 +7,12 @@ namespace Dominio
         public int Id { get; private set; }
         public string Tipo { get; private set; }
         public string Descripcion { get; private set; }
-        public DateTime FechaAlta { get; private set; }
 
-        public CategoriaGasto(int id, string tipo, string descripcion, DateTime fechaAlta)
+        public CategoriaGasto(int id, string tipo, string descripcion)
         {
             SetId(id);
             SetTipo(tipo);
             SetDescripcion(descripcion);
-            SetFechaAlta(fechaAlta);
         }
 
         public CategoriaGasto() { }
@@ -36,10 +34,6 @@ namespace Dominio
             Descripcion = descripcion ?? string.Empty;
         }
 
-        public void SetFechaAlta(DateTime fechaAlta)
-        {
-            if (fechaAlta == default) throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
-            FechaAlta = fechaAlta;
-        }
+
     }
 }

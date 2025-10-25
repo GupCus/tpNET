@@ -1,20 +1,16 @@
 using Dominio;
-using System.ComponentModel;
-using System.Net.Http;
+using DTOs;
+using Services;
 using System.Net.Http.Json;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace Escritorio
 {
     public partial class FormCategoriaGastos : Form
     {
-        /* L�gica del form */
+        /* Lógica del form */
         private bool confirmarEliminar = false;
-
-        private readonly HttpClient httpClient = new()
-        {
-            BaseAddress = new Uri("http://localhost:5032")
-        };
+        private readonly CategoriaGastoService CategoriaGastoService = new();
 
         public FormCategoriaGastos()
         {
@@ -27,15 +23,14 @@ namespace Escritorio
         }
 
         //Metodo que se encarga de sanitizar la categoria para no enviar nulos
-        private CategoriaGasto LimpiarCategoria()
+        private CategoriaGastoDTO LimpiarCategoria()
         {
 
-            CategoriaGasto cg = new()
+            CategoriaGastoDTO cg = new()
             {
-                /*
+                Id = string.IsNullOrEmpty(txtID.Text) ? 0 : int.Parse(txtID.Text),
                 Tipo = string.IsNullOrEmpty(txtTipo.Text) ? "Alimentos" : txtTipo.Text,
-                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,}
-                */
+                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,
             };
 
             return cg;
@@ -45,6 +40,7 @@ namespace Escritorio
         {
             ((TextBox)sender).Text = "";
         }
+
         //Al Seleccionar una categoria (fila), se rescatan sus datos a la UI
         private void dgvCategoria_SelectionChanged(object sender, EventArgs e)
         {
@@ -70,9 +66,9 @@ namespace Escritorio
 
         /* API CategoriasGastos */
         //GET ALL Categorias || Actualizaci�n de la tabla principal
-        private async void GetCategorias()
+        private void GetCategorias()
         {
-            var cgs = await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagastos");
+            var cgs = CategoriaGastoService.GetAll();
             this.dgvCategoria.DataSource = cgs;
         }
 
@@ -80,15 +76,15 @@ namespace Escritorio
         private async void Cargar_Click(object sender, EventArgs e)
         {
             txtID.Text = "";
-            CategoriaGasto cg = this.LimpiarCategoria();
-            await httpClient.PostAsJsonAsync("categoriagastos", cg);
+            CategoriaGastoDTO cg = this.LimpiarCategoria();
+            CategoriaGastoService.Add(cg);
             this.GetCategorias();
         }
         //PUT Categoria
         private async void Modificar_Click(object sender, EventArgs e)
         {
-            CategoriaGasto cg = this.LimpiarCategoria();
-            await httpClient.PutAsJsonAsync($"categoriagastos/{((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id}", cg);
+            CategoriaGastoDTO cg = this.LimpiarCategoria();
+            CategoriaGastoService.Update(cg);
             this.GetCategorias();
         }
 
@@ -97,13 +93,13 @@ namespace Escritorio
         {
             if (!confirmarEliminar)
             {
-                Eliminar.Text = "�EST� SEGURO?";
+                Eliminar.Text = "¿ESTÁ SEGURO?";
                 confirmarEliminar = true;
             }
             //Hacer click de vuelta para ejecutar esto
             else
             {
-                await httpClient.DeleteAsync($"categoriagastos/{((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id}");
+                CategoriaGastoService.Delete(((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id);
                 this.GetCategorias();
                 Eliminar.Text = "ELIMINAR CATEGORIA";
                 confirmarEliminar = false;

@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using Dominio;
+using Microsoft.Extensions.Logging;
 
 namespace Repository
 {
@@ -21,13 +19,22 @@ namespace Repository
         {
         }
 
-        internal TPIContext()
+        public TPIContext()
         {
-            this.Database.EnsureCreated();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;
+                                        Initial Catalog=Planificador;
+                                        Integrated Security=true;
+                                        TrustServerCertificate=True");
+                optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
+            }
+
+            /* Lo comento porque no me funciona así
             if (!optionsBuilder.IsConfigured)
             {
                 // Solo se ejecutará si no se configuró desde Program.cs
@@ -39,6 +46,7 @@ namespace Repository
                 string connectionString = configuration.GetConnectionString("DefaultConnection");
                 optionsBuilder.UseSqlServer(connectionString);
             }
+            */
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -66,6 +74,14 @@ namespace Repository
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Contrasena).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.FechaAlta).IsRequired();
+                entity.HasData(new
+                {
+                    Id = 1,
+                    Mail = "admin",
+                    Nombre = "admin",
+                    Contrasena = "admin", 
+                    FechaAlta = DateTime.Now
+                });
             });
 
             // === Grupo ===
