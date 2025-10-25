@@ -1,4 +1,4 @@
-using Dominio;
+using Domain.Model;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -30,11 +30,10 @@ namespace Escritorio
         private CategoriaGasto LimpiarCategoria()
         {
 
-            CategoriaGasto cg = new()
-            {
-                Tipo = string.IsNullOrEmpty(txtTipo.Text) ? "Alimentos" : txtTipo.Text,
-                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,
-            };
+            CategoriaGasto cg = new CategoriaGasto();
+            
+            cg.SetTipo( txtTipo.Text);
+            cg.SetDescripcion(txtDescripcion.Text);
 
             return cg;
         }

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Windows.Forms;
-using Dominio;
+using Domain.Model;
 using System.Reflection.Metadata.Ecma335;
 using System.Net.Http;
 using DTOs;
@@ -28,7 +28,7 @@ namespace Escritorio
             };
 
             
-            usuarioClient = new UsuarioApiClient(client);
+            usuarioClient = new UsuarioApiClient();
         }
        
         private async void FormUsuario_Load(object sender, EventArgs e)
@@ -40,7 +40,7 @@ namespace Escritorio
         {
             try
             {
-                var users = await usuarioClient.GetAllAsync();
+                var users = await UsuarioApiClient.GetAllAsync();
                 this.dgvUsuario.DataSource = users;
             }
             catch (HttpRequestException ex)
@@ -106,7 +106,7 @@ namespace Escritorio
             try
             {
                 UsuarioDTO u = this.LimpiarUsuario();
-                await usuarioClient.AddAsync( u);
+                await UsuarioApiClient.AddAsync( u);
                 await this.GetUsuarios();
 
             }
@@ -120,7 +120,7 @@ namespace Escritorio
         private async void Editar_Click(object sender, EventArgs e)
         {
             UsuarioDTO u = this.LimpiarUsuario();
-            await usuarioClient.UpdateAsync(u);
+            await UsuarioApiClient.UpdateAsync(u);
             await this.GetUsuarios();
 
         }
@@ -136,7 +136,7 @@ namespace Escritorio
             else
             {
                 int id = int.Parse(txtID.Text);
-                await usuarioClient.DeleteAsync(id);
+                await UsuarioApiClient.DeleteAsync(id);
                 await this.GetUsuarios();
                 Eliminar.Text = "Eliminar";
                 confirma = false;

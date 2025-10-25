@@ -8,7 +8,7 @@ using System.Text;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Dominio;
+using Domain.Model;
 using API.Clients;
 
 
@@ -33,7 +33,7 @@ namespace Escritorio
                 MessageBox.Show("Por favor ingrese usuario y contraseña.");
                 return;
             }
-            var users = await usuarioClient.GetAllAsync();
+            var users = await UsuarioApiClient.GetAllAsync();
             Console.WriteLine(users.Count());
            var usuario=users.FirstOrDefault(u=>u.Nombre==txtUsername.Text && u.Contrasena==txtPassword.Text);
             if (usuario != null)

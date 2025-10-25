@@ -1,4 +1,4 @@
-﻿using Dominio;
+﻿using Domain.Model;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -84,14 +84,14 @@ namespace Escritorio
                 throw new InvalidOperationException("El Monto no es un número válido.");
             }
 
-            Gasto g = new()
-            {
-                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Sin descripción" : txtDescripcion.Text,
-                FechaHora = txtFechaHora.Value,
-                Monto = monto,
-                CategoriaGastoId = (int)cmbCategoria.SelectedValue,
-                UsuarioId = (int)cmbUsuario.SelectedValue
-            };
+            Gasto g = new Gasto();
+            
+            g.SetDescripcion(txtDescripcion.Text);
+            g.SetFechaHora(txtFechaHora.Value);
+            g.SetMonto(monto);
+            g.SetCategoriaGastoId((int)cmbCategoria.SelectedValue);
+            g.SetUsuarioId((int)cmbUsuario.SelectedValue);
+
 
             return g;
         }
@@ -176,10 +176,10 @@ namespace Escritorio
             try
             {
                 Gasto g = this.LimpiarGasto();
-                int? idSeleccionado = ((Gasto)dgvGasto.CurrentRow.DataBoundItem).Id;
+                int idSeleccionado = ((Gasto)dgvGasto.CurrentRow.DataBoundItem).Id;
 
-                
-                g.Id = idSeleccionado;
+
+                g.SetId(idSeleccionado); 
 
                 await httpClient.PutAsJsonAsync($"gasto/{idSeleccionado}", g);
                 await this.GetGastos();
