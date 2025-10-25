@@ -10,9 +10,9 @@ namespace Dominio
 
         public CategoriaGasto(int id, string tipo, string descripcion)
         {
-            SetId(id);
-            SetTipo(tipo);
-            SetDescripcion(descripcion);
+            Id= id;
+            Tipo= tipo;
+            Descripcion= descripcion;
         }
 
         public CategoriaGasto() { }

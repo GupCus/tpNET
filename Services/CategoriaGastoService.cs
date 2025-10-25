@@ -16,7 +16,7 @@ namespace Services
             if (repo.NameExists(dto.Tipo))
                 throw new ArgumentException($"Ya existe una categoría con el tipo '{dto.Tipo}'.");
 
-            var fechaAlta = DateTime.Now;
+           
             var entidad = new CategoriaGasto(0, dto.Tipo, dto.Descripcion);
 
             repo.Add(entidad);

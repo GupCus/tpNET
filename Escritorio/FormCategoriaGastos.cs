@@ -1,8 +1,9 @@
 using Dominio;
 using DTOs;
+using API.Clients;
 using Services;
 using System.Net.Http.Json;
-
+using System.Diagnostics;
 
 namespace Escritorio
 {
@@ -10,30 +11,44 @@ namespace Escritorio
     {
         /* Lógica del form */
         private bool confirmarEliminar = false;
-        private readonly CategoriaGastoService CategoriaGastoService = new();
+       
 
         public FormCategoriaGastos()
         {
             InitializeComponent();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
-            this.GetCategorias();
+            Debug.WriteLine("Form1_Load ejecutándose...");
+            await GetCategorias();
+            Debug.WriteLine("Form1_Load completado");
         }
 
         //Metodo que se encarga de sanitizar la categoria para no enviar nulos
-        private CategoriaGastoDTO LimpiarCategoria()
+        private object LimpiarCategoria()
         {
-
-            CategoriaGastoDTO cg = new()
+            bool nuevo = string.IsNullOrEmpty(txtID.Text);
+            if (!nuevo)
             {
-                Id = string.IsNullOrEmpty(txtID.Text) ? 0 : int.Parse(txtID.Text),
-                Tipo = string.IsNullOrEmpty(txtTipo.Text) ? "Alimentos" : txtTipo.Text,
-                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,
-            };
+                CategoriaGastoUpdateDTO cgUpdate = new()
+                {
+                    Id = string.IsNullOrEmpty(txtID.Text) ? 0 : int.Parse(txtID.Text),
+                    Tipo = string.IsNullOrEmpty(txtTipo.Text) ? "Alimentos" : txtTipo.Text,
+                    Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,
+                };
+                return cgUpdate;
+            }
+            else
+            {
+                CategoriaGastoDTO cg = new()
+                {
+                    Tipo = string.IsNullOrEmpty(txtTipo.Text) ? "Alimentos" : txtTipo.Text,
+                    Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,
+                };
+                return cg;
 
-            return cg;
+            }
         }
         //Limpia las casillas al hacer click
         private void Txt_Click(object sender, EventArgs e)
@@ -44,7 +59,7 @@ namespace Escritorio
         //Al Seleccionar una categoria (fila), se rescatan sus datos a la UI
         private void dgvCategoria_SelectionChanged(object sender, EventArgs e)
         {
-            if (dgvCategoria.CurrentRow != null && dgvCategoria.CurrentRow.DataBoundItem is CategoriaGasto cg)
+            if (dgvCategoria.CurrentRow != null && dgvCategoria.CurrentRow.DataBoundItem is CategoriaGastoDTO cg)
             {
 
                 txtID.Text = cg.Id.ToString();
@@ -66,26 +81,40 @@ namespace Escritorio
 
         /* API CategoriasGastos */
         //GET ALL Categorias || Actualizaci�n de la tabla principal
-        private void GetCategorias()
+        private async Task GetCategorias()
         {
-            var cgs = CategoriaGastoService.GetAll();
-            this.dgvCategoria.DataSource = cgs;
+            try
+            {
+                var cgs = await CategoriaGastoApiClient.GetAllAsync();
+                Debug.WriteLine($"Categorías recibidas: {cgs?.Count() ?? 0}");
+                this.dgvCategoria.DataSource = null;
+                this.dgvCategoria.AutoGenerateColumns = true;
+                this.dgvCategoria.DataSource = cgs;
+                
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine($"ERROR: {ex.Message}");
+                Debug.WriteLine($"StackTrace: {ex.StackTrace}");
+                MessageBox.Show($"Error: {ex.Message}", "Error al cargar",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         //POST Categoria
         private async void Cargar_Click(object sender, EventArgs e)
         {
             txtID.Text = "";
-            CategoriaGastoDTO cg = this.LimpiarCategoria();
-            CategoriaGastoService.Add(cg);
-            this.GetCategorias();
+            CategoriaGastoDTO cg = (CategoriaGastoDTO)this.LimpiarCategoria();
+            await CategoriaGastoApiClient.AddAsync(cg);
+            await GetCategorias();
         }
         //PUT Categoria
         private async void Modificar_Click(object sender, EventArgs e)
         {
-            CategoriaGastoDTO cg = this.LimpiarCategoria();
-            CategoriaGastoService.Update(cg);
-            this.GetCategorias();
+            CategoriaGastoUpdateDTO cg = (CategoriaGastoUpdateDTO)this.LimpiarCategoria();
+            await CategoriaGastoApiClient.UpdateAsync(cg);
+            await GetCategorias();
         }
 
         //DELETE Categoria
@@ -99,8 +128,8 @@ namespace Escritorio
             //Hacer click de vuelta para ejecutar esto
             else
             {
-                CategoriaGastoService.Delete(((CategoriaGasto)dgvCategoria.CurrentRow.DataBoundItem).Id);
-                this.GetCategorias();
+                await CategoriaGastoApiClient.DeleteAsync(((CategoriaGastoDTO)dgvCategoria.CurrentRow.DataBoundItem).Id);
+                await GetCategorias();
                 Eliminar.Text = "ELIMINAR CATEGORIA";
                 confirmarEliminar = false;
             }
