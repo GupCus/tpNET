@@ -53,7 +53,7 @@
             // 
             // categoriaGastoBindingSource
             // 
-            categoriaGastoBindingSource.DataSource = typeof(Dominio.CategoriaGasto);
+            categoriaGastoBindingSource.DataSource = typeof(Domain.Model.CategoriaGasto);
             // 
             // Cargar
             // 

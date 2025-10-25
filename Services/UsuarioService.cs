@@ -88,5 +88,12 @@ namespace Application.Services
                 FechaAlta = u.FechaAlta
             });
         }
+
+        public bool Login(string username, string pass)
+        {
+            var users = new UsuarioRepository().GetAll();
+            var usuario = users.FirstOrDefault(u => u.Nombre == username && u.Contrasena == pass);
+            return usuario != null;
+        }
     }
 }

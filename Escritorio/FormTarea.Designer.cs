@@ -160,7 +160,7 @@
             // 
             // tareaBindingSource
             // 
-            tareaBindingSource.DataSource = typeof(Dominio.Tarea);
+            tareaBindingSource.DataSource = typeof(Domain.Model.Tarea);
             // 
             // tableLayoutPanel2
             // 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Domain.Model
+namespace Dominio
 {
     public class Grupo
     {

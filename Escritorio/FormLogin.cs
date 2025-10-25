@@ -10,33 +10,28 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Domain.Model;
 using API.Clients;
+using Application.Services;
 
 
 namespace Escritorio
 {
     public partial class FormLogin : Form
     {
-        private readonly UsuarioApiClient usuarioClient;
+        private readonly UsuarioService usuarioService = new();
         public FormLogin()
         {
             InitializeComponent();
-            usuarioClient = new UsuarioApiClient(new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7126/")
-            });
         }
-        
-        private  async void btnIniciar_Click(object sender, EventArgs e)
+
+        private async void btnIniciar_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtUsername.Text.Trim()) || string.IsNullOrEmpty(txtPassword.Text.Trim()))
             {
                 MessageBox.Show("Por favor ingrese usuario y contraseña.");
                 return;
             }
-            var users = await UsuarioApiClient.GetAllAsync();
-            Console.WriteLine(users.Count());
-           var usuario=users.FirstOrDefault(u=>u.Nombre==txtUsername.Text && u.Contrasena==txtPassword.Text);
-            if (usuario != null)
+
+            if (usuarioService.Login(txtUsername.Text, txtPassword.Text))
             {
                 MessageBox.Show("¡Usted ha ingresado correctamente!");
                 FormPrincipal formPrincipal = new FormPrincipal();

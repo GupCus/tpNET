@@ -1,7 +1,7 @@
-﻿using Domain.Model;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Dominio;
 
-namespace Data
+namespace Repository
 {
     public class GrupoRepository
     {

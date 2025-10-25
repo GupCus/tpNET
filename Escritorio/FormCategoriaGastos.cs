@@ -8,7 +8,7 @@ namespace Escritorio
 {
     public partial class FormCategoriaGastos : Form
     {
-        /* Lógica del form */
+        /* Lï¿½gica del form */
         private bool confirmarEliminar = false;
 
         private readonly HttpClient httpClient = new()
@@ -30,10 +30,13 @@ namespace Escritorio
         private CategoriaGasto LimpiarCategoria()
         {
 
-            CategoriaGasto cg = new CategoriaGasto();
-            
-            cg.SetTipo( txtTipo.Text);
-            cg.SetDescripcion(txtDescripcion.Text);
+            CategoriaGasto cg = new()
+            {
+                /*
+                Tipo = string.IsNullOrEmpty(txtTipo.Text) ? "Alimentos" : txtTipo.Text,
+                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,}
+                */
+            };
 
             return cg;
         }
@@ -58,7 +61,7 @@ namespace Escritorio
                 //Reset eliminar
                 if (confirmarEliminar)
                 {
-                    Eliminar.Text = "ELIMINAR CATEGORÍA";
+                    Eliminar.Text = "ELIMINAR CATEGORï¿½A";
                     confirmarEliminar = false;
                 }
 
@@ -66,7 +69,7 @@ namespace Escritorio
         }
 
         /* API CategoriasGastos */
-        //GET ALL Categorias || Actualización de la tabla principal
+        //GET ALL Categorias || Actualizaciï¿½n de la tabla principal
         private async void GetCategorias()
         {
             var cgs = await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagastos");
@@ -94,7 +97,7 @@ namespace Escritorio
         {
             if (!confirmarEliminar)
             {
-                Eliminar.Text = "¿ESTÁ SEGURO?";
+                Eliminar.Text = "ï¿½ESTï¿½ SEGURO?";
                 confirmarEliminar = true;
             }
             //Hacer click de vuelta para ejecutar esto

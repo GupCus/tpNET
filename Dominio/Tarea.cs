@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Domain.Model
+namespace Dominio
 {
     public enum EstadoTarea
     {

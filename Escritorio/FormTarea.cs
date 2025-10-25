@@ -38,12 +38,13 @@ namespace Escritorio
 
             Tarea t = new()
             {
+                /*
                 Nombre = string.IsNullOrEmpty(txtNombre.Text) ? "Sin nombre" : txtNombre.Text,
                 FechaHora = txtFechaHora.Value,
                 Duracion = int.TryParse(txtDuracion.Text, out int duracion) ? duracion : null, 
                 Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Sin descripción" : txtDescripcion.Text,
                 Estado = (EstadoTarea?)txtEstado.SelectedItem ?? EstadoTarea.Activo
-            };
+            */};
 
             return t;
         }
@@ -53,7 +54,7 @@ namespace Escritorio
         {
             if (dgvTarea.CurrentRow != null && dgvTarea.CurrentRow.DataBoundItem is Tarea t)
             {
-                txtID.Text = t.Id?.ToString() ?? "";
+                //txtID.Text = t.Id?.ToString() ?? "";
                 txtNombre.Text = t.Nombre ?? "";
                 txtFechaHora.Value = t.FechaHora ?? DateTime.Now;
                 txtDuracion.Text = t.Duracion?.ToString() ?? "";

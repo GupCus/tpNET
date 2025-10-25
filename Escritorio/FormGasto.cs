@@ -26,24 +26,24 @@ namespace Escritorio
         public FormGasto()
         {
             InitializeComponent();
-            
+
         }
 
         private async void FormGasto_Load(object sender, EventArgs e)
         {
             await GetCategorias();
             await GetUsuarios();
-            await GetGastos(); 
+            await GetGastos();
         }
 
-        
+
         private async Task GetCategorias()
         {
             try
             {
                 var categorias = await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagastos");
 
-        
+
                 cmbCategoria.DataSource = categorias?.ToList();
                 cmbCategoria.DisplayMember = "Nombre";
                 cmbCategoria.ValueMember = "Id";
@@ -84,14 +84,26 @@ namespace Escritorio
                 throw new InvalidOperationException("El Monto no es un número válido.");
             }
 
-            Gasto g = new Gasto();
-            
-            g.SetDescripcion(txtDescripcion.Text);
-            g.SetFechaHora(txtFechaHora.Value);
-            g.SetMonto(monto);
-            g.SetCategoriaGastoId((int)cmbCategoria.SelectedValue);
-            g.SetUsuarioId((int)cmbUsuario.SelectedValue);
+            /* Facu
+                    Gasto g = new Gasto();
 
+                    g.SetDescripcion(txtDescripcion.Text);
+                    g.SetFechaHora(txtFechaHora.Value);
+                    g.SetMonto(monto);
+                    g.SetCategoriaGastoId((int)cmbCategoria.SelectedValue);
+                    g.SetUsuarioId((int)cmbUsuario.SelectedValue);
+            */
+
+            Gasto g = new()
+            {
+                /*
+                Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Sin descripción" : txtDescripcion.Text,
+                FechaHora = txtFechaHora.Value,
+                Monto = monto,
+                CategoriaGastoId = (int)cmbCategoria.SelectedValue,
+                UsuarioId = (int)cmbUsuario.SelectedValue
+                        */
+            };
 
             return g;
         }
@@ -100,12 +112,12 @@ namespace Escritorio
         {
             if (dgvGasto.CurrentRow != null && dgvGasto.CurrentRow.DataBoundItem is Gasto g)
             {
-                txtID.Text = g.Id?.ToString() ?? "";
+                //txtID.Text = g.Id?.ToString() ?? "";
                 txtDescripcion.Text = g.Descripcion ?? "";
                 txtFechaHora.Value = g.FechaHora;
                 txtMonto.Text = g.Monto.ToString();
 
-                
+
                 if (cmbCategoria.DataSource != null)
                 {
                     cmbCategoria.SelectedValue = g.CategoriaGastoId;
@@ -118,7 +130,7 @@ namespace Escritorio
                 btnModificar.Enabled = true;
                 btnEliminar.Enabled = true;
 
-                
+
                 if (confirmarEliminar)
                 {
                     btnEliminar.Text = "Eliminar Gasto";
@@ -133,10 +145,10 @@ namespace Escritorio
         {
             try
             {
-                
+
                 var gastos = await httpClient.GetFromJsonAsync<IEnumerable<Gasto>>("gasto");
                 this.dgvGasto.DataSource = gastos?.ToList();
-                txtID.Text = string.Empty; 
+                txtID.Text = string.Empty;
             }
             catch (Exception ex)
             {
@@ -179,8 +191,7 @@ namespace Escritorio
                 int idSeleccionado = ((Gasto)dgvGasto.CurrentRow.DataBoundItem).Id;
 
 
-                g.SetId(idSeleccionado); 
-
+                //g.Id = idSeleccionado;
                 await httpClient.PutAsJsonAsync($"gasto/{idSeleccionado}", g);
                 await this.GetGastos();
             }

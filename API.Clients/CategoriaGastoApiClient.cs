@@ -1,13 +1,12 @@
-﻿using Domain.Model;
-using DTOs;
+﻿using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Data;
 
-namespace Application.Services
+namespace API.Clients
 {
-    public class UsuarioService
+    public class CategoriaGastoApiClient
     {
         public UsuarioDTO Add(UsuarioUpdateDTO dto)
         {

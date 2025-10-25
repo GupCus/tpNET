@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain.Model
+namespace Dominio
 {
     public class CategoriaGasto
     {

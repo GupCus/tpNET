@@ -27,10 +27,10 @@ namespace Escritorio
                 BaseAddress = new Uri("https://localhost:7126/")
             };
 
-            
-            usuarioClient = new UsuarioApiClient();
+
+            //usuarioClient = new UsuarioApiClient(client);
         }
-       
+
         private async void FormUsuario_Load(object sender, EventArgs e)
         {
 
@@ -40,8 +40,8 @@ namespace Escritorio
         {
             try
             {
-                var users = await UsuarioApiClient.GetAllAsync();
-                this.dgvUsuario.DataSource = users;
+                //var users = await usuarioClient.GetAllAsync();
+                //this.dgvUsuario.DataSource = users;
             }
             catch (HttpRequestException ex)
             {
@@ -60,7 +60,7 @@ namespace Escritorio
                 Id = string.IsNullOrEmpty(txtID.Text) ? 0 : int.Parse(txtID.Text),
                 Nombre = string.IsNullOrEmpty(txtNombre.Text) ? "Juan Perez" : txtNombre.Text,
                 Mail = string.IsNullOrEmpty(txtMail.Text) ? "jperez@gmail.com" : txtMail.Text,
-                
+
             };
             return user;
         }
@@ -106,7 +106,7 @@ namespace Escritorio
             try
             {
                 UsuarioDTO u = this.LimpiarUsuario();
-                await UsuarioApiClient.AddAsync( u);
+                //await usuarioClient.AddAsync( u);
                 await this.GetUsuarios();
 
             }
@@ -120,7 +120,7 @@ namespace Escritorio
         private async void Editar_Click(object sender, EventArgs e)
         {
             UsuarioDTO u = this.LimpiarUsuario();
-            await UsuarioApiClient.UpdateAsync(u);
+            //await usuarioClient.UpdateAsync(u);
             await this.GetUsuarios();
 
         }
@@ -136,7 +136,7 @@ namespace Escritorio
             else
             {
                 int id = int.Parse(txtID.Text);
-                await UsuarioApiClient.DeleteAsync(id);
+                //await usuarioClient.DeleteAsync(id);
                 await this.GetUsuarios();
                 Eliminar.Text = "Eliminar";
                 confirma = false;

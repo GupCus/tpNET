@@ -1,6 +1,6 @@
-﻿using Domain.Model;
+﻿using Dominio;
 
-namespace Data
+namespace Repository
 {
     public class CategoriaGastoRepository
     {
