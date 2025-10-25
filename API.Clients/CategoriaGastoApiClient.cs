@@ -1,9 +1,9 @@
 ﻿using Domain.Model;
-using Data;
 using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Data;
 
 namespace Application.Services
 {

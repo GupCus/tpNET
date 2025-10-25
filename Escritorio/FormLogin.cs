@@ -16,11 +16,11 @@ namespace Escritorio
 {
     public partial class FormLogin : Form
     {
-        private readonly UsuarioClient usuarioClient;
+        private readonly UsuarioApiClient usuarioClient;
         public FormLogin()
         {
             InitializeComponent();
-            usuarioClient = new UsuarioClient(new HttpClient
+            usuarioClient = new UsuarioApiClient(new HttpClient
             {
                 BaseAddress = new Uri("https://localhost:7126/")
             });

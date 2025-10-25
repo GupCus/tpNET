@@ -1,59 +1,70 @@
-﻿using Dominio;
-using Repository;
+﻿using Application.Services;
+using DTOs;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Builder;
 
 namespace API.EndPoints
 {
-    public static class TareaEndPoints
+    public static class TareaEndpoints
     {
         public static void MapTareaEndPoints(this WebApplication app)
         {
-            // ==================== CRUD TAREAS ====================
-
-            //GetALL
-            app.MapGet("/tarea/", async () =>
-            Results.Ok(await TareaRepository.GetAll()));
-
-            //GetOne
-            app.MapGet("/tarea/{id}", async (int id) =>
-            await TareaRepository.GetOne(id) is Tarea t
-            ? Results.Ok(t)
-            : Results.NotFound(new { message = $"Tarea con ID {id} no encontrada" }));
-
-
-            //Post
-            app.MapPost("/tarea/", async (Tarea t) =>
+            app.MapGet("/tareas", (TareaService service) =>
             {
-                var nt = await TareaRepository.Post(t);
-                return Results.Created($"/tarea/{nt.Id}", nt);
-            });
+                var dtos = service.GetAll();
+                return Results.Ok(dtos);
+            })
+            .WithName("GetAllTareas")
+            .Produces<IEnumerable<TareaDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
 
-            //Put
-            app.MapPut("/tarea/{id}", async (int id, Tarea t) =>
+            app.MapGet("/tareas/{id:int}", (int id, TareaService service) =>
             {
-                t.Id = id;
-                var mt = await TareaRepository.Put(t);
-                if (mt == null)
-                {
-                    return Results.NotFound(new { message = $"Tarea con ID {id} no encontrada" });
-                }
-                else
-                {
-                    return Results.NoContent();
-                }
-            });
+                var dto = service.Get(id);
+                return dto == null ? Results.NotFound() : Results.Ok(dto);
+            })
+            .WithName("GetTareaById")
+            .Produces<TareaDTO>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi();
 
-            //Delete
-            app.MapDelete("/tarea/{id}", async (int id) =>
+            app.MapPost("/tareas", (TareaDTO input, TareaService service) =>
             {
-                if (await TareaRepository.Delete(id) == null)
-                {
-                    return Results.NotFound(new { message = $"Tarea con ID {id} no encontrada" });
-                }
-                else
-                {
-                    return Results.NoContent();
-                }
-            });
+                var created = service.Add(input);
+                return Results.Created($"/tareas/{created.Id}", created);
+            })
+            .WithName("CreateTarea")
+            .Produces<TareaDTO>(StatusCodes.Status201Created)
+            .WithOpenApi();
+
+            app.MapPut("/tareas", (TareaDTO input, TareaService service) =>
+            {
+                var ok = service.Update(input);
+                return ok ? Results.NoContent() : Results.NotFound();
+            })
+            .WithName("UpdateTarea")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi();
+
+            app.MapDelete("/tareas/{id:int}", (int id, TareaService service) =>
+            {
+                var ok = service.Delete(id);
+                return ok ? Results.NoContent() : Results.NotFound();
+            })
+            .WithName("DeleteTarea")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi();
+
+            app.MapGet("/tareas/criteria", (string texto, TareaService service) =>
+            {
+                var items = service.GetByCriteria(new TareaCriteriaDTO { Texto = texto });
+                return Results.Ok(items);
+            })
+            .WithName("GetTareasByCriteria")
+            .Produces<IEnumerable<TareaDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
         }
     }
 }

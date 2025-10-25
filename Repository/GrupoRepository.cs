@@ -1,68 +1,70 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Model;
 using Microsoft.EntityFrameworkCore;
-using Dominio;
-namespace Repository
+
+namespace Data
 {
     public class GrupoRepository
     {
-        public async static Task<Grupo[]?> GetAll()
-        {
-            using (PlanificadorContext db = new())
-            {
-                return await db.Grupo.ToArrayAsync();
-            }
+        private TPIContext CreateContext() => new TPIContext();
 
-        }
-        public async static Task<Grupo?> GetOne(int id)
+        public void Add(Grupo grupo)
         {
-            using (PlanificadorContext db = new())
-            {
-                return await db.Grupo.FindAsync(id);
-            }
+            using var ctx = CreateContext();
+            ctx.Grupos.Add(grupo);
+            ctx.SaveChanges();
         }
-        public async static Task<Grupo?> Post(Grupo gru)
-        {
-            using (PlanificadorContext db = new())
-            {
-                await db.Grupo.AddAsync(gru);
-                await db.SaveChangesAsync();
-                return gru;
-            }
-        }
-        public async static Task<Grupo?> Put(Grupo gru)
-        {
-            using (PlanificadorContext db = new())
-            {
-                Grupo? grupoAModificar = await db.Grupo.FindAsync(gru.Id);
-                if (grupoAModificar != null)
-                {
-                    grupoAModificar.Planes = gru.Planes;
-                    grupoAModificar.Usuarios = gru.Usuarios;
-                    grupoAModificar.Nombre = gru.Nombre;
-                    await db.SaveChangesAsync();
-                    return await db.Grupo.FindAsync(grupoAModificar.Id);
 
-                }
-                return null;
-            }
-        }
-        public static async Task<int?> Delete(int id)
+        public bool Delete(int id)
         {
-            using (PlanificadorContext db = new())
-            {
-                var grupo = await db.Grupo.FindAsync(id);
-                if (grupo != null)
-                {
-                    db.Grupo.Remove(grupo);
-                    return await db.SaveChangesAsync();
+            using var ctx = CreateContext();
+            var g = ctx.Grupos.Find(id);
+            if (g == null) return false;
+            ctx.Grupos.Remove(g);
+            ctx.SaveChanges();
+            return true;
+        }
 
-                }
-                return null;
-            }
+        public Grupo? Get(int id)
+        {
+            using var ctx = CreateContext();
+            return ctx.Grupos
+                      .Include(g => g.Usuarios)
+                      .Include(g => g.Planes)
+                      .FirstOrDefault(g => g.Id == id);
+        }
+
+        public IEnumerable<Grupo> GetAll()
+        {
+            using var ctx = CreateContext();
+            return ctx.Grupos.Include(g => g.Usuarios).Include(g => g.Planes).ToList();
+        }
+
+        public bool Update(Grupo grupo)
+        {
+            using var ctx = CreateContext();
+            var existing = ctx.Grupos.Find(grupo.Id);
+            if (existing == null) return false;
+            existing.SetNombre(grupo.Nombre);
+            existing.SetDescripcion(grupo.Descripcion);
+            existing.SetFechaAlta(grupo.FechaAlta);
+            ctx.SaveChanges();
+            return true;
+        }
+
+        public bool NameExists(string nombre, int? excludeId = null)
+        {
+            using var ctx = CreateContext();
+            var q = ctx.Grupos.Where(g => g.Nombre.ToLower() == nombre.ToLower());
+            if (excludeId.HasValue) q = q.Where(g => g.Id != excludeId.Value);
+            return q.Any();
+        }
+
+        public IEnumerable<Grupo> GetByCriteria(string texto)
+        {
+            using var ctx = CreateContext();
+            if (string.IsNullOrWhiteSpace(texto)) return ctx.Grupos.ToList();
+            texto = texto.ToLower();
+            return ctx.Grupos.Where(g => g.Nombre.ToLower().Contains(texto) || (g.Descripcion != null && g.Descripcion.ToLower().Contains(texto))).ToList();
         }
     }
 }

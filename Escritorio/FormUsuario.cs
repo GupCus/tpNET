@@ -18,7 +18,7 @@ namespace Escritorio
     public partial class FormUsuario : Form
     {
         private bool confirma = false;
-        private readonly UsuarioClient usuarioClient;
+        private readonly UsuarioApiClient usuarioClient;
         public FormUsuario()
         {
             InitializeComponent();
@@ -28,7 +28,7 @@ namespace Escritorio
             };
 
             
-            usuarioClient = new UsuarioClient(client);
+            usuarioClient = new UsuarioApiClient(client);
         }
        
         private async void FormUsuario_Load(object sender, EventArgs e)

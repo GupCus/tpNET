@@ -1,96 +1,75 @@
-﻿using System;
+﻿
+using Domain.Model;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Dominio;
-using System.ComponentModel;
-using System.Diagnostics;
-using DTOs;
 
-namespace Repository
+namespace Data
 {
     public class UsuarioRepository
     {
+        private TPIContext CreateContext() => new TPIContext();
 
-        private readonly PlanificadorContext bd;
-        public UsuarioRepository(PlanificadorContext context)
+        public void Add(Usuario usuario)
         {
-            bd = context;
+            using var ctx = CreateContext();
+            ctx.Usuarios.Add(usuario);
+            ctx.SaveChanges();
         }
-        public  async Task<IEnumerable<Usuario>> GetAll()
-        {
-            
-            
-                return await bd.Usuario.ToListAsync();
-            
 
-        }
-        public  async Task CreateAdmin()
+        public bool Delete(int id)
         {
-            
-                var adminExistente = await bd.Usuario.FirstOrDefaultAsync(u => u.Nombre == "admin" && u.Contrasena == "123");
+            using var ctx = CreateContext();
+            var u = ctx.Usuarios.Find(id);
+            if (u == null) return false;
+            ctx.Usuarios.Remove(u);
+            ctx.SaveChanges();
+            return true;
+        }
 
-                if (adminExistente == null)
-                {
-                var admin = new Usuario("admin@admin.com", "admin");
-                admin.Contrasena = "123";
-                    await bd.Usuario.AddAsync(admin);
-                    await bd.SaveChangesAsync();
-                
-            }
-        }
-        public  async Task<Usuario?> GetOne(int id)
+        public Usuario? Get(int id)
         {
-            
-               return await bd.Usuario.FindAsync(id);
-            
+            using var ctx = CreateContext();
+            return ctx.Usuarios
+                .Include(u => u.Grupos)
+                .FirstOrDefault(u => u.Id == id);
         }
-        public  async Task<Usuario?> Add(Usuario user)
-        {      
 
-            
-                await bd.Usuario.AddAsync(user);
-                await bd.SaveChangesAsync();
-                return user;
-            
-        }
-        public  async Task<bool> Update(Usuario usuario)
+        public IEnumerable<Usuario> GetAll()
         {
-            
-                Usuario? userAModificar = await bd.Usuario.FindAsync(usuario.Id);
-            if (userAModificar == null) return false;
-            userAModificar.Nombre = usuario.Nombre;
-            userAModificar.Mail = usuario.Mail;
-                await bd.SaveChangesAsync();
-                return true;
+            using var ctx = CreateContext();
+            return ctx.Usuarios.Include(u => u.Grupos).ToList();
+        }
 
-            
-        }
-        public  async Task<bool> Delete(int id)
+        public bool Update(Usuario usuario)
         {
-            
-                Usuario? userABorrar = await bd.Usuario.FindAsync(id);
-                if (userABorrar != null)
-                {
-                    bd.Usuario.Remove(userABorrar);
-                     await bd.SaveChangesAsync();
-                return true;
-                }
-                return false;
-            
+            using var ctx = CreateContext();
+            var existing = ctx.Usuarios.Find(usuario.Id);
+            if (existing == null) return false;
+            existing.SetMail(usuario.Mail);
+            existing.SetNombre(usuario.Nombre);
+            if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
+                existing.SetContrasena(usuario.Contrasena);
+            existing.SetFechaAlta(usuario.FechaAlta);
+            ctx.SaveChanges();
+            return true;
         }
-        public  bool EmailExists(string email, int? id = null)
+
+        public bool EmailExists(string email, int? excludeId = null)
         {
-            
-                var query = bd.Usuario.Where(u => u.Mail.ToLower() == email.ToLower());
-                if (id.HasValue)
-                {
-                    query = query.Where(u => u.Id != id.Value);
-                }
-                return query.Any();
-            }
-        
+            using var ctx = CreateContext();
+            var q = ctx.Usuarios.Where(u => u.Mail.ToLower() == email.ToLower());
+            if (excludeId.HasValue) q = q.Where(u => u.Id != excludeId.Value);
+            return q.Any();
+        }
+
+        public IEnumerable<Usuario> GetByCriteria(string texto)
+        {
+            using var ctx = CreateContext();
+            if (string.IsNullOrWhiteSpace(texto)) return ctx.Usuarios.ToList();
+            texto = texto.ToLower();
+            return ctx.Usuarios.Where(u => u.Mail.ToLower().Contains(texto) || u.Nombre.ToLower().Contains(texto)).ToList();
+        }
     }
 }

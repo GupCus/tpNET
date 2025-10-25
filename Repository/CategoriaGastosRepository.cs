@@ -1,69 +1,66 @@
-﻿using Dominio;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Model;
 
-namespace Repository
+namespace Data
 {
-    public static class CategoriaGastosRepository
+    public class CategoriaGastoRepository
     {
-        public static async Task<CategoriaGasto[]> GetAll()
+        private TPIContext CreateContext() => new TPIContext();
+
+        public void Add(CategoriaGasto entity)
         {
-            using (PlanificadorContext bd = new())
-            {
-                return await bd.CategoriaGastos.ToArrayAsync();
-            }
+            using var ctx = CreateContext();
+            ctx.CategoriaGastos.Add(entity);
+            ctx.SaveChanges();
         }
 
-        public static async Task<CategoriaGasto?> GetOne(int id)
+        public bool Delete(int id)
         {
-            using (PlanificadorContext bd = new())
-            {
-                return await bd.CategoriaGastos.FindAsync(id);
-            }
-        }
-        public static async Task<CategoriaGasto> Post(CategoriaGasto cg)
-        {
-            cg.Id = null;
-            using (PlanificadorContext bd = new())
-            {
-                await bd.CategoriaGastos.AddAsync(cg);
-                await bd.SaveChangesAsync();
-                return cg;
-            }
+            using var ctx = CreateContext();
+            var e = ctx.CategoriaGastos.Find(id);
+            if (e == null) return false;
+            ctx.CategoriaGastos.Remove(e);
+            ctx.SaveChanges();
+            return true;
         }
 
-        public static async Task<CategoriaGasto?> Put(CategoriaGasto cg)
+        public CategoriaGasto? Get(int id)
         {
-            using (PlanificadorContext bd = new())
-            {
-                CategoriaGasto? cgModif = await bd.CategoriaGastos.FindAsync(cg.Id);
-                if (cgModif != null)
-                {
-                    cgModif.Descripcion = cg.Descripcion;
-                    cgModif.Tipo = cg.Tipo;
-                    await bd.SaveChangesAsync();
-                    return await bd.CategoriaGastos.FindAsync(cg.Id);
-                }
-                return null;
-            }
+            using var ctx = CreateContext();
+            return ctx.CategoriaGastos.FirstOrDefault(x => x.Id == id);
         }
 
-        public static async Task<int?> Delete(int id)
+        public IEnumerable<CategoriaGasto> GetAll()
         {
-            using (PlanificadorContext bd = new())
-            {
-                var cg = await bd.CategoriaGastos.FindAsync(id);
-                if(cg != null)
-                {
-                    bd.CategoriaGastos.Remove(cg);
-                    return await bd.SaveChangesAsync();
-                }
-                return null;
-            }
+            using var ctx = CreateContext();
+            return ctx.CategoriaGastos.ToList();
+        }
+
+        public bool Update(CategoriaGasto entity)
+        {
+            using var ctx = CreateContext();
+            var existing = ctx.CategoriaGastos.Find(entity.Id);
+            if (existing == null) return false;
+            existing.SetTipo(entity.Tipo);
+            existing.SetDescripcion(entity.Descripcion);
+            existing.SetFechaAlta(entity.FechaAlta);
+            ctx.SaveChanges();
+            return true;
+        }
+
+        public bool NameExists(string tipo, int? excludeId = null)
+        {
+            using var ctx = CreateContext();
+            var q = ctx.CategoriaGastos.Where(c => c.Tipo.ToLower() == tipo.ToLower());
+            if (excludeId.HasValue) q = q.Where(c => c.Id != excludeId.Value);
+            return q.Any();
+        }
+
+        public IEnumerable<CategoriaGasto> GetByCriteria(string texto)
+        {
+            using var ctx = CreateContext();
+            if (string.IsNullOrWhiteSpace(texto)) return ctx.CategoriaGastos.ToList();
+            texto = texto.ToLower();
+            return ctx.CategoriaGastos.Where(c => c.Tipo.ToLower().Contains(texto) || (c.Descripcion != null && c.Descripcion.ToLower().Contains(texto))).ToList();
         }
     }
 }
