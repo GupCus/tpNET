@@ -1,4 +1,4 @@
-﻿using Domain.Model;
+﻿using Dominio;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

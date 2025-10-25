@@ -8,9 +8,9 @@ using System.Text;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Domain.Model;
+using Dominio;
 using API.Clients;
-using Application.Services;
+using Services;
 
 
 namespace Escritorio

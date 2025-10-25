@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Repository;
+
 namespace Escritorio
 {
     internal static class Program
@@ -11,7 +13,7 @@ namespace Escritorio
         [STAThread]
         static async Task Main()
         {
-            //PlanificadorContext context = new PlanificadorContext();
+            TPIContext context = new TPIContext();
             //UsuarioRepository usuarioRepository = new UsuarioRepository(context);
 
             ApplicationConfiguration.Initialize();

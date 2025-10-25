@@ -1,11 +1,11 @@
-﻿using Domain.Model;
-using Data;
+﻿using Dominio;
+using Repository;
 using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Application.Services
+namespace Services
 {
     public class GastoService
     {

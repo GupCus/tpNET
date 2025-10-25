@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Domain.Model; 
+using Dominio; 
 
 namespace DTOs
 {

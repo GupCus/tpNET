@@ -144,7 +144,7 @@
             // 
             // gastoBindingSource
             // 
-            gastoBindingSource.DataSource = typeof(Domain.Model.Gasto);
+            gastoBindingSource.DataSource = typeof(Dominio.Gasto);
             // 
             // tableLayoutPanel2
             // 

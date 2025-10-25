@@ -1,4 +1,4 @@
-using Domain.Model;
+using Dominio;
 using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;

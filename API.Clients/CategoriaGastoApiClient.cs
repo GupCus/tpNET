@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Data;
-
+using Repository;
+using Dominio;
 namespace API.Clients
 {
     public class CategoriaGastoApiClient

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Windows.Forms;
-using Domain.Model;
+using Dominio;
 using System.Reflection.Metadata.Ecma335;
 using System.Net.Http;
 using DTOs;

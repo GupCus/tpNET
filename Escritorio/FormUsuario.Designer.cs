@@ -75,7 +75,7 @@
             // 
             // usuarioBindingSource
             // 
-            usuarioBindingSource.DataSource = typeof(Domain.Model.Usuario);
+            usuarioBindingSource.DataSource = typeof(Dominio.Usuario);
             // 
             // dgvUsuario
             // 

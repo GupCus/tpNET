@@ -1,6 +1,6 @@
 ﻿using API.EndPoints;
-using Application.Services;
-using Data;
+using Services;
+using Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
