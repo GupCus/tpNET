@@ -10,11 +10,16 @@ namespace API.Clients
 {
     public class GastoApiClient
     {
-        private static HttpClient client = new HttpClient();
+        private static HttpClient client;
 
         static GastoApiClient()
         {
-            client.BaseAddress = new Uri("http://localhost:5183/");
+            // Si usas HTTPS y certificado autofirmado en desarrollo, usa este handler:
+            client = new HttpClient(new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+            });
+            client.BaseAddress = new Uri("https://localhost:5183/"); // Cambia a http si tu API está en http.
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

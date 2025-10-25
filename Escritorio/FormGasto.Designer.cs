@@ -39,6 +39,7 @@
             gastoBindingSource = new BindingSource(components);
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
+            label10 = new Label();
             label6 = new Label();
             btnNuevo = new Button();
             btnModificar = new Button();
@@ -52,6 +53,7 @@
             cmbCategoria = new ComboBox();
             label8 = new Label();
             cmbUsuario = new ComboBox();
+            comTarea = new ComboBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             btnEliminar = new Button();
             tableLayoutPanel5 = new TableLayoutPanel();
@@ -172,6 +174,7 @@
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 4F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48F));
+            tableLayoutPanel3.Controls.Add(label10, 2, 5);
             tableLayoutPanel3.Controls.Add(label6, 0, 0);
             tableLayoutPanel3.Controls.Add(btnNuevo, 0, 7);
             tableLayoutPanel3.Controls.Add(btnModificar, 2, 7);
@@ -185,6 +188,7 @@
             tableLayoutPanel3.Controls.Add(cmbCategoria, 2, 4);
             tableLayoutPanel3.Controls.Add(label8, 0, 5);
             tableLayoutPanel3.Controls.Add(cmbUsuario, 0, 6);
+            tableLayoutPanel3.Controls.Add(comTarea, 2, 6);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 0);
             tableLayoutPanel3.Margin = new Padding(0);
@@ -200,6 +204,18 @@
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.Size = new Size(692, 234);
             tableLayoutPanel3.TabIndex = 0;
+            // 
+            // label10
+            // 
+            label10.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label10.AutoSize = true;
+            label10.Location = new Point(391, 131);
+            label10.Margin = new Padding(32, 0, 4, 0);
+            label10.Name = "label10";
+            label10.Size = new Size(297, 20);
+            label10.TabIndex = 23;
+            label10.Text = "Tarea";
+            label10.TextAlign = ContentAlignment.BottomLeft;
             // 
             // label6
             // 
@@ -346,6 +362,18 @@
             cmbUsuario.Size = new Size(288, 28);
             cmbUsuario.TabIndex = 27;
             // 
+            // comTarea
+            // 
+            comTarea.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            comTarea.DropDownStyle = ComboBoxStyle.DropDownList;
+            comTarea.FormattingEnabled = true;
+            comTarea.Location = new Point(359, 153);
+            comTarea.Margin = new Padding(0, 2, 44, 2);
+            comTarea.Name = "comTarea";
+            comTarea.Size = new Size(289, 28);
+            comTarea.TabIndex = 29;
+            comTarea.SelectedIndexChanged += comTarea_SelectedIndexChanged;
+            // 
             // tableLayoutPanel4
             // 
             tableLayoutPanel4.ColumnCount = 1;
@@ -471,5 +499,7 @@
         private ComboBox cmbCategoria;
         private ComboBox cmbUsuario;
         private Label label8; // Para la etiqueta de Usuario
+        private ComboBox comTarea;
+        private Label label10;
     }
 }

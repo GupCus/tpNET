@@ -1,9 +1,4 @@
 ﻿using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Repository;
-using Dominio;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 namespace API.Clients

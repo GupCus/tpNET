@@ -1,8 +1,5 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Dominio;
 
 namespace Repository
@@ -34,13 +31,18 @@ namespace Repository
             return ctx.Gastos
                       .Include(g => g.CategoriaGasto)
                       .Include(g => g.Usuario)
+                      .Include(g => g.Tarea) 
                       .FirstOrDefault(g => g.Id == id);
         }
 
         public IEnumerable<Gasto> GetAll()
         {
             using var ctx = CreateContext();
-            return ctx.Gastos.Include(g => g.CategoriaGasto).Include(g => g.Usuario).ToList();
+            return ctx.Gastos
+                .Include(g => g.CategoriaGasto)
+                .Include(g => g.Usuario)
+                .Include(g => g.Tarea) 
+                .ToList();
         }
 
         public bool Update(Gasto gasto)
@@ -54,6 +56,7 @@ namespace Repository
             existing.SetDescripcion(gasto.Descripcion);
             existing.SetFechaHora(gasto.FechaHora);
             existing.SetFechaAlta(gasto.FechaAlta);
+            existing.SetTareaId(gasto.TareaId);
             ctx.SaveChanges();
             return true;
         }
@@ -61,15 +64,23 @@ namespace Repository
         public IEnumerable<Gasto> GetByCriteria(string texto)
         {
             using var ctx = CreateContext();
-            if (string.IsNullOrWhiteSpace(texto)) return ctx.Gastos.Include(g => g.CategoriaGasto).Include(g => g.Usuario).ToList();
+            if (string.IsNullOrWhiteSpace(texto))
+                return ctx.Gastos
+                    .Include(g => g.CategoriaGasto)
+                    .Include(g => g.Usuario)
+                    .Include(g => g.Tarea)
+                    .ToList();
+
             texto = texto.ToLower();
             return ctx.Gastos
                 .Include(g => g.CategoriaGasto)
                 .Include(g => g.Usuario)
+                .Include(g => g.Tarea) 
                 .Where(g => g.Descripcion.ToLower().Contains(texto)
                             || g.Monto.ToString().Contains(texto)
                             || (g.CategoriaGasto != null && g.CategoriaGasto.Tipo.ToLower().Contains(texto))
-                            || (g.Usuario != null && g.Usuario.Nombre.ToLower().Contains(texto)))
+                            || (g.Usuario != null && g.Usuario.Nombre.ToLower().Contains(texto))
+                            || (g.Tarea != null && g.Tarea.Nombre.ToLower().Contains(texto)))
                 .ToList();
         }
     }

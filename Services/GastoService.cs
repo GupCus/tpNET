@@ -21,10 +21,24 @@ namespace Services
             if (usuarioRepo.Get(dto.UsuarioId) == null)
                 throw new ArgumentException($"No existe Usuario con Id {dto.UsuarioId}.");
 
+            // Si hay tarea, podrías validar aquí si existe la Tarea
+            // var tareaRepo = new TareaRepository();
+            // if (dto.TareaId != null && tareaRepo.Get(dto.TareaId.Value) == null)
+            //     throw new ArgumentException($"No existe Tarea con Id {dto.TareaId}.");
+
             var fechaHora = dto.FechaHora == default ? DateTime.Now : dto.FechaHora;
             var fechaAlta = DateTime.Now;
 
-            var entidad = new Gasto(0, dto.CategoriaGastoId, dto.UsuarioId, dto.Monto, dto.Descripcion, fechaHora, fechaAlta);
+            var entidad = new Gasto(
+                0,
+                dto.CategoriaGastoId,
+                dto.UsuarioId,
+                dto.Monto,
+                dto.Descripcion,
+                fechaHora,
+                fechaAlta,
+                dto.TareaId 
+            );
 
             repo.Add(entidad);
 
@@ -32,6 +46,7 @@ namespace Services
             dto.FechaAlta = entidad.FechaAlta;
             dto.CategoriaGastoNombre = entidad.CategoriaGasto?.Tipo;
             dto.UsuarioNombre = entidad.Usuario?.Nombre;
+            dto.TareaNombre = entidad.Tarea?.Nombre;
             return dto;
         }
 
@@ -41,7 +56,7 @@ namespace Services
             return repo.Delete(id);
         }
 
-        public GastoDTO Get(int id)
+        public GastoDTO? Get(int id)
         {
             var repo = new GastoRepository();
             var g = repo.Get(id);
@@ -54,6 +69,8 @@ namespace Services
                 CategoriaGastoNombre = g.CategoriaGasto?.Tipo,
                 UsuarioId = g.UsuarioId,
                 UsuarioNombre = g.Usuario?.Nombre,
+                TareaId = g.TareaId,
+                TareaNombre = g.Tarea?.Nombre,
                 Monto = g.Monto,
                 Descripcion = g.Descripcion,
                 FechaHora = g.FechaHora,
@@ -72,6 +89,8 @@ namespace Services
                 CategoriaGastoNombre = g.CategoriaGasto?.Tipo,
                 UsuarioId = g.UsuarioId,
                 UsuarioNombre = g.Usuario?.Nombre,
+                TareaId = g.TareaId,
+                TareaNombre = g.Tarea?.Nombre,
                 Monto = g.Monto,
                 Descripcion = g.Descripcion,
                 FechaHora = g.FechaHora,
@@ -83,7 +102,16 @@ namespace Services
         {
             var repo = new GastoRepository();
 
-            var entidad = new Gasto(dto.Id, dto.CategoriaGastoId, dto.UsuarioId, dto.Monto, dto.Descripcion, dto.FechaHora, dto.FechaAlta);
+            var entidad = new Gasto(
+                dto.Id,
+                dto.CategoriaGastoId,
+                dto.UsuarioId,
+                dto.Monto,
+                dto.Descripcion,
+                dto.FechaHora,
+                dto.FechaAlta,
+                dto.TareaId 
+            );
             return repo.Update(entidad);
         }
 
@@ -98,6 +126,8 @@ namespace Services
                 CategoriaGastoNombre = g.CategoriaGasto?.Tipo,
                 UsuarioId = g.UsuarioId,
                 UsuarioNombre = g.Usuario?.Nombre,
+                TareaId = g.TareaId,
+                TareaNombre = g.Tarea?.Nombre,
                 Monto = g.Monto,
                 Descripcion = g.Descripcion,
                 FechaHora = g.FechaHora,

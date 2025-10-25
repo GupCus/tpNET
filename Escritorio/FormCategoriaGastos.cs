@@ -1,8 +1,5 @@
-using Dominio;
 using DTOs;
 using API.Clients;
-using Services;
-using System.Net.Http.Json;
 using System.Diagnostics;
 
 namespace Escritorio

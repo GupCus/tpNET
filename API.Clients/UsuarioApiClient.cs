@@ -14,7 +14,7 @@ namespace API.Clients
 
         static UsuarioApiClient()
         {
-            client.BaseAddress = new Uri("http://localhost:5183/");
+            client.BaseAddress = new Uri("https://localhost:5183/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }

@@ -41,12 +41,29 @@ namespace Dominio
             }
         }
 
+        private int? _tareaId;
+        private Tarea? _tarea;
+        public int? TareaId
+        {
+            get => _tarea?.Id ?? _tareaId;
+            private set => _tareaId = value;
+        }
+        public Tarea? Tarea
+        {
+            get => _tarea;
+            private set
+            {
+                _tarea = value;
+                if (value != null && _tareaId != value.Id) _tareaId = value.Id;
+            }
+        }
+
         public float Monto { get; private set; }
         public string Descripcion { get; private set; }
         public DateTime FechaHora { get; private set; }
         public DateTime FechaAlta { get; private set; }
 
-        public Gasto(int id, int categoriaGastoId, int usuarioId, float monto, string descripcion, DateTime fechaHora, DateTime fechaAlta)
+        public Gasto(int id, int categoriaGastoId, int usuarioId, float monto, string descripcion, DateTime fechaHora, DateTime fechaAlta, int? tareaId = null)
         {
             SetId(id);
             SetCategoriaGastoId(categoriaGastoId);
@@ -55,6 +72,7 @@ namespace Dominio
             SetDescripcion(descripcion);
             SetFechaHora(fechaHora);
             SetFechaAlta(fechaAlta);
+            SetTareaId(tareaId);
         }
 
         public Gasto() { }
@@ -91,6 +109,21 @@ namespace Dominio
             if (usuario == null) throw new ArgumentNullException(nameof(usuario));
             _usuario = usuario;
             _usuarioId = usuario.Id;
+        }
+
+        public void SetTareaId(int? tareaId)
+        {
+            if (tareaId.HasValue && tareaId.Value <= 0)
+                throw new ArgumentException("TareaId debe ser mayor que 0 si se especifica.", nameof(tareaId));
+            _tareaId = tareaId;
+            if (_tarea != null && _tarea.Id != tareaId) _tarea = null;
+        }
+
+        public void SetTarea(Tarea tarea)
+        {
+            if (tarea == null) throw new ArgumentNullException(nameof(tarea));
+            _tarea = tarea;
+            _tareaId = tarea.Id;
         }
 
         public void SetMonto(float monto)
