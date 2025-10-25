@@ -1,83 +1,77 @@
-using API.EndPoints;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using Data;
-using DTOs;
+﻿using API.EndPoints;
 using Application.Services;
+using Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
-namespace API
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
 {
-    public class Program
-    {
-        public static void Main(string[] args)
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Planificador API", Version = "v1" });
+});
+
+// ✅ CONFIGURACIÓN CORRECTA DEL DBCONTEXT
+builder.Services.AddDbContext<TPIContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazorWasm",
+        policy =>
         {
-            var builder = WebApplication.CreateBuilder(args);
+            policy.WithOrigins("https://localhost:7170", "http://localhost:5076")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 
-            // Swagger / OpenAPI
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Planificador API", Version = "v1" });
-            });
+// Registrar repositorios y servicios
+builder.Services.AddScoped<CategoriaGastoRepository>();
+builder.Services.AddScoped<CategoriaGastoService>();
+builder.Services.AddScoped<GastoRepository>();
+builder.Services.AddScoped<GastoService>();
+builder.Services.AddScoped<GrupoRepository>();
+builder.Services.AddScoped<GrupoService>();
+builder.Services.AddScoped<PlanRepository>();
+builder.Services.AddScoped<PlanService>();
+builder.Services.AddScoped<TareaRepository>();
+builder.Services.AddScoped<TareaService>();
+builder.Services.AddScoped<UsuarioRepository>();
+builder.Services.AddScoped<UsuarioService>();
 
-            builder.Services.AddHttpLogging(o => { });
+var app = builder.Build();
 
-            // Usar TPIContext en lugar de PlanificadorContext
-            builder.Services.AddDbContext<TPIContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-            );
+// Crear DB si es necesario
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
+    // ✅ ELIMINAR Y RECREAR la base de datos (solo desarrollo)
+    //context.Database.EnsureDeleted(); // Elimina la base de datos existente
+    context.Database.EnsureCreated(); // Crea una nueva
 
-            // Registrar repositorios y servicios en DI
-            // Ajusta los tipos/namespaces si en tu proyecto difieren.
-            builder.Services.AddScoped<CategoriaGastoRepository>();
-            builder.Services.AddScoped<CategoriaGastoService>();
-
-            builder.Services.AddScoped<GastoRepository>();
-            builder.Services.AddScoped<GastoService>();
-
-            builder.Services.AddScoped<GrupoRepository>();
-            builder.Services.AddScoped<GrupoService>();
-
-            builder.Services.AddScoped<PlanRepository>();
-            builder.Services.AddScoped<PlanService>();
-
-            builder.Services.AddScoped<TareaRepository>();
-            builder.Services.AddScoped<TareaService>();
-
-            builder.Services.AddScoped<UsuarioRepository>();
-            builder.Services.AddScoped<UsuarioService>();
-
-            var app = builder.Build();
-
-            // Crear DB si es necesario (development)
-            using (var scope = app.Services.CreateScope())
-            {
-                var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
-                context.Database.EnsureCreated();
-            }
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-                app.UseHttpLogging();
-            }
-
-            app.UseHttpsRedirection();
-
-            // Map endpoints
-            app.MapGet("/", () => Results.Redirect("/swagger/"));
-
-            // Llamada corregida al m�todo de mapeo
-            app.MapUsuarioEndPoints();
-            app.MapCategoriaGastosEndpoints();
-            app.MapTareaEndPoints();
-            app.MapGastoEndPoints();
-            app.MapGrupoEndPoints();
-            app.MapPlanEndPoints();
-
-            app.Run();
-        }
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
     }
+
+    app.UseHttpsRedirection();
+    app.UseCors("AllowBlazorWasm");
+
+    // Map endpoints
+    app.MapGet("/", () => Results.Redirect("/swagger/"));
+    app.MapUsuarioEndPoints();
+    app.MapCategoriaGastosEndpoints();
+    app.MapTareaEndPoints();
+    app.MapGastoEndPoints();
+    app.MapGrupoEndPoints();
+    app.MapPlanEndPoints();
+
+    app.Run();
+
 }

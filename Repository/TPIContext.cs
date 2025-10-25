@@ -4,6 +4,7 @@ using Domain.Model;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace Data
 {
@@ -16,6 +17,10 @@ namespace Data
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
 
+        public TPIContext(DbContextOptions<TPIContext> options) : base(options)
+        {
+        }
+
         internal TPIContext()
         {
             this.Database.EnsureCreated();
@@ -25,6 +30,7 @@ namespace Data
         {
             if (!optionsBuilder.IsConfigured)
             {
+                // Solo se ejecutará si no se configuró desde Program.cs
                 var configuration = new ConfigurationBuilder()
                     .SetBasePath(Directory.GetCurrentDirectory())
                     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -60,11 +66,6 @@ namespace Data
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Contrasena).IsRequired().HasMaxLength(255);
                 entity.Property(e => e.FechaAlta).IsRequired();
-
-                // indicar que la navegación Grupos usa backing field "_grupos"
-                var nav = entity.Metadata.FindNavigation(nameof(Usuario.Grupos));
-                if (nav != null)
-                    nav.SetPropertyAccessMode(PropertyAccessMode.Field);
             });
 
             // === Grupo ===
@@ -75,18 +76,14 @@ namespace Data
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(150);
                 entity.Property(e => e.Descripcion).HasMaxLength(500);
                 entity.Property(e => e.FechaAlta).IsRequired();
-
-                // Map backing fields for collections
-                entity.Navigation(nameof(Grupo.Usuarios)).HasField("_usuarios");
-                entity.Navigation(nameof(Grupo.Planes)).HasField("_planes");
             });
 
-            // === Many-to-many Usuario <-> Grupo (tabla intermedia explícita) ===
+            // === Many-to-many Usuario <-> Grupo ===
             modelBuilder.Entity<Usuario>()
-                .HasMany(typeof(Grupo), "_grupos")
-                .WithMany("_usuarios")
+                .HasMany(u => u.Grupos)
+                .WithMany(g => g.Usuarios)
                 .UsingEntity<Dictionary<string, object>>(
-                    "UsuarioGrupo",
+                    "UsuarioGrupos",
                     j => j
                         .HasOne<Grupo>()
                         .WithMany()
@@ -106,6 +103,9 @@ namespace Data
                     });
 
             // === Plan ===
+            var dateOnlyConverter = new ValueConverter<DateOnly, DateTime>(
+                v => v.ToDateTime(TimeOnly.MinValue),
+                v => DateOnly.FromDateTime(v));
             modelBuilder.Entity<Plan>(entity =>
             {
                 entity.HasKey(e => e.Id);
@@ -113,11 +113,6 @@ namespace Data
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(150);
                 entity.Property(e => e.Descripcion).HasMaxLength(500);
                 entity.Property(e => e.FechaAlta).IsRequired();
-
-                // DateOnly -> DateTime conversion
-                var dateOnlyConverter = new ValueConverter<DateOnly, DateTime>(
-                    v => v.ToDateTime(TimeOnly.MinValue),
-                    v => DateOnly.FromDateTime(v));
                 entity.Property(e => e.FechaInicio).HasConversion(dateOnlyConverter).IsRequired();
                 entity.Property(e => e.FechaFin).HasConversion(dateOnlyConverter).IsRequired();
             });
@@ -130,28 +125,22 @@ namespace Data
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
                 entity.Property(e => e.Descripcion).HasMaxLength(500);
                 entity.Property(e => e.FechaAlta).IsRequired();
-
-                // Gastos collection backing field
-                entity.Navigation(nameof(Tarea.Gastos)).HasField("_gastos");
             });
 
-            // === Gasto ===
+            // === Gasto - CONFIGURACIÓN CORREGIDA ===
             modelBuilder.Entity<Gasto>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                // Categoria relationship (backing field + shadow FK column)
-                entity.Property<int>("_categoriaGastoId").HasColumnName("CategoriaGastoId").IsRequired();
-                entity.Navigation(nameof(Gasto.CategoriaGasto)).HasField("_categoriaGasto");
+                // ✅ CONFIGURACIÓN SIMPLIFICADA - Elimina las referencias a campos privados
+                entity.Property<int>("CategoriaGastoId").IsRequired();
                 entity.HasOne(g => g.CategoriaGasto)
                       .WithMany()
                       .HasForeignKey("CategoriaGastoId")
                       .OnDelete(DeleteBehavior.Restrict);
 
-                // Usuario relationship
-                entity.Property<int>("_usuarioId").HasColumnName("UsuarioId").IsRequired();
-                entity.Navigation(nameof(Gasto.Usuario)).HasField("_usuario");
+                entity.Property<int>("UsuarioId").IsRequired();
                 entity.HasOne(g => g.Usuario)
                       .WithMany()
                       .HasForeignKey("UsuarioId")
