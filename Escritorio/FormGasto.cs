@@ -1,4 +1,6 @@
 ﻿using Dominio;
+using DTOs;
+using Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,11 +19,7 @@ namespace Escritorio
     {
         /* Lógica del form */
         private bool confirmarEliminar = false;
-
-        private readonly HttpClient httpClient = new()
-        {
-            BaseAddress = new Uri("https://localhost:7126/")
-        };
+        private readonly GastoService service = new();
 
         public FormGasto()
         {
@@ -36,13 +34,11 @@ namespace Escritorio
             await GetGastos();
         }
 
-
         private async Task GetCategorias()
         {
             try
             {
-                var categorias = await httpClient.GetFromJsonAsync<IEnumerable<CategoriaGasto>>("categoriagastos");
-
+                var categorias = new CategoriaGastoService().GetAll();
 
                 cmbCategoria.DataSource = categorias?.ToList();
                 cmbCategoria.DisplayMember = "Nombre";
@@ -57,7 +53,7 @@ namespace Escritorio
         {
             try
             {
-                var usuarios = await httpClient.GetFromJsonAsync<IEnumerable<Usuario>>("usuario");
+                var usuarios = new UsuarioService().GetAll();
 
                 cmbUsuario.DataSource = usuarios?.ToList();
                 cmbUsuario.DisplayMember = "NombreUsuario";
@@ -69,7 +65,7 @@ namespace Escritorio
             }
         }
 
-        private Gasto LimpiarGasto()
+        private GastoDTO LimpiarGasto()
         {
             if (cmbCategoria.SelectedValue == null)
             {
@@ -94,15 +90,15 @@ namespace Escritorio
                     g.SetUsuarioId((int)cmbUsuario.SelectedValue);
             */
 
-            Gasto g = new()
+            GastoDTO g = new()
             {
-                /*
+                
                 Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Sin descripción" : txtDescripcion.Text,
                 FechaHora = txtFechaHora.Value,
                 Monto = monto,
                 CategoriaGastoId = (int)cmbCategoria.SelectedValue,
                 UsuarioId = (int)cmbUsuario.SelectedValue
-                        */
+                   
             };
 
             return g;
@@ -146,7 +142,7 @@ namespace Escritorio
             try
             {
 
-                var gastos = await httpClient.GetFromJsonAsync<IEnumerable<Gasto>>("gasto");
+                var gastos = service.GetAll();
                 this.dgvGasto.DataSource = gastos?.ToList();
                 txtID.Text = string.Empty;
             }
@@ -162,8 +158,8 @@ namespace Escritorio
             txtID.Text = "";
             try
             {
-                Gasto g = this.LimpiarGasto();
-                await httpClient.PostAsJsonAsync("gasto", g);
+                GastoDTO g = this.LimpiarGasto();
+                service.Add(g);
                 await this.GetGastos();
             }
             catch (InvalidOperationException ioe)
@@ -187,12 +183,11 @@ namespace Escritorio
 
             try
             {
-                Gasto g = this.LimpiarGasto();
+                GastoDTO g = this.LimpiarGasto();
                 int idSeleccionado = ((Gasto)dgvGasto.CurrentRow.DataBoundItem).Id;
+                g.Id = idSeleccionado;
 
-
-                //g.Id = idSeleccionado;
-                await httpClient.PutAsJsonAsync($"gasto/{idSeleccionado}", g);
+                service.Update(g);
                 await this.GetGastos();
             }
             catch (InvalidOperationException ioe)
@@ -224,8 +219,8 @@ namespace Escritorio
             {
                 try
                 {
-                    int? idSeleccionado = ((Gasto)dgvGasto.CurrentRow.DataBoundItem).Id;
-                    await httpClient.DeleteAsync($"gasto/{idSeleccionado}");
+                    int idSeleccionado = ((Gasto)dgvGasto.CurrentRow.DataBoundItem).Id;
+                    service.Delete(idSeleccionado);
                     await this.GetGastos();
                     btnEliminar.Text = "Eliminar Gasto";
                     confirmarEliminar = false;

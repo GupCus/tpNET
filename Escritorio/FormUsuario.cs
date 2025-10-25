@@ -13,35 +13,28 @@ using System.Reflection.Metadata.Ecma335;
 using System.Net.Http;
 using DTOs;
 using API.Clients;
+using Services;
 namespace Escritorio
 {
     public partial class FormUsuario : Form
     {
         private bool confirma = false;
-        private readonly UsuarioApiClient usuarioClient;
+        private readonly UsuarioService service = new();
         public FormUsuario()
         {
             InitializeComponent();
-            HttpClient client = new HttpClient
-            {
-                BaseAddress = new Uri("https://localhost:7126/")
-            };
-
-
-            //usuarioClient = new UsuarioApiClient(client);
         }
 
         private async void FormUsuario_Load(object sender, EventArgs e)
         {
-
             await GetUsuarios();
         }
         private async Task GetUsuarios()
         {
             try
             {
-                //var users = await usuarioClient.GetAllAsync();
-                //this.dgvUsuario.DataSource = users;
+                var users = service.GetAll();
+                this.dgvUsuario.DataSource = users;
             }
             catch (HttpRequestException ex)
             {
@@ -53,9 +46,9 @@ namespace Escritorio
             }
         }
 
-        private UsuarioDTO LimpiarUsuario()
+        private UsuarioUpdateDTO LimpiarUsuario()
         {
-            UsuarioDTO user = new UsuarioDTO
+            UsuarioUpdateDTO user = new()
             {
                 Id = string.IsNullOrEmpty(txtID.Text) ? 0 : int.Parse(txtID.Text),
                 Nombre = string.IsNullOrEmpty(txtNombre.Text) ? "Juan Perez" : txtNombre.Text,
@@ -105,8 +98,8 @@ namespace Escritorio
             txtID.Text = "";
             try
             {
-                UsuarioDTO u = this.LimpiarUsuario();
-                //await usuarioClient.AddAsync( u);
+                UsuarioUpdateDTO u = this.LimpiarUsuario();
+                service.Add(u);
                 await this.GetUsuarios();
 
             }
@@ -119,8 +112,8 @@ namespace Escritorio
 
         private async void Editar_Click(object sender, EventArgs e)
         {
-            UsuarioDTO u = this.LimpiarUsuario();
-            //await usuarioClient.UpdateAsync(u);
+            UsuarioUpdateDTO u = this.LimpiarUsuario();
+            service.Update(u);
             await this.GetUsuarios();
 
         }
@@ -136,7 +129,7 @@ namespace Escritorio
             else
             {
                 int id = int.Parse(txtID.Text);
-                //await usuarioClient.DeleteAsync(id);
+                service.Delete(id);
                 await this.GetUsuarios();
                 Eliminar.Text = "Eliminar";
                 confirma = false;

@@ -61,7 +61,6 @@ namespace Repository
                 entity.Property(e => e.Tipo).IsRequired().HasMaxLength(150);
                 entity.HasIndex(e => e.Tipo).IsUnique();
                 entity.Property(e => e.Descripcion).HasMaxLength(500);
-                entity.Property(e => e.FechaAlta).IsRequired();
             });
 
             // === Usuario ===

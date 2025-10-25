@@ -42,7 +42,6 @@ namespace Repository
             if (existing == null) return false;
             existing.SetTipo(entity.Tipo);
             existing.SetDescripcion(entity.Descripcion);
-            existing.SetFechaAlta(entity.FechaAlta);
             ctx.SaveChanges();
             return true;
         }

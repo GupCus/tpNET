@@ -1,14 +1,6 @@
 ﻿using Dominio;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using DTOs;
+using Services;
 
 namespace Escritorio
 {
@@ -18,10 +10,7 @@ namespace Escritorio
         /* Lógica del form */
         private bool confirmarEliminar = false;
 
-        private readonly HttpClient httpClient = new()
-        {
-            BaseAddress = new Uri("http://localhost:5032")
-        };
+        private readonly TareaService service = new();
         public FormTarea()
         {
             InitializeComponent();
@@ -31,20 +20,20 @@ namespace Escritorio
             txtEstado.DataSource = Enum.GetValues(typeof(EstadoTarea));
             GetTareas();
         }
-
+        
         //Metodo que se encarga de sanitizar la tarea para no enviar nulos
-        private Tarea LimpiarTarea()
+        private TareaDTO LimpiarTarea()
         {
 
-            Tarea t = new()
+            TareaDTO t = new()
             {
-                /*
+                
                 Nombre = string.IsNullOrEmpty(txtNombre.Text) ? "Sin nombre" : txtNombre.Text,
                 FechaHora = txtFechaHora.Value,
                 Duracion = int.TryParse(txtDuracion.Text, out int duracion) ? duracion : null, 
                 Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Sin descripción" : txtDescripcion.Text,
                 Estado = (EstadoTarea?)txtEstado.SelectedItem ?? EstadoTarea.Activo
-            */};
+            };
 
             return t;
         }
@@ -54,7 +43,7 @@ namespace Escritorio
         {
             if (dgvTarea.CurrentRow != null && dgvTarea.CurrentRow.DataBoundItem is Tarea t)
             {
-                //txtID.Text = t.Id?.ToString() ?? "";
+                txtID.Text = t.Id.ToString() ?? "";
                 txtNombre.Text = t.Nombre ?? "";
                 txtFechaHora.Value = t.FechaHora ?? DateTime.Now;
                 txtDuracion.Text = t.Duracion?.ToString() ?? "";
@@ -75,25 +64,25 @@ namespace Escritorio
 
         /* API Tarea */
         //GET ALL Tarea || Actualización de la tabla principal
-        private async void GetTareas()
+        private void GetTareas()
         {
-            var tareas = await httpClient.GetFromJsonAsync<IEnumerable<Tarea>>("tarea");
+            var tareas = service.GetAll();
             this.dgvTarea.DataSource = tareas;
         }
 
         //POST Tarea
-        private async void btnNuevo_Click(object sender, EventArgs e)
+        private void btnNuevo_Click(object sender, EventArgs e)
         {
            txtID.Text = "";
-           Tarea t = this.LimpiarTarea();
-           await httpClient.PostAsJsonAsync("tarea", t);
+           TareaDTO t = this.LimpiarTarea();
+           service.Add(t);
            this.GetTareas();
         }
         //PUT Tarea
-        private async void btnModificar_Click(object sender, EventArgs e)
+        private void btnModificar_Click(object sender, EventArgs e)
         {
-            Tarea t = this.LimpiarTarea();
-            await httpClient.PutAsJsonAsync($"tarea/{((Tarea)dgvTarea.CurrentRow.DataBoundItem).Id}", t);
+            TareaDTO t = this.LimpiarTarea();
+            service.Update(t);
             this.GetTareas();
         }
 
@@ -108,7 +97,7 @@ namespace Escritorio
             //Hacer click de vuelta para ejecutar esto
             else
             {
-                await httpClient.DeleteAsync($"tarea/{((Tarea)dgvTarea.CurrentRow.DataBoundItem).Id}");
+                service.Delete(((Tarea)dgvTarea.CurrentRow.DataBoundItem).Id);
                 this.GetTareas();
                 btnEliminar.Text = "ELIMINAR TAREA";
                 confirmarEliminar = false;
