@@ -1,0 +1,50 @@
+﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+
+<PageTitle>Inicio de Sesión</PageTitle>
+
+<h3>Inicio de Sesión</h3>
+<br />
+<EditForm Model="loginusuario" OnValidSubmit="Enviar" FormName="loginusu">
+    <DataAnnotationsValidator />
+    <div>
+        <div class="mb-3">
+            <label for="User">Usuario:</label>
+            <InputText id="User" class="form-control" @bind-Value="loginusuario.User" />
+            <ValidationMessage For="@(() => loginusuario.User)" />
+        </div>
+        <div class="mb-3">
+            <label for="Pass">Contraseña:</label>
+            <InputText type="password" id="Pass" class="form-control" @bind-Value="loginusuario.Pass" />
+            <ValidationMessage For="@(() => loginusuario.Pass)" />
+        </div>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+
+</EditForm>
+<hr />
+<br />
+
+@code {
+
+    internal class Login
+    {
+        [Required(ErrorMessage = "El usuario es obligatorio.")]
+        [StringLength(50, ErrorMessage = "El usuario debe tener menos de 50 caracteres.")]
+        public string? User{ get; set; }
+        
+        [Required(ErrorMessage = "La contraseña es necesaria.")]
+        [StringLength(50, MinimumLength = 8, ErrorMessage = "La contraseña debe tener al menos 8 caracteres.")]
+        public string? Pass{ get; set; }
+        
+        public Login() {}
+    }
+
+    private Login loginusuario { get; set; } = new() { User = "", Pass = "" };
+
+    private async Task Enviar()
+    {
+
+    }
+}
