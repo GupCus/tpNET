@@ -1,0 +1,50 @@
+﻿@page "/grupos"
+
+<PageTitle>Mis Grupos</PageTitle>
+
+<!-- Tabla de Grupos -->
+<h3>Mis Grupos</h3>
+@if (grupos != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Legajo</th>
+                <th>Direccion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var grupo in grupos)
+            {
+                <tr>
+                    <td>@grupo.Nombre</td>
+                    <td>
+                        <a class="btn btn-dark" href="@($"/grupo/{grupo.Id}")">Ver más</a>
+                        <button type="button" class="btn btn-danger" @onclick="() => {}">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>Cargando...</em></p>
+}
+
+@code {
+    private Grupo[]? grupos;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await CargarDatos();
+    }
+
+    private async Task CargarDatos()
+    {
+        var result = await GrupoApiClient.GetAllAsync();
+    }
+}
