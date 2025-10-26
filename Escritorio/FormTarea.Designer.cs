@@ -99,6 +99,7 @@
             label1.TabIndex = 3;
             label1.Text = "Tareas";
             label1.TextAlign = ContentAlignment.MiddleCenter;
+            label1.Click += label1_Click;
             // 
             // dgvTarea
             // 
@@ -122,6 +123,7 @@
             idDataGridViewTextBoxColumn.HeaderText = "ID";
             idDataGridViewTextBoxColumn.MinimumWidth = 6;
             idDataGridViewTextBoxColumn.Name = "idDataGridViewTextBoxColumn";
+            idDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // nombreDataGridViewTextBoxColumn
             // 
@@ -129,6 +131,7 @@
             nombreDataGridViewTextBoxColumn.HeaderText = "Nombre";
             nombreDataGridViewTextBoxColumn.MinimumWidth = 6;
             nombreDataGridViewTextBoxColumn.Name = "nombreDataGridViewTextBoxColumn";
+            nombreDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // descripcionDataGridViewTextBoxColumn
             // 
@@ -136,6 +139,7 @@
             descripcionDataGridViewTextBoxColumn.HeaderText = "Descripcion";
             descripcionDataGridViewTextBoxColumn.MinimumWidth = 6;
             descripcionDataGridViewTextBoxColumn.Name = "descripcionDataGridViewTextBoxColumn";
+            descripcionDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // fechaHoraDataGridViewTextBoxColumn
             // 
@@ -143,6 +147,7 @@
             fechaHoraDataGridViewTextBoxColumn.HeaderText = "FechaHora";
             fechaHoraDataGridViewTextBoxColumn.MinimumWidth = 6;
             fechaHoraDataGridViewTextBoxColumn.Name = "fechaHoraDataGridViewTextBoxColumn";
+            fechaHoraDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // duracionDataGridViewTextBoxColumn
             // 
@@ -150,6 +155,7 @@
             duracionDataGridViewTextBoxColumn.HeaderText = "Duracion";
             duracionDataGridViewTextBoxColumn.MinimumWidth = 6;
             duracionDataGridViewTextBoxColumn.Name = "duracionDataGridViewTextBoxColumn";
+            duracionDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // estadoDataGridViewTextBoxColumn
             // 
@@ -157,6 +163,7 @@
             estadoDataGridViewTextBoxColumn.HeaderText = "Estado";
             estadoDataGridViewTextBoxColumn.MinimumWidth = 6;
             estadoDataGridViewTextBoxColumn.Name = "estadoDataGridViewTextBoxColumn";
+            estadoDataGridViewTextBoxColumn.ReadOnly = true;
             // 
             // tareaBindingSource
             // 

@@ -15,7 +15,7 @@ namespace API.EndPoints
                 return Results.Ok(dtos);
             })
             .WithName("GetAllPlanes")
-            .Produces<IEnumerable<PlanDTO>>(StatusCodes.Status200OK)
+            .Produces<IEnumerable<PlanCreateDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
             app.MapGet("/planes/{id:int}", (int id, PlanService service) =>
@@ -24,20 +24,20 @@ namespace API.EndPoints
                 return dto == null ? Results.NotFound() : Results.Ok(dto);
             })
             .WithName("GetPlanById")
-            .Produces<PlanDTO>(StatusCodes.Status200OK)
+            .Produces<PlanCreateDTO>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi();
 
-            app.MapPost("/planes", (PlanDTO input, PlanService service) =>
+            app.MapPost("/planes", (PlanCreateDTO input, PlanService service) =>
             {
                 var created = service.Add(input);
                 return Results.Created($"/planes/{created.Id}", created);
             })
             .WithName("CreatePlan")
-            .Produces<PlanDTO>(StatusCodes.Status201Created)
+            .Produces<PlanCreateDTO>(StatusCodes.Status201Created)
             .WithOpenApi();
 
-            app.MapPut("/planes", (PlanDTO input, PlanService service) =>
+            app.MapPut("/planes", (PlanUpdateDTO input, PlanService service) =>
             {
                 var ok = service.Update(input);
                 return ok ? Results.NoContent() : Results.NotFound();
@@ -63,7 +63,7 @@ namespace API.EndPoints
                 return Results.Ok(items);
             })
             .WithName("GetPlanesByCriteria")
-            .Produces<IEnumerable<PlanDTO>>(StatusCodes.Status200OK)
+            .Produces<IEnumerable<PlanCreateDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
         }
     }

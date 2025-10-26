@@ -39,6 +39,7 @@
             categoriasDeGastosToolStripMenuItem = new ToolStripMenuItem();
             usuariosToolStripMenuItem1 = new ToolStripMenuItem();
             tareasToolStripMenuItem = new ToolStripMenuItem();
+            planesToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             menuStrip2.SuspendLayout();
             SuspendLayout();
@@ -58,22 +59,22 @@
             // categoriaGastosToolStripMenuItem
             // 
             categoriaGastosToolStripMenuItem.Name = "categoriaGastosToolStripMenuItem";
-            categoriaGastosToolStripMenuItem.Size = new Size(14, 20);
+            categoriaGastosToolStripMenuItem.Size = new Size(12, 20);
             // 
             // gastosToolStripMenuItem
             // 
             gastosToolStripMenuItem.Name = "gastosToolStripMenuItem";
-            gastosToolStripMenuItem.Size = new Size(14, 20);
+            gastosToolStripMenuItem.Size = new Size(12, 20);
             // 
             // usuariosToolStripMenuItem
             // 
             usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            usuariosToolStripMenuItem.Size = new Size(14, 20);
+            usuariosToolStripMenuItem.Size = new Size(12, 20);
             // 
             // tareaToolStripMenuItem
             // 
             tareaToolStripMenuItem.Name = "tareaToolStripMenuItem";
-            tareaToolStripMenuItem.Size = new Size(14, 20);
+            tareaToolStripMenuItem.Size = new Size(12, 20);
             // 
             // menuStrip1
             // 
@@ -88,49 +89,56 @@
             // menuStrip2
             // 
             menuStrip2.ImageScalingSize = new Size(20, 20);
-            menuStrip2.Items.AddRange(new ToolStripItem[] { gastosToolStripMenuItem1, categoriasDeGastosToolStripMenuItem, usuariosToolStripMenuItem1, tareasToolStripMenuItem });
+            menuStrip2.Items.AddRange(new ToolStripItem[] { gastosToolStripMenuItem1, categoriasDeGastosToolStripMenuItem, usuariosToolStripMenuItem1, tareasToolStripMenuItem, planesToolStripMenuItem });
             menuStrip2.Location = new Point(0, 0);
             menuStrip2.Name = "menuStrip2";
-            menuStrip2.Padding = new Padding(7, 3, 0, 3);
-            menuStrip2.Size = new Size(1262, 30);
+            menuStrip2.Size = new Size(1104, 24);
             menuStrip2.TabIndex = 0;
             menuStrip2.Text = "menuStrip2";
             // 
             // gastosToolStripMenuItem1
             // 
             gastosToolStripMenuItem1.Name = "gastosToolStripMenuItem1";
-            gastosToolStripMenuItem1.Size = new Size(67, 24);
+            gastosToolStripMenuItem1.Size = new Size(54, 20);
             gastosToolStripMenuItem1.Text = "Gastos";
             gastosToolStripMenuItem1.Click += gastosToolStripMenuItem1_Click;
             // 
             // categoriasDeGastosToolStripMenuItem
             // 
             categoriasDeGastosToolStripMenuItem.Name = "categoriasDeGastosToolStripMenuItem";
-            categoriasDeGastosToolStripMenuItem.Size = new Size(162, 24);
+            categoriasDeGastosToolStripMenuItem.Size = new Size(128, 20);
             categoriasDeGastosToolStripMenuItem.Text = "Categorias de gastos";
             categoriasDeGastosToolStripMenuItem.Click += categoriasDeGastosToolStripMenuItem_Click;
             // 
             // usuariosToolStripMenuItem1
             // 
             usuariosToolStripMenuItem1.Name = "usuariosToolStripMenuItem1";
-            usuariosToolStripMenuItem1.Size = new Size(79, 24);
+            usuariosToolStripMenuItem1.Size = new Size(64, 20);
             usuariosToolStripMenuItem1.Text = "Usuarios";
             usuariosToolStripMenuItem1.Click += usuariosToolStripMenuItem1_Click;
             // 
             // tareasToolStripMenuItem
             // 
             tareasToolStripMenuItem.Name = "tareasToolStripMenuItem";
-            tareasToolStripMenuItem.Size = new Size(64, 24);
+            tareasToolStripMenuItem.Size = new Size(52, 20);
             tareasToolStripMenuItem.Text = "Tareas";
             tareasToolStripMenuItem.Click += tareasToolStripMenuItem_Click;
             // 
+            // planesToolStripMenuItem
+            // 
+            planesToolStripMenuItem.Name = "planesToolStripMenuItem";
+            planesToolStripMenuItem.Size = new Size(53, 20);
+            planesToolStripMenuItem.Text = "Planes";
+            planesToolStripMenuItem.Click += planesToolStripMenuItem_Click;
+            // 
             // FormPrincipal
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1262, 673);
+            ClientSize = new Size(1104, 505);
             Controls.Add(menuStrip2);
             MainMenuStrip = menuStrip2;
+            Margin = new Padding(3, 2, 3, 2);
             Name = "FormPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Planificador";
@@ -157,5 +165,6 @@
         private ToolStripMenuItem categoriasDeGastosToolStripMenuItem;
         private ToolStripMenuItem usuariosToolStripMenuItem1;
         private ToolStripMenuItem tareasToolStripMenuItem;
+        private ToolStripMenuItem planesToolStripMenuItem;
     }
 }

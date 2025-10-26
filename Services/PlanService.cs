@@ -9,12 +9,12 @@ namespace Services
 {
     public class PlanService
     {
-        public PlanDTO Add(PlanDTO dto)
+        public PlanCreateDTO Add(PlanCreateDTO dto)
         {
             var repo = new PlanRepository();
 
             var fechaAlta = DateTime.Now;
-            var entidad = new Plan(0, dto.Nombre, dto.FechaInicio, dto.FechaFin, dto.Descripcion, fechaAlta);
+            var entidad = new Plan(0, dto.Nombre, dto.FechaInicio, dto.FechaBaja, dto.Descripcion, dto.FechaAlta);
 
             repo.Add(entidad);
 
@@ -40,7 +40,7 @@ namespace Services
                 Id = p.Id,
                 Nombre = p.Nombre,
                 FechaInicio = p.FechaInicio,
-                FechaFin = p.FechaFin,
+                FechaFin= p.FechaFin,
                 Descripcion = p.Descripcion,
                 FechaAlta = p.FechaAlta
             };
@@ -61,10 +61,16 @@ namespace Services
             }).ToList();
         }
 
-        public bool Update(PlanDTO dto)
+        public bool Update(PlanUpdateDTO dto)
         {
             var repo = new PlanRepository();
-            var entidad = new Plan(dto.Id, dto.Nombre, dto.FechaInicio, dto.FechaFin, dto.Descripcion, dto.FechaAlta);
+
+            var entidad = repo.Get(dto.Id);
+            if (entidad == null) throw new Exception("Plan no encontrado");
+            entidad.SetNombre(dto.Nombre);
+            entidad.SetFechaInicio(DateOnly.FromDateTime(dto.FechaInicio));
+            entidad.SetDescripcion(dto.Descripcion);
+            entidad.SetFechaFin(DateOnly.FromDateTime(dto.FechaFin));
             return repo.Update(entidad);
         }
 

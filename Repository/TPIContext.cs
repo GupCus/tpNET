@@ -127,7 +127,7 @@ namespace Repository
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(150);
                 entity.Property(e => e.Descripcion).HasMaxLength(500);
-                entity.Property(e => e.FechaAlta).IsRequired();
+                entity.Property(e => e.FechaAlta).HasConversion(dateOnlyConverter).IsRequired();
                 entity.Property(e => e.FechaInicio).HasConversion(dateOnlyConverter).IsRequired();
                 entity.Property(e => e.FechaFin).HasConversion(dateOnlyConverter).IsRequired();
             });

@@ -14,7 +14,7 @@ namespace API.Clients
 
         static PlanApiClient()
         {
-            client.BaseAddress = new Uri("http://localhost:5183/");
+            client.BaseAddress = new Uri("https://localhost:5183/");
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -47,7 +47,7 @@ namespace API.Clients
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
 
-        public static async Task AddAsync(PlanDTO dto)
+        public static async Task AddAsync(PlanCreateDTO dto)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace API.Clients
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
 
-        public static async Task UpdateAsync(PlanDTO dto)
+        public static async Task UpdateAsync(PlanUpdateDTO dto)
         {
             try
             {
@@ -92,13 +92,13 @@ namespace API.Clients
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
 
-        public static async Task<IEnumerable<PlanDTO>> GetByCriteriaAsync(string texto)
+        public static async Task<IEnumerable<PlanCreateDTO>> GetByCriteriaAsync(string texto)
         {
             try
             {
                 var response = await client.GetAsync($"planes/criteria?texto={Uri.EscapeDataString(texto)}");
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadFromJsonAsync<IEnumerable<PlanDTO>>() ?? new List<PlanDTO>();
+                    return await response.Content.ReadFromJsonAsync<IEnumerable<PlanCreateDTO>>() ?? new List<PlanCreateDTO>();
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Error en búsqueda. Status: {response.StatusCode}, Detalle: {error}");
             }

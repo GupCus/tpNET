@@ -96,6 +96,13 @@ namespace Escritorio
 
         }
 
-
+        private void planesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormPlan form = new FormPlan();
+            form.MdiParent = this;
+            form.Dock = DockStyle.Fill;
+            
+            form.Show();
+        }
     }
 }

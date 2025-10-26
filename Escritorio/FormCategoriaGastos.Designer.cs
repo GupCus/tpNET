@@ -51,9 +51,10 @@
             // Cargar
             // 
             Cargar.Dock = DockStyle.Fill;
-            Cargar.Location = new Point(3, 110);
+            Cargar.Location = new Point(3, 82);
+            Cargar.Margin = new Padding(3, 2, 3, 2);
             Cargar.Name = "Cargar";
-            Cargar.Size = new Size(307, 38);
+            Cargar.Size = new Size(268, 29);
             Cargar.TabIndex = 1;
             Cargar.Text = "Cargar Nuevo";
             Cargar.UseVisualStyleBackColor = true;
@@ -65,9 +66,9 @@
             label1.AutoSize = true;
             label1.Enabled = false;
             label1.Font = new Font("Segoe UI", 25F);
-            label1.Location = new Point(234, 4);
+            label1.Location = new Point(205, 3);
             label1.Name = "label1";
-            label1.Size = new Size(341, 57);
+            label1.Size = new Size(274, 46);
             label1.TabIndex = 2;
             label1.Text = "Categoria Gastos";
             label1.TextAlign = ContentAlignment.TopCenter;
@@ -78,27 +79,29 @@
             label2.Dock = DockStyle.Fill;
             label2.Location = new Point(3, 0);
             label2.Name = "label2";
-            label2.Size = new Size(307, 38);
+            label2.Size = new Size(268, 29);
             label2.TabIndex = 3;
             label2.Text = "Tipo";
             // 
             // txtTipo
             // 
             txtTipo.Dock = DockStyle.Fill;
-            txtTipo.Location = new Point(3, 41);
+            txtTipo.Location = new Point(3, 31);
+            txtTipo.Margin = new Padding(3, 2, 3, 2);
             txtTipo.Name = "txtTipo";
             txtTipo.PlaceholderText = "Tipo";
-            txtTipo.Size = new Size(307, 27);
+            txtTipo.Size = new Size(268, 23);
             txtTipo.TabIndex = 4;
             txtTipo.DoubleClick += Txt_Click;
             // 
             // txtDescripcion
             // 
             txtDescripcion.Dock = DockStyle.Fill;
-            txtDescripcion.Location = new Point(316, 41);
+            txtDescripcion.Location = new Point(277, 31);
+            txtDescripcion.Margin = new Padding(3, 2, 3, 2);
             txtDescripcion.Name = "txtDescripcion";
             txtDescripcion.PlaceholderText = "Descripción";
-            txtDescripcion.Size = new Size(307, 27);
+            txtDescripcion.Size = new Size(268, 23);
             txtDescripcion.TabIndex = 6;
             txtDescripcion.DoubleClick += Txt_Click;
             // 
@@ -106,9 +109,9 @@
             // 
             label3.AutoSize = true;
             label3.Dock = DockStyle.Fill;
-            label3.Location = new Point(316, 0);
+            label3.Location = new Point(277, 0);
             label3.Name = "label3";
-            label3.Size = new Size(307, 38);
+            label3.Size = new Size(268, 29);
             label3.TabIndex = 5;
             label3.Text = "Descripción";
             // 
@@ -117,9 +120,9 @@
             label6.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            label6.Location = new Point(11, 309);
+            label6.Location = new Point(10, 232);
             label6.Name = "label6";
-            label6.Size = new Size(98, 28);
+            label6.Size = new Size(81, 21);
             label6.TabIndex = 11;
             label6.Text = "Categoría";
             label6.TextAlign = ContentAlignment.BottomLeft;
@@ -128,9 +131,10 @@
             // 
             Modificar.Dock = DockStyle.Fill;
             Modificar.Enabled = false;
-            Modificar.Location = new Point(316, 110);
+            Modificar.Location = new Point(277, 82);
+            Modificar.Margin = new Padding(3, 2, 3, 2);
             Modificar.Name = "Modificar";
-            Modificar.Size = new Size(307, 38);
+            Modificar.Size = new Size(268, 29);
             Modificar.TabIndex = 13;
             Modificar.Text = "Modificar";
             Modificar.UseVisualStyleBackColor = true;
@@ -140,9 +144,9 @@
             // 
             label7.AutoSize = true;
             label7.Dock = DockStyle.Fill;
-            label7.Location = new Point(629, 0);
+            label7.Location = new Point(551, 0);
             label7.Name = "label7";
-            label7.Size = new Size(119, 38);
+            label7.Size = new Size(103, 29);
             label7.TabIndex = 14;
             label7.Text = "ID: ";
             // 
@@ -153,9 +157,10 @@
             Eliminar.Enabled = false;
             Eliminar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             Eliminar.ForeColor = SystemColors.MenuText;
-            Eliminar.Location = new Point(629, 41);
+            Eliminar.Location = new Point(551, 31);
+            Eliminar.Margin = new Padding(3, 2, 3, 2);
             Eliminar.Name = "Eliminar";
-            Eliminar.Size = new Size(119, 63);
+            Eliminar.Size = new Size(103, 47);
             Eliminar.TabIndex = 15;
             Eliminar.Text = "ELIMINAR CATEGORÍA";
             Eliminar.UseVisualStyleBackColor = false;
@@ -169,20 +174,21 @@
             dgvCategoria.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvCategoria.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvCategoria.DataSource = categoriaGastoBindingSource;
-            dgvCategoria.Location = new Point(11, 68);
+            dgvCategoria.Location = new Point(10, 51);
+            dgvCategoria.Margin = new Padding(3, 2, 3, 2);
             dgvCategoria.Name = "dgvCategoria";
             dgvCategoria.ReadOnly = true;
             dgvCategoria.RowHeadersWidth = 51;
-            dgvCategoria.Size = new Size(811, 239);
+            dgvCategoria.Size = new Size(710, 179);
             dgvCategoria.TabIndex = 0;
             dgvCategoria.SelectionChanged += dgvCategoria_SelectionChanged;
             // 
             // txtID
             // 
             txtID.AutoSize = true;
-            txtID.Location = new Point(667, 341);
+            txtID.Location = new Point(584, 256);
             txtID.Name = "txtID";
-            txtID.Size = new Size(0, 20);
+            txtID.Size = new Size(0, 15);
             txtID.TabIndex = 17;
             // 
             // tableLayoutPanel1
@@ -190,8 +196,8 @@
             tableLayoutPanel1.ColumnCount = 4;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 125F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 86F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 109F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 75F));
             tableLayoutPanel1.Controls.Add(label2, 0, 0);
             tableLayoutPanel1.Controls.Add(Eliminar, 2, 1);
             tableLayoutPanel1.Controls.Add(txtDescripcion, 1, 1);
@@ -201,21 +207,20 @@
             tableLayoutPanel1.Controls.Add(Cargar, 0, 2);
             tableLayoutPanel1.Controls.Add(txtTipo, 0, 1);
             tableLayoutPanel1.Dock = DockStyle.Bottom;
-            tableLayoutPanel1.Location = new Point(0, 341);
-            tableLayoutPanel1.Margin = new Padding(3, 4, 3, 4);
+            tableLayoutPanel1.Location = new Point(0, 256);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 3;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 35.9375F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 64.0625F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 43F));
-            tableLayoutPanel1.Size = new Size(837, 151);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 32F));
+            tableLayoutPanel1.Size = new Size(732, 113);
             tableLayoutPanel1.TabIndex = 18;
             // 
             // FormCategoriaGastos
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(837, 492);
+            ClientSize = new Size(732, 369);
             ControlBox = false;
             Controls.Add(tableLayoutPanel1);
             Controls.Add(txtID);
@@ -223,6 +228,7 @@
             Controls.Add(label1);
             Controls.Add(dgvCategoria);
             FormBorderStyle = FormBorderStyle.None;
+            Margin = new Padding(3, 2, 3, 2);
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "FormCategoriaGastos";

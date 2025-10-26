@@ -48,7 +48,7 @@ namespace Repository
             existing.SetFechaInicio(plan.FechaInicio);
             existing.SetFechaFin(plan.FechaFin);
             existing.SetDescripcion(plan.Descripcion);
-            existing.SetFechaAlta(plan.FechaAlta);
+            
             ctx.SaveChanges();
             return true;
         }

@@ -9,9 +9,9 @@ namespace Dominio
         public DateOnly FechaInicio { get; private set; }
         public DateOnly FechaFin { get; private set; }
         public string Descripcion { get; private set; }
-        public DateTime FechaAlta { get; private set; }
+        public DateOnly FechaAlta { get; private set; }
 
-        public Plan(int id, string nombre, DateOnly fechaInicio, DateOnly fechaFin, string descripcion, DateTime fechaAlta)
+        public Plan(int id, string nombre, DateOnly fechaInicio, DateOnly fechaFin, string descripcion,DateOnly fechaAlta)
         {
             SetId(id);
             SetNombre(nombre);
@@ -19,6 +19,7 @@ namespace Dominio
             SetFechaFin(fechaFin);
             SetDescripcion(descripcion);
             SetFechaAlta(fechaAlta);
+           
         }
 
         public Plan() { }
@@ -51,7 +52,7 @@ namespace Dominio
             Descripcion = descripcion ?? string.Empty;
         }
 
-        public void SetFechaAlta(DateTime fechaAlta)
+        public void SetFechaAlta(DateOnly fechaAlta)
         {
             if (fechaAlta == default) throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
             FechaAlta = fechaAlta;
