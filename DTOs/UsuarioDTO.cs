@@ -14,4 +14,10 @@ namespace DTOs
         // Opcional: lista de grupos a los que pertenece (solo datos básicos)
         public List<GrupoDTO>? Grupos { get; set; }
     }
+
+    public class LoginDTO
+    {
+        public string Usuario { get; set; }
+        public string Contrasena { get; set; }
+    }
 }

@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Dominio;
 using API.Clients;
 using Services;
+using DTOs;
 
 
 namespace Escritorio
@@ -34,7 +35,9 @@ namespace Escritorio
                 return;
             }
 
-            if (usuarioService.Login(txtUsername.Text, txtPassword.Text))
+            LoginDTO user = new() { Usuario= txtUsername.Text, Contrasena= txtPassword.Text };
+
+            if (usuarioService.Login(user))
             {
                 MessageBox.Show("¡Usted ha ingresado correctamente!",
                     "Login Exitoso",

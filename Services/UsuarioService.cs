@@ -89,10 +89,10 @@ namespace Services
             });
         }
 
-        public bool Login(string username, string pass)
+        public bool Login(LoginDTO user)
         {
             var users = new UsuarioRepository().GetAll();
-            var usuario = users.FirstOrDefault(u => u.Nombre == username && u.Contrasena == pass);
+            var usuario = users.FirstOrDefault(u => u.Nombre == user.Usuario && u.Contrasena == user.Contrasena);
             return usuario != null;
         }
     }

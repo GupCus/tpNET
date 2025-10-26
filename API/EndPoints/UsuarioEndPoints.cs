@@ -66,6 +66,14 @@ namespace API.EndPoints
             .WithName("GetUsuariosByCriteria")
             .Produces<IEnumerable<UsuarioDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
+
+            app.MapPost("/usuarios/login", (LoginDTO user, UsuarioService service) =>
+            {
+                var exito = service.Login(user);
+                return Results.Ok(exito);
+            })
+            .WithName("Login")
+            .WithOpenApi();
         }
     }
 }
