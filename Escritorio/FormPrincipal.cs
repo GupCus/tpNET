@@ -101,7 +101,16 @@ namespace Escritorio
             FormPlan form = new FormPlan();
             form.MdiParent = this;
             form.Dock = DockStyle.Fill;
-            
+
+            form.Show();
+        }
+
+        private void gruposToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormGrupo form = new FormGrupo();
+            form.MdiParent = this;
+            form.Dock = DockStyle.Fill;
+
             form.Show();
         }
     }

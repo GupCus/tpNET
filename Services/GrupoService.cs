@@ -77,8 +77,10 @@ namespace Services
             var repo = new GrupoRepository();
             if (repo.NameExists(dto.Nombre, dto.Id))
                 throw new ArgumentException($"Ya existe otro grupo con el nombre '{dto.Nombre}'.");
-
-            var entidad = new Grupo(dto.Id, dto.Nombre, dto.Descripcion, dto.FechaAlta);
+            var entidad=repo.Get(dto.Id);
+            entidad.SetDescripcion(dto.Descripcion);
+            entidad.SetNombre(dto.Nombre);
+            //var entidad = new Grupo(dto.Id, dto.Nombre, dto.Descripcion, dto.FechaAlta);
 
             // Si se proporciona lista de usuarios en DTO, sincronizar (simple enfoque)
             if (dto.Usuarios != null)

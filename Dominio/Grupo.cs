@@ -46,7 +46,7 @@ namespace Dominio
 
         public void SetFechaAlta(DateTime fechaAlta)
         {
-            if (fechaAlta == default) throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
+            //if (fechaAlta == default) throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
             FechaAlta = fechaAlta;
         }
 

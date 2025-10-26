@@ -119,7 +119,7 @@ namespace Escritorio
                 btnEliminar.Text = "¿ESTÁ SEGURO?";
                 confirma = true;
             }
-            //Hacer click de vuelta para ejecutar esto
+            
             else
             {
                 await PlanApiClient.DeleteAsync(((PlanDTO)dataGridView1.CurrentRow.DataBoundItem).Id);
