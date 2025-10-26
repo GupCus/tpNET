@@ -25,10 +25,17 @@ namespace Escritorio
 
             try
             {
-                // Llama al endpoint de login de la API usando UsuarioUpdateDTO
-                var usuario = await UsuarioApiClient.LoginAsync(txtUsername.Text, txtPassword.Text);
+                // Crear el DTO de login
+                LoginDTO user = new()
+                {
+                    Usuario = txtUsername.Text.Trim(),
+                    Contrasena = txtPassword.Text.Trim()
+                };
 
-                if (usuario != null)
+                // Consumir el servicio API del login (retorna bool)
+                bool ok = await UsuarioApiClient.Login(user);
+
+                if (ok)
                 {
                     MessageBox.Show("¡Usted ha ingresado correctamente!",
                         "Login Exitoso",
@@ -36,7 +43,6 @@ namespace Escritorio
                         MessageBoxIcon.Information);
                     this.DialogResult = DialogResult.OK;
                     // Puedes guardar datos del usuario logueado aquí si lo necesitas
-                    return;
                 }
                 else
                 {
@@ -44,7 +50,6 @@ namespace Escritorio
                         "Login",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
-                    return;
                 }
             }
             catch (Exception ex)
