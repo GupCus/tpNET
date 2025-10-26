@@ -79,7 +79,8 @@ namespace Repository
                     Mail = "admin",
                     Nombre = "admin",
                     Contrasena = "admin", 
-                    FechaAlta = DateTime.Now
+                    FechaAlta = DateTime.Now,
+                    Rol = "Admin"
                 });
             });
 

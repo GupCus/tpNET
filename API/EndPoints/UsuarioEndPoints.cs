@@ -7,7 +7,6 @@ namespace API.EndPoints
 {
     public static class UsuarioEndpoints
     {
-        // Nombre corregido: MapUsuarioEndPoints (antes había un typo)
         public static void MapUsuarioEndPoints(this WebApplication app)
         {
             app.MapGet("/usuarios", (UsuarioService service) =>
@@ -65,6 +64,25 @@ namespace API.EndPoints
             })
             .WithName("GetUsuariosByCriteria")
             .Produces<IEnumerable<UsuarioDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
+
+            // === LOGIN ENDPOINT ===
+            app.MapPost("/usuarios/login", (UsuarioUpdateDTO input, UsuarioService service) =>
+            {
+                bool valido = service.Login(input.Nombre, input.Contrasena ?? "");
+                if (valido)
+                {
+                    var usuario = service.GetAll().FirstOrDefault(u => u.Nombre == input.Nombre);
+                    return usuario is not null ? Results.Ok(usuario) : Results.Unauthorized();
+                }
+                else
+                {
+                    return Results.Unauthorized();
+                }
+            })
+            .WithName("LoginUsuario")
+            .Produces<UsuarioDTO>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status401Unauthorized)
             .WithOpenApi();
         }
     }

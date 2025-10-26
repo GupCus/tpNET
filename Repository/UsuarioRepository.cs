@@ -42,19 +42,21 @@ namespace Repository
             return ctx.Usuarios.Include(u => u.Grupos).ToList();
         }
 
-        public bool Update(Usuario usuario)
-        {
-            using var ctx = CreateContext();
-            var existing = ctx.Usuarios.Find(usuario.Id);
-            if (existing == null) return false;
-            existing.SetMail(usuario.Mail);
-            existing.SetNombre(usuario.Nombre);
-            if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
-                existing.SetContrasena(usuario.Contrasena);
-            existing.SetFechaAlta(usuario.FechaAlta);
-            ctx.SaveChanges();
-            return true;
-        }
+public bool Update(Usuario usuario)
+{
+    using var ctx = CreateContext();
+    var existing = ctx.Usuarios.Find(usuario.Id);
+    if (existing == null) return false;
+    existing.SetMail(usuario.Mail);
+    existing.SetNombre(usuario.Nombre);
+    if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
+        existing.SetContrasena(usuario.Contrasena);
+    existing.SetFechaAlta(usuario.FechaAlta);
+    // Forzar SIEMPRE NoAdmin
+    existing.SetRol("NoAdmin");
+    ctx.SaveChanges();
+    return true;
+}
 
         public bool EmailExists(string email, int? excludeId = null)
         {

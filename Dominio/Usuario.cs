@@ -12,17 +12,22 @@ namespace Dominio
         public string Mail { get; private set; }
         public string Contrasena { get; private set; } // en producción guardar hashed
         public DateTime FechaAlta { get; private set; }
+        public string Rol { get; private set; }
 
         private readonly List<Grupo> _grupos = new List<Grupo>();
         public IReadOnlyCollection<Grupo> Grupos => _grupos.AsReadOnly();
 
-        public Usuario(int id, string mail, string nombre, string contrasena, DateTime fechaAlta)
+        public const string RolAdministrador = "Admini";
+        public const string RolUsuarioNormal = "NoAdmin";
+
+        public Usuario(int id, string mail, string nombre, string contrasena, DateTime fechaAlta, string rol)
         {
             SetId(id);
             SetMail(mail);
             SetNombre(nombre);
             SetContrasena(contrasena);
             SetFechaAlta(fechaAlta);
+            SetRol(rol);
         }
 
         public Usuario() { }
@@ -61,6 +66,13 @@ namespace Dominio
         {
             if (fechaAlta == default) throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
             FechaAlta = fechaAlta;
+        }
+
+        public void SetRol(string rol)
+        {
+            if (rol != RolAdministrador && rol != RolUsuarioNormal)
+                throw new ArgumentException("El rol debe ser 'Administrador' o 'UsuarioNormal'.", nameof(rol));
+            Rol = rol;
         }
 
         public void AddGrupo(Grupo grupo)

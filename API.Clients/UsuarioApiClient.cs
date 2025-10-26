@@ -1,10 +1,6 @@
 ﻿using DTOs;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
 
 namespace API.Clients
 {
@@ -103,6 +99,20 @@ namespace API.Clients
             }
             catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
+        }
+
+        public static async Task<UsuarioDTO?> LoginAsync(string nombre, string contrasena)
+        {
+            var dto = new UsuarioUpdateDTO
+            {
+                Nombre = nombre,
+                Contrasena = contrasena
+                // Los demás campos pueden quedar nulos
+            };
+            var response = await client.PostAsJsonAsync("usuarios/login", dto);
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
+            return null;
         }
     }
 }

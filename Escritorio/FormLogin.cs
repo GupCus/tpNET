@@ -1,23 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Net.Http.Json;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Dominio;
 using API.Clients;
-using Services;
-
+using DTOs;
 
 namespace Escritorio
 {
     public partial class FormLogin : Form
     {
-        private readonly UsuarioService usuarioService = new();
         public FormLogin()
         {
             InitializeComponent();
@@ -34,22 +23,36 @@ namespace Escritorio
                 return;
             }
 
-            if (usuarioService.Login(txtUsername.Text, txtPassword.Text))
+            try
             {
-                MessageBox.Show("¡Usted ha ingresado correctamente!",
-                    "Login Exitoso",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Information);
-                this.DialogResult = DialogResult.OK;
-                return;
-            }
-            else {
+                // Llama al endpoint de login de la API usando UsuarioUpdateDTO
+                var usuario = await UsuarioApiClient.LoginAsync(txtUsername.Text, txtPassword.Text);
 
-                MessageBox.Show("Usuario y/o contraseña incorrectos",
-                    "Login",
+                if (usuario != null)
+                {
+                    MessageBox.Show("¡Usted ha ingresado correctamente!",
+                        "Login Exitoso",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                    this.DialogResult = DialogResult.OK;
+                    // Puedes guardar datos del usuario logueado aquí si lo necesitas
+                    return;
+                }
+                else
+                {
+                    MessageBox.Show("Usuario y/o contraseña incorrectos",
+                        "Login",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al verificar usuario: " + ex.Message,
+                    "Error API",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
-                return;
             }
         }
     }

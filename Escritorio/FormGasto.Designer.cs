@@ -29,6 +29,8 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            DataGridViewCellStyle dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            DataGridViewCellStyle dataGridViewCellStyle2 = new DataGridViewCellStyle();
             tableLayoutPanel1 = new TableLayoutPanel();
             label1 = new Label();
             dgvGasto = new DataGridView();
@@ -104,9 +106,25 @@
             // 
             dgvGasto.AutoGenerateColumns = false;
             dgvGasto.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dgvGasto.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dgvGasto.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvGasto.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, descripcionDataGridViewTextBoxColumn, fechaHoraDataGridViewTextBoxColumn, montoDataGridViewTextBoxColumn });
             dgvGasto.DataSource = gastoBindingSource;
+            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = SystemColors.Window;
+            dataGridViewCellStyle2.Font = new Font("Segoe UI", 9F);
+            dataGridViewCellStyle2.ForeColor = SystemColors.ControlText;
+            dataGridViewCellStyle2.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = DataGridViewTriState.False;
+            dgvGasto.DefaultCellStyle = dataGridViewCellStyle2;
             dgvGasto.Dock = DockStyle.Fill;
             dgvGasto.Location = new Point(11, 73);
             dgvGasto.Margin = new Padding(11, 10, 11, 10);
