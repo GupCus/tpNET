@@ -101,18 +101,18 @@ namespace API.Clients
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
 
-        public static async Task<UsuarioDTO?> LoginAsync(string nombre, string contrasena)
+        public static async Task<bool> Login(LoginDTO user)
         {
-            var dto = new UsuarioUpdateDTO
+            try
             {
-                Nombre = nombre,
-                Contrasena = contrasena
-                // Los demás campos pueden quedar nulos
-            };
-            var response = await client.PostAsJsonAsync("usuarios/login", dto);
-            if (response.IsSuccessStatusCode)
-                return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
-            return null;
+                var response = await client.PostAsJsonAsync("usuarios/login",user);
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<bool>();
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al iniciar sesión. Status: {response.StatusCode}, Detalle: {error}");
+            }
+            catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
+            catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
     }
 }

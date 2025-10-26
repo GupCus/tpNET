@@ -66,23 +66,12 @@ namespace API.EndPoints
             .Produces<IEnumerable<UsuarioDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
-            // === LOGIN ENDPOINT ===
-            app.MapPost("/usuarios/login", (UsuarioUpdateDTO input, UsuarioService service) =>
+            app.MapPost("/usuarios/login", (LoginDTO user, UsuarioService service) =>
             {
-                bool valido = service.Login(input.Nombre, input.Contrasena ?? "");
-                if (valido)
-                {
-                    var usuario = service.GetAll().FirstOrDefault(u => u.Nombre == input.Nombre);
-                    return usuario is not null ? Results.Ok(usuario) : Results.Unauthorized();
-                }
-                else
-                {
-                    return Results.Unauthorized();
-                }
+                var exito = service.Login(user);
+                return Results.Ok(exito);
             })
-            .WithName("LoginUsuario")
-            .Produces<UsuarioDTO>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status401Unauthorized)
+            .WithName("Login")
             .WithOpenApi();
         }
     }

@@ -14,4 +14,10 @@ namespace DTOs
         public string Rol { get; set; }
         public List<GrupoDTO>? Grupos { get; set; }
     }
+
+    public class LoginDTO
+    {
+        public string Usuario { get; set; }
+        public string Contrasena { get; set; }
+    }
 }
