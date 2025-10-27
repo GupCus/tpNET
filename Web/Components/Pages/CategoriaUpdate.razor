@@ -1,0 +1,84 @@
+﻿@page "/categorias/update/{Id:int}"
+@using DTOs
+@using API.Clients;
+@inject NavigationManager NavigationManager
+<h3>Actualizar categoria</h3>
+
+@if (cargando)
+{
+    <p>Cargando categoria</p>
+}
+else if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else
+{
+    <EditForm Model="categoriaUpdate" OnValidSubmit="GuardarCategoria">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Tipo</label>
+            <InputText class="form-control" @bind-Value="categoriaUpdate.Tipo" />
+        </div>
+
+
+        <div class="mb-3">
+            <label>Descripción</label>
+            <InputTextArea class="form-control" @bind-Value="categoriaUpdate.Descripcion" />
+        </div>
+
+        <button class="btn btn-primary" type="submit">
+            Guardar
+        </button>
+    </EditForm>
+
+    @code {
+    [Parameter] public int Id { get; set; }
+
+
+    private string mensajeError = string.Empty;
+    private bool cargando = true;
+    private CategoriaGastoUpdateDTO categoriaUpdate = new CategoriaGastoUpdateDTO();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var categoria = await CategoriaGastoApiClient.GetAsync(Id);
+            categoriaUpdate.Tipo = categoria.Tipo;
+            categoriaUpdate.Id = categoria.Id;
+            categoriaUpdate.Descripcion = categoria.Descripcion;
+
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar el plan: {ex.Message}";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task GuardarCategoria()
+    {
+        try
+        {
+
+            mensajeError = string.Empty;
+
+            await CategoriaGastoApiClient.UpdateAsync(categoriaUpdate);
+            NavigationManager.NavigateTo("/categorias");
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al actualizar la categoria: {ex.Message}";
+        }
+
+    }
+}
+}

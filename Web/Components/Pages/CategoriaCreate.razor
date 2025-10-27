@@ -1,0 +1,46 @@
+﻿@page "/categorias/create"
+@using DTOs;
+@using API.Clients;
+@inject NavigationManager NavigationManager
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+<h3>Crear categoria de gasto</h3>
+<EditForm Model="nuevaCategoria" OnValidSubmit="GuardarCategoria">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <div class="mb-3">
+        <label>Tipo</label>
+        <InputText class="form-control" @bind-Value="nuevaCategoria.Tipo" />
+    </div>
+
+    <div class="mb-3">
+        <label>Descripción</label>
+        <InputTextArea class="form-control" @bind-Value="nuevaCategoria.Descripcion" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+</EditForm>
+@code {
+    private CategoriaGastoDTO nuevaCategoria = new CategoriaGastoDTO();
+    private string mensajeError = string.Empty;
+    private async Task GuardarCategoria()
+    {
+
+        try
+        {
+
+            
+            await CategoriaGastoApiClient.AddAsync(nuevaCategoria);
+            NavigationManager.NavigateTo("/categorias");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            mensajeError = $"Error al guardar la categoria: {ex.Message}";
+
+        }
+    }
+}
