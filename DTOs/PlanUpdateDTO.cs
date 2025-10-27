@@ -13,6 +13,7 @@ namespace DTOs
         {
             get; set;
         }
+        public int GrupoId { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }
     }

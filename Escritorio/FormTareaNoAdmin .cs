@@ -76,7 +76,8 @@ namespace Escritorio
                         tarea.FechaHora?.ToString("dd/MM/yyyy HH:mm") ?? "No definida",
                         tarea.Duracion?.ToString() ?? "N/A",
                         tarea.Estado.ToString(),
-                        tarea.Gastos?.Count ?? 0
+                        tarea.Gastos?.Count ?? 0,
+                        tarea.PlanId // ✅ AGREGAR PlanId A LA GRILLA
                     );
                 }
 
@@ -119,6 +120,17 @@ namespace Escritorio
                     return;
                 }
 
+                // ✅ OBTENER EL PlanId DEL COMBOBOX SELECCIONADO
+                var planSeleccionado = cmbPlan.SelectedItem as dynamic;
+                int planId = planSeleccionado?.Value ?? 0;
+
+                if (planId == 0)
+                {
+                    MessageBox.Show("Plan no válido seleccionado", "Validación",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
                 var nuevaTarea = new TareaDTO
                 {
                     Nombre = nombre,
@@ -126,7 +138,8 @@ namespace Escritorio
                     FechaHora = dtpFechaHora.Value,
                     Duracion = string.IsNullOrEmpty(txtDuracion.Text) ? null : int.Parse(txtDuracion.Text),
                     Estado = (EstadoTarea)cmbEstado.SelectedIndex,
-                    FechaAlta = DateTime.Now
+                    FechaAlta = DateTime.Now,
+                    PlanId = planId // ✅ ASIGNAR EL PlanId CORRECTAMENTE
                 };
 
                 _ = TareaApiClient.AddAsync(nuevaTarea);
@@ -151,6 +164,7 @@ namespace Escritorio
             txtDuracion.Clear();
             dtpFechaHora.Value = DateTime.Now;
             cmbEstado.SelectedIndex = 0;
+            cmbPlan.SelectedIndex = 0; // ✅ LIMPIAR TAMBIÉN LA SELECCIÓN DEL PLAN
         }
 
         private void btnBuscar_Click(object sender, EventArgs e)
@@ -174,7 +188,8 @@ namespace Escritorio
                         tarea.FechaHora?.ToString("dd/MM/yyyy HH:mm") ?? "No definida",
                         tarea.Duracion?.ToString() ?? "N/A",
                         tarea.Estado.ToString(),
-                        tarea.Gastos?.Count ?? 0
+                        tarea.Gastos?.Count ?? 0,
+                        tarea.PlanId // ✅ AGREGAR PlanId A LA GRILLA
                     );
                 }
             }
@@ -196,7 +211,8 @@ namespace Escritorio
                         tarea.FechaHora?.ToString("dd/MM/yyyy HH:mm") ?? "No definida",
                         tarea.Duracion?.ToString() ?? "N/A",
                         tarea.Estado.ToString(),
-                        tarea.Gastos?.Count ?? 0
+                        tarea.Gastos?.Count ?? 0,
+                        tarea.PlanId // ✅ AGREGAR PlanId A LA GRILLA
                     );
                 }
             }
@@ -215,9 +231,10 @@ namespace Escritorio
             {
                 var tareaId = Convert.ToInt32(dgvTareas.Rows[e.RowIndex].Cells["colId"].Value);
                 var tareaNombre = dgvTareas.Rows[e.RowIndex].Cells["colNombre"].Value.ToString();
+                var planId = dgvTareas.Rows[e.RowIndex].Cells["colPlanId"].Value; // ✅ OBTENER PlanId
 
                 // Aquí podrías abrir un form de edición o detalles
-                MessageBox.Show($"Tarea seleccionada: {tareaNombre}\nID: {tareaId}",
+                MessageBox.Show($"Tarea seleccionada: {tareaNombre}\nID: {tareaId}\nPlan ID: {planId}",
                     "Tarea Seleccionada", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }

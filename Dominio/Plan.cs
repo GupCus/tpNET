@@ -10,8 +10,10 @@ namespace Dominio
         public DateOnly FechaFin { get; private set; }
         public string Descripcion { get; private set; }
         public DateOnly FechaAlta { get; private set; }
+        public Grupo Grupo { get; private set; }
+        public int GrupoId { get; private set; }
 
-        public Plan(int id, string nombre, DateOnly fechaInicio, DateOnly fechaFin, string descripcion,DateOnly fechaAlta)
+        public Plan(int id, string nombre, DateOnly fechaInicio, DateOnly fechaFin, string descripcion, DateOnly fechaAlta, int grupoId)
         {
             SetId(id);
             SetNombre(nombre);
@@ -19,7 +21,7 @@ namespace Dominio
             SetFechaFin(fechaFin);
             SetDescripcion(descripcion);
             SetFechaAlta(fechaAlta);
-           
+            SetGrupoId(grupoId);
         }
 
         public Plan() { }
@@ -56,6 +58,12 @@ namespace Dominio
         {
             if (fechaAlta == default) throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
             FechaAlta = fechaAlta;
+        }
+
+        public void SetGrupoId(int grupoId)
+        {
+            if (grupoId < 0) throw new ArgumentException("El GrupoId debe ser mayor o igual a 0.", nameof(grupoId));
+            GrupoId = grupoId;
         }
     }
 }

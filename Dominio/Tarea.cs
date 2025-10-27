@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Dominio
 {
@@ -18,11 +19,13 @@ namespace Dominio
         public string Descripcion { get; private set; }
         public EstadoTarea Estado { get; private set; }
         public DateTime FechaAlta { get; private set; }
+        public Plan Plan { get; private set; }
+        public int PlanId { get; private set; }
 
         private readonly List<Gasto> _gastos = new List<Gasto>();
         public IReadOnlyCollection<Gasto> Gastos => _gastos.AsReadOnly();
 
-        public Tarea(int id, string nombre, DateTime? fechaHora, int? duracion, string descripcion, EstadoTarea estado, DateTime fechaAlta)
+        public Tarea(int id, string nombre, DateTime? fechaHora, int? duracion, string descripcion, EstadoTarea estado, DateTime fechaAlta, int planId)
         {
             SetId(id);
             SetNombre(nombre);
@@ -31,6 +34,7 @@ namespace Dominio
             SetDescripcion(descripcion);
             SetEstado(estado);
             SetFechaAlta(fechaAlta);
+            SetPlanId(planId);
         }
 
         public Tarea() { }
@@ -72,6 +76,12 @@ namespace Dominio
         {
             if (fechaAlta == default) throw new ArgumentException("La fecha de alta no puede ser nula.", nameof(fechaAlta));
             FechaAlta = fechaAlta;
+        }
+
+        public void SetPlanId(int planId)
+        {
+            if (planId < 0) throw new ArgumentException("El PlanId debe ser mayor o igual a 0.", nameof(planId));
+            PlanId = planId;
         }
 
         public void AddGasto(Gasto gasto)

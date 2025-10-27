@@ -50,6 +50,7 @@ namespace Repository
             existing.SetDescripcion(tarea.Descripcion);
             existing.SetEstado(tarea.Estado);
             existing.SetFechaAlta(tarea.FechaAlta);
+            existing.SetPlanId(tarea.PlanId);
             ctx.SaveChanges();
             return true;
         }
@@ -60,6 +61,16 @@ namespace Repository
             if (string.IsNullOrWhiteSpace(texto)) return ctx.Tareas.ToList();
             texto = texto.ToLower();
             return ctx.Tareas.Where(t => t.Nombre.ToLower().Contains(texto) || (t.Descripcion != null && t.Descripcion.ToLower().Contains(texto))).ToList();
+        }
+
+        // Método adicional para buscar tareas por PlanId
+        public IEnumerable<Tarea> GetByPlanId(int planId)
+        {
+            using var ctx = CreateContext();
+            return ctx.Tareas
+                .Include(t => t.Gastos)
+                .Where(t => t.PlanId == planId)
+                .ToList();
         }
     }
 }

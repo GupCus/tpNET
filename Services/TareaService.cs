@@ -14,15 +14,13 @@ namespace Services
             var repo = new TareaRepository();
 
             var fechaAlta = DateTime.Now;
-            var entidad = new Tarea(0, dto.Nombre, dto.FechaHora, dto.Duracion, dto.Descripcion, dto.Estado, fechaAlta);
+            var entidad = new Tarea(0, dto.Nombre, dto.FechaHora, dto.Duracion, dto.Descripcion, dto.Estado, fechaAlta, dto.PlanId);
 
-            // Si se envían gastos en el DTO, opcionalmente asociarlos (se asume que Gastos vienen con Ids o datos mínimos)
             if (dto.Gastos != null && dto.Gastos.Any())
             {
                 var gastoRepo = new GastoRepository();
                 foreach (var gDto in dto.Gastos)
                 {
-                    // Si el gasto ya existe, obtenerlo; si no, crear uno mínimo no persistente aquí.
                     var gastoExistente = gDto.Id > 0 ? gastoRepo.Get(gDto.Id) : null;
                     if (gastoExistente != null) entidad.AddGasto(gastoExistente);
                 }
@@ -56,6 +54,7 @@ namespace Services
                 Descripcion = t.Descripcion,
                 Estado = t.Estado,
                 FechaAlta = t.FechaAlta,
+                PlanId = t.PlanId,
                 Gastos = t.Gastos?.Select(g => new GastoDTO
                 {
                     Id = g.Id,
@@ -84,6 +83,7 @@ namespace Services
                 Descripcion = t.Descripcion,
                 Estado = t.Estado,
                 FechaAlta = t.FechaAlta,
+                PlanId = t.PlanId,
                 Gastos = t.Gastos?.Select(g => new GastoDTO
                 {
                     Id = g.Id,
@@ -102,8 +102,7 @@ namespace Services
         public bool Update(TareaDTO dto)
         {
             var repo = new TareaRepository();
-            var entidad = new Tarea(dto.Id, dto.Nombre, dto.FechaHora, dto.Duracion, dto.Descripcion, dto.Estado, dto.FechaAlta);
-            // Nota: sincronización de gastos debería manejarse con endpoints específicos si hace falta
+            var entidad = new Tarea(dto.Id, dto.Nombre, dto.FechaHora, dto.Duracion, dto.Descripcion, dto.Estado, dto.FechaAlta, dto.PlanId);
             return repo.Update(entidad);
         }
 
@@ -119,7 +118,8 @@ namespace Services
                 Duracion = t.Duracion,
                 Descripcion = t.Descripcion,
                 Estado = t.Estado,
-                FechaAlta = t.FechaAlta
+                FechaAlta = t.FechaAlta,
+                PlanId = t.PlanId
             });
         }
     }

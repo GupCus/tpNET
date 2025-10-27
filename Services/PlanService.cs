@@ -14,7 +14,7 @@ namespace Services
             var repo = new PlanRepository();
 
             var fechaAlta = DateTime.Now;
-            var entidad = new Plan(0, dto.Nombre, dto.FechaInicio, dto.FechaBaja, dto.Descripcion, dto.FechaAlta);
+            var entidad = new Plan(0, dto.Nombre, dto.FechaInicio, dto.FechaBaja, dto.Descripcion, DateOnly.FromDateTime(fechaAlta), dto.GrupoId);
 
             repo.Add(entidad);
 
@@ -40,9 +40,10 @@ namespace Services
                 Id = p.Id,
                 Nombre = p.Nombre,
                 FechaInicio = p.FechaInicio,
-                FechaFin= p.FechaFin,
+                FechaFin = p.FechaFin,
                 Descripcion = p.Descripcion,
-                FechaAlta = p.FechaAlta
+                FechaAlta = p.FechaAlta,
+                GrupoId = p.GrupoId
             };
         }
 
@@ -57,7 +58,8 @@ namespace Services
                 FechaInicio = p.FechaInicio,
                 FechaFin = p.FechaFin,
                 Descripcion = p.Descripcion,
-                FechaAlta = p.FechaAlta
+                FechaAlta = p.FechaAlta,
+                GrupoId = p.GrupoId
             }).ToList();
         }
 
@@ -71,6 +73,7 @@ namespace Services
             entidad.SetFechaInicio(DateOnly.FromDateTime(dto.FechaInicio));
             entidad.SetDescripcion(dto.Descripcion);
             entidad.SetFechaFin(DateOnly.FromDateTime(dto.FechaFin));
+            entidad.SetGrupoId(dto.GrupoId);
             return repo.Update(entidad);
         }
 
@@ -85,7 +88,8 @@ namespace Services
                 FechaInicio = p.FechaInicio,
                 FechaFin = p.FechaFin,
                 Descripcion = p.Descripcion,
-                FechaAlta = p.FechaAlta
+                FechaAlta = p.FechaAlta,
+                GrupoId = p.GrupoId
             });
         }
     }

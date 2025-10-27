@@ -16,7 +16,7 @@ namespace Repository
         public DbSet<Plan> Planes { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<UsuarioGrupo> GrupoUsuarios { get; set; } // <<--- NUEVO
+        public DbSet<UsuarioGrupo> GrupoUsuarios { get; set; }
 
         public TPIContext(DbContextOptions<TPIContext> options) : base(options)
         {
@@ -36,20 +36,6 @@ namespace Repository
                                         TrustServerCertificate=True");
                 optionsBuilder.LogTo(Console.WriteLine, LogLevel.Information);
             }
-
-            /* Lo comento porque no me funciona así
-            if (!optionsBuilder.IsConfigured)
-            {
-                // Solo se ejecutará si no se configuró desde Program.cs
-                var configuration = new ConfigurationBuilder()
-                    .SetBasePath(Directory.GetCurrentDirectory())
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .Build();
-
-                string connectionString = configuration.GetConnectionString("DefaultConnection");
-                optionsBuilder.UseSqlServer(connectionString);
-            }
-            */
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -129,6 +115,13 @@ namespace Repository
                 entity.Property(e => e.FechaAlta).HasConversion(dateOnlyConverter).IsRequired();
                 entity.Property(e => e.FechaInicio).HasConversion(dateOnlyConverter).IsRequired();
                 entity.Property(e => e.FechaFin).HasConversion(dateOnlyConverter).IsRequired();
+
+                // ✅ CONFIGURACIÓN CORREGIDA - Usar propiedad real
+                entity.Property(e => e.GrupoId).IsRequired();
+                entity.HasOne(p => p.Grupo)
+                      .WithMany(g => g.Planes)
+                      .HasForeignKey(e => e.GrupoId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
             // === Tarea ===
@@ -139,25 +132,31 @@ namespace Repository
                 entity.Property(e => e.Nombre).IsRequired().HasMaxLength(200);
                 entity.Property(e => e.Descripcion).HasMaxLength(500);
                 entity.Property(e => e.FechaAlta).IsRequired();
+
+                // ✅ CONFIGURACIÓN CORREGIDA - Usar propiedad real
+                entity.Property(e => e.PlanId).IsRequired();
+                entity.HasOne(t => t.Plan)
+                      .WithMany()
+                      .HasForeignKey(e => e.PlanId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
 
-            // === Gasto - CONFIGURACIÓN CORREGIDA ===
+            // === Gasto ===
             modelBuilder.Entity<Gasto>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-                // ✅ CONFIGURACIÓN SIMPLIFICADA - Elimina las referencias a campos privados
-                entity.Property<int>("CategoriaGastoId").IsRequired();
+                entity.Property(e => e.CategoriaGastoId).IsRequired();
                 entity.HasOne(g => g.CategoriaGasto)
                       .WithMany()
-                      .HasForeignKey("CategoriaGastoId")
+                      .HasForeignKey(e => e.CategoriaGastoId)
                       .OnDelete(DeleteBehavior.Restrict);
 
-                entity.Property<int>("UsuarioId").IsRequired();
+                entity.Property(e => e.UsuarioId).IsRequired();
                 entity.HasOne(g => g.Usuario)
                       .WithMany()
-                      .HasForeignKey("UsuarioId")
+                      .HasForeignKey(e => e.UsuarioId)
                       .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(e => e.Monto).IsRequired();

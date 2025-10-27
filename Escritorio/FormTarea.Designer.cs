@@ -38,6 +38,7 @@
             fechaHoraDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             duracionDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             estadoDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
+            planIdDataGridViewTextBoxColumn = new DataGridViewTextBoxColumn();
             tareaBindingSource = new BindingSource(components);
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
@@ -59,6 +60,9 @@
             tableLayoutPanel5 = new TableLayoutPanel();
             label7 = new Label();
             txtID = new Label();
+            label9 = new Label();
+            cmbPlan = new ComboBox();
+            btnLimpiar = new Button();
             tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvTarea).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tareaBindingSource).BeginInit();
@@ -106,7 +110,7 @@
             dgvTarea.AutoGenerateColumns = false;
             dgvTarea.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvTarea.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvTarea.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, nombreDataGridViewTextBoxColumn, descripcionDataGridViewTextBoxColumn, fechaHoraDataGridViewTextBoxColumn, duracionDataGridViewTextBoxColumn, estadoDataGridViewTextBoxColumn });
+            dgvTarea.Columns.AddRange(new DataGridViewColumn[] { idDataGridViewTextBoxColumn, nombreDataGridViewTextBoxColumn, descripcionDataGridViewTextBoxColumn, fechaHoraDataGridViewTextBoxColumn, duracionDataGridViewTextBoxColumn, estadoDataGridViewTextBoxColumn, planIdDataGridViewTextBoxColumn });
             dgvTarea.DataSource = tareaBindingSource;
             dgvTarea.Dock = DockStyle.Fill;
             dgvTarea.Location = new Point(9, 58);
@@ -165,6 +169,14 @@
             estadoDataGridViewTextBoxColumn.Name = "estadoDataGridViewTextBoxColumn";
             estadoDataGridViewTextBoxColumn.ReadOnly = true;
             // 
+            // planIdDataGridViewTextBoxColumn
+            // 
+            planIdDataGridViewTextBoxColumn.DataPropertyName = "PlanId";
+            planIdDataGridViewTextBoxColumn.HeaderText = "Plan ID";
+            planIdDataGridViewTextBoxColumn.MinimumWidth = 6;
+            planIdDataGridViewTextBoxColumn.Name = "planIdDataGridViewTextBoxColumn";
+            planIdDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
             // tareaBindingSource
             // 
             tareaBindingSource.DataSource = typeof(Dominio.Tarea);
@@ -192,10 +204,10 @@
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 4F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 48F));
             tableLayoutPanel3.Controls.Add(label6, 0, 0);
-            tableLayoutPanel3.Controls.Add(btnNuevo, 0, 7);
+            tableLayoutPanel3.Controls.Add(btnNuevo, 0, 8);
             tableLayoutPanel3.Controls.Add(txtNombre, 0, 2);
             tableLayoutPanel3.Controls.Add(label2, 0, 1);
-            tableLayoutPanel3.Controls.Add(btnModificar, 2, 7);
+            tableLayoutPanel3.Controls.Add(btnModificar, 2, 8);
             tableLayoutPanel3.Controls.Add(label3, 2, 1);
             tableLayoutPanel3.Controls.Add(txtDescripcion, 2, 2);
             tableLayoutPanel3.Controls.Add(label4, 0, 3);
@@ -204,11 +216,16 @@
             tableLayoutPanel3.Controls.Add(label8, 0, 5);
             tableLayoutPanel3.Controls.Add(txtFechaHora, 0, 4);
             tableLayoutPanel3.Controls.Add(txtEstado, 0, 6);
+            tableLayoutPanel3.Controls.Add(label9, 2, 5);
+            tableLayoutPanel3.Controls.Add(cmbPlan, 2, 6);
+            tableLayoutPanel3.Controls.Add(btnLimpiar, 0, 9);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(0, 0);
             tableLayoutPanel3.Margin = new Padding(0);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 8;
+            tableLayoutPanel3.RowCount = 10;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
@@ -236,7 +253,7 @@
             btnNuevo.Location = new Point(9, 155);
             btnNuevo.Margin = new Padding(9, 8, 9, 8);
             btnNuevo.Name = "btnNuevo";
-            btnNuevo.Size = new Size(247, 58);
+            btnNuevo.Size = new Size(247, 24);
             btnNuevo.TabIndex = 0;
             btnNuevo.Text = "Cargar Nuevo";
             btnNuevo.UseVisualStyleBackColor = true;
@@ -269,7 +286,7 @@
             btnModificar.Location = new Point(296, 155);
             btnModificar.Margin = new Padding(9, 8, 9, 8);
             btnModificar.Name = "btnModificar";
-            btnModificar.Size = new Size(248, 58);
+            btnModificar.Size = new Size(248, 24);
             btnModificar.TabIndex = 1;
             btnModificar.Text = "Modificar";
             btnModificar.UseVisualStyleBackColor = true;
@@ -424,6 +441,40 @@
             txtID.Size = new Size(0, 15);
             txtID.TabIndex = 16;
             // 
+            // label9
+            // 
+            label9.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            label9.AutoSize = true;
+            label9.Location = new Point(313, 105);
+            label9.Margin = new Padding(26, 0, 3, 0);
+            label9.Name = "label9";
+            label9.Size = new Size(237, 15);
+            label9.TabIndex = 27;
+            label9.Text = "Plan";
+            label9.TextAlign = ContentAlignment.BottomLeft;
+            // 
+            // cmbPlan
+            // 
+            cmbPlan.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            cmbPlan.FormattingEnabled = true;
+            cmbPlan.Location = new Point(287, 122);
+            cmbPlan.Margin = new Padding(0, 2, 35, 2);
+            cmbPlan.Name = "cmbPlan";
+            cmbPlan.Size = new Size(231, 23);
+            cmbPlan.TabIndex = 28;
+            // 
+            // btnLimpiar
+            // 
+            btnLimpiar.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            btnLimpiar.Location = new Point(9, 187);
+            btnLimpiar.Margin = new Padding(9, 0, 9, 0);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new Size(247, 24);
+            btnLimpiar.TabIndex = 29;
+            btnLimpiar.Text = "Limpiar";
+            btnLimpiar.UseVisualStyleBackColor = true;
+            btnLimpiar.Click += btnLimpiar_Click;
+            // 
             // FormTarea
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -464,6 +515,7 @@
         private DataGridViewTextBoxColumn fechaHoraDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn duracionDataGridViewTextBoxColumn;
         private DataGridViewTextBoxColumn estadoDataGridViewTextBoxColumn;
+        private DataGridViewTextBoxColumn planIdDataGridViewTextBoxColumn;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel4;
@@ -484,5 +536,8 @@
         private ComboBox txtEstado;
         private TableLayoutPanel tableLayoutPanel5;
         private Label txtID;
+        private Label label9;
+        private ComboBox cmbPlan;
+        private Button btnLimpiar;
     }
 }

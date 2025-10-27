@@ -45,6 +45,9 @@
             btnEditar = new Button();
             btnEliminar = new Button();
             tableLayoutPanel2 = new TableLayoutPanel();
+            lblGrupo = new Label();
+            cmbGrupo = new ComboBox();
+            btnLimpiar = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
@@ -133,11 +136,12 @@
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            tableLayoutPanel1.ColumnCount = 5;
+            tableLayoutPanel1.ColumnCount = 6;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 271F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 77F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 228F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 109F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.Controls.Add(lblNombre, 0, 0);
             tableLayoutPanel1.Controls.Add(lblDescripcion, 0, 1);
@@ -152,12 +156,16 @@
             tableLayoutPanel1.Controls.Add(btnAgregar, 4, 0);
             tableLayoutPanel1.Controls.Add(btnEditar, 4, 1);
             tableLayoutPanel1.Controls.Add(btnEliminar, 4, 2);
+            tableLayoutPanel1.Controls.Add(lblGrupo, 0, 3);
+            tableLayoutPanel1.Controls.Add(cmbGrupo, 1, 3);
+            tableLayoutPanel1.Controls.Add(btnLimpiar, 4, 3);
             tableLayoutPanel1.Location = new Point(3, 333);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 3;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 54F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.Size = new Size(794, 114);
             tableLayoutPanel1.TabIndex = 5;
             // 
@@ -165,7 +173,7 @@
             // 
             lblID.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             lblID.AutoSize = true;
-            lblID.Location = new Point(3, 91);
+            lblID.Location = new Point(3, 61);
             lblID.Name = "lblID";
             lblID.Size = new Size(103, 15);
             lblID.TabIndex = 5;
@@ -176,7 +184,7 @@
             // 
             txtID.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             txtID.Enabled = false;
-            txtID.Location = new Point(112, 87);
+            txtID.Location = new Point(112, 57);
             txtID.Name = "txtID";
             txtID.Size = new Size(265, 23);
             txtID.TabIndex = 6;
@@ -187,7 +195,7 @@
             lblFechaDesde.AutoSize = true;
             lblFechaDesde.Location = new Point(383, 0);
             lblFechaDesde.Name = "lblFechaDesde";
-            lblFechaDesde.Size = new Size(71, 30);
+            lblFechaDesde.Size = new Size(71, 28);
             lblFechaDesde.TabIndex = 7;
             lblFechaDesde.Text = "Fecha desde";
             lblFechaDesde.TextAlign = ContentAlignment.MiddleCenter;
@@ -196,9 +204,9 @@
             // 
             lblFechaHasta.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             lblFechaHasta.AutoSize = true;
-            lblFechaHasta.Location = new Point(383, 49);
+            lblFechaHasta.Location = new Point(383, 28);
             lblFechaHasta.Name = "lblFechaHasta";
-            lblFechaHasta.Size = new Size(71, 15);
+            lblFechaHasta.Size = new Size(71, 28);
             lblFechaHasta.TabIndex = 8;
             lblFechaHasta.Text = "Fecha hasta";
             lblFechaHasta.TextAlign = ContentAlignment.MiddleCenter;
@@ -208,7 +216,7 @@
             btnAgregar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
             btnAgregar.Location = new Point(688, 3);
             btnAgregar.Name = "btnAgregar";
-            btnAgregar.Size = new Size(103, 23);
+            btnAgregar.Size = new Size(103, 22);
             btnAgregar.TabIndex = 9;
             btnAgregar.Text = "Agregar";
             btnAgregar.UseVisualStyleBackColor = true;
@@ -217,9 +225,9 @@
             // btnEditar
             // 
             btnEditar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btnEditar.Location = new Point(688, 45);
+            btnEditar.Location = new Point(688, 31);
             btnEditar.Name = "btnEditar";
-            btnEditar.Size = new Size(103, 23);
+            btnEditar.Size = new Size(103, 22);
             btnEditar.TabIndex = 10;
             btnEditar.Text = "Editar";
             btnEditar.UseVisualStyleBackColor = true;
@@ -228,9 +236,9 @@
             // btnEliminar
             // 
             btnEliminar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-            btnEliminar.Location = new Point(688, 87);
+            btnEliminar.Location = new Point(688, 59);
             btnEliminar.Name = "btnEliminar";
-            btnEliminar.Size = new Size(103, 23);
+            btnEliminar.Size = new Size(103, 22);
             btnEliminar.TabIndex = 11;
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = true;
@@ -253,6 +261,37 @@
             tableLayoutPanel2.Size = new Size(800, 450);
             tableLayoutPanel2.TabIndex = 6;
             tableLayoutPanel2.Paint += tableLayoutPanel2_Paint;
+            // 
+            // lblGrupo
+            // 
+            lblGrupo.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            lblGrupo.AutoSize = true;
+            lblGrupo.Location = new Point(3, 91);
+            lblGrupo.Name = "lblGrupo";
+            lblGrupo.Size = new Size(103, 15);
+            lblGrupo.TabIndex = 12;
+            lblGrupo.Text = "Grupo";
+            lblGrupo.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // cmbGrupo
+            // 
+            cmbGrupo.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            cmbGrupo.FormattingEnabled = true;
+            cmbGrupo.Location = new Point(112, 87);
+            cmbGrupo.Name = "cmbGrupo";
+            cmbGrupo.Size = new Size(265, 23);
+            cmbGrupo.TabIndex = 13;
+            // 
+            // btnLimpiar
+            // 
+            btnLimpiar.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            btnLimpiar.Location = new Point(688, 87);
+            btnLimpiar.Name = "btnLimpiar";
+            btnLimpiar.Size = new Size(103, 23);
+            btnLimpiar.TabIndex = 14;
+            btnLimpiar.Text = "Limpiar";
+            btnLimpiar.UseVisualStyleBackColor = true;
+            btnLimpiar.Click += btnLimpiar_Click;
             // 
             // FormPlan
             // 
@@ -294,5 +333,8 @@
         private Button btnEditar;
         private Button btnEliminar;
         private TableLayoutPanel tableLayoutPanel2;
+        private Label lblGrupo;
+        private ComboBox cmbGrupo;
+        private Button btnLimpiar;
     }
 }
