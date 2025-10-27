@@ -28,161 +28,68 @@
         /// </summary>
         private void InitializeComponent()
         {
-            miniToolStrip = new MenuStrip();
-            categoriaGastosToolStripMenuItem = new ToolStripMenuItem();
-            gastosToolStripMenuItem = new ToolStripMenuItem();
-            usuariosToolStripMenuItem = new ToolStripMenuItem();
-            tareaToolStripMenuItem = new ToolStripMenuItem();
-            menuStrip1 = new MenuStrip();
-            menuStrip2 = new MenuStrip();
-            gastosToolStripMenuItem1 = new ToolStripMenuItem();
-            categoriasDeGastosToolStripMenuItem = new ToolStripMenuItem();
-            usuariosToolStripMenuItem1 = new ToolStripMenuItem();
-            tareasToolStripMenuItem = new ToolStripMenuItem();
-            planesToolStripMenuItem = new ToolStripMenuItem();
-            gruposToolStripMenuItem = new ToolStripMenuItem();
-            agregarUsuariosToolStripMenuItem = new ToolStripMenuItem();
-            menuStrip1.SuspendLayout();
-            menuStrip2.SuspendLayout();
+            panelSuperior = new Panel();
+            lblTituloOpciones = new Label();
+            cmbOpciones = new ComboBox();
+            panelSuperior.SuspendLayout();
             SuspendLayout();
             // 
-            // miniToolStrip
+            // panelSuperior
             // 
-            miniToolStrip.AccessibleName = "Selección de nuevo elemento";
-            miniToolStrip.AccessibleRole = AccessibleRole.ComboBox;
-            miniToolStrip.AutoSize = false;
-            miniToolStrip.Dock = DockStyle.None;
-            miniToolStrip.ImageScalingSize = new Size(20, 20);
-            miniToolStrip.Location = new Point(294, 2);
-            miniToolStrip.Name = "miniToolStrip";
-            miniToolStrip.Size = new Size(570, 24);
-            miniToolStrip.TabIndex = 5;
+            panelSuperior.BackColor = Color.LightSteelBlue;
+            panelSuperior.Controls.Add(lblTituloOpciones);
+            panelSuperior.Controls.Add(cmbOpciones);
+            panelSuperior.Dock = DockStyle.Top;
+            panelSuperior.Location = new Point(0, 0);
+            panelSuperior.Margin = new Padding(3, 4, 3, 4);
+            panelSuperior.Name = "panelSuperior";
+            panelSuperior.Size = new Size(1262, 100);  // ← Aumenté la altura a 100
+            panelSuperior.TabIndex = 0;
             // 
-            // categoriaGastosToolStripMenuItem
+            // lblTituloOpciones
             // 
-            categoriaGastosToolStripMenuItem.Name = "categoriaGastosToolStripMenuItem";
-            categoriaGastosToolStripMenuItem.Size = new Size(14, 20);
+            lblTituloOpciones.AutoSize = true;
+            lblTituloOpciones.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTituloOpciones.ForeColor = Color.DarkBlue;
+            lblTituloOpciones.Location = new Point(50, 15);  // ← Y: 15 (arriba)
+            lblTituloOpciones.Name = "lblTituloOpciones";
+            lblTituloOpciones.Size = new Size(103, 23);
+            lblTituloOpciones.TabIndex = 1;
+            lblTituloOpciones.Text = "Navegación:";
             // 
-            // gastosToolStripMenuItem
+            // cmbOpciones
             // 
-            gastosToolStripMenuItem.Name = "gastosToolStripMenuItem";
-            gastosToolStripMenuItem.Size = new Size(14, 20);
-            // 
-            // usuariosToolStripMenuItem
-            // 
-            usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            usuariosToolStripMenuItem.Size = new Size(14, 20);
-            // 
-            // tareaToolStripMenuItem
-            // 
-            tareaToolStripMenuItem.Name = "tareaToolStripMenuItem";
-            tareaToolStripMenuItem.Size = new Size(14, 20);
-            // 
-            // menuStrip1
-            // 
-            menuStrip1.ImageScalingSize = new Size(20, 20);
-            menuStrip1.Items.AddRange(new ToolStripItem[] { categoriaGastosToolStripMenuItem, gastosToolStripMenuItem, usuariosToolStripMenuItem, tareaToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(570, 24);
-            menuStrip1.TabIndex = 5;
-            menuStrip1.Text = "menuStrip1";
-            // 
-            // menuStrip2
-            // 
-            menuStrip2.ImageScalingSize = new Size(20, 20);
-            menuStrip2.Items.AddRange(new ToolStripItem[] { gastosToolStripMenuItem1, categoriasDeGastosToolStripMenuItem, usuariosToolStripMenuItem1, tareasToolStripMenuItem, planesToolStripMenuItem, gruposToolStripMenuItem, agregarUsuariosToolStripMenuItem });
-            menuStrip2.Location = new Point(0, 0);
-            menuStrip2.Name = "menuStrip2";
-            menuStrip2.Padding = new Padding(7, 3, 0, 3);
-            menuStrip2.Size = new Size(1262, 30);
-            menuStrip2.TabIndex = 0;
-            menuStrip2.Text = "menuStrip2";
-            // 
-            // gastosToolStripMenuItem1
-            // 
-            gastosToolStripMenuItem1.Name = "gastosToolStripMenuItem1";
-            gastosToolStripMenuItem1.Size = new Size(67, 24);
-            gastosToolStripMenuItem1.Text = "Gastos";
-            gastosToolStripMenuItem1.Click += gastosToolStripMenuItem1_Click;
-            // 
-            // categoriasDeGastosToolStripMenuItem
-            // 
-            categoriasDeGastosToolStripMenuItem.Name = "categoriasDeGastosToolStripMenuItem";
-            categoriasDeGastosToolStripMenuItem.Size = new Size(162, 24);
-            categoriasDeGastosToolStripMenuItem.Text = "Categorias de gastos";
-            categoriasDeGastosToolStripMenuItem.Click += categoriasDeGastosToolStripMenuItem_Click;
-            // 
-            // usuariosToolStripMenuItem1
-            // 
-            usuariosToolStripMenuItem1.Name = "usuariosToolStripMenuItem1";
-            usuariosToolStripMenuItem1.Size = new Size(79, 24);
-            usuariosToolStripMenuItem1.Text = "Usuarios";
-            usuariosToolStripMenuItem1.Click += usuariosToolStripMenuItem1_Click;
-            // 
-            // tareasToolStripMenuItem
-            // 
-            tareasToolStripMenuItem.Name = "tareasToolStripMenuItem";
-            tareasToolStripMenuItem.Size = new Size(64, 24);
-            tareasToolStripMenuItem.Text = "Tareas";
-            tareasToolStripMenuItem.Click += tareasToolStripMenuItem_Click;
-            // 
-            // planesToolStripMenuItem
-            // 
-            planesToolStripMenuItem.Name = "planesToolStripMenuItem";
-            planesToolStripMenuItem.Size = new Size(65, 24);
-            planesToolStripMenuItem.Text = "Planes";
-            planesToolStripMenuItem.Click += planesToolStripMenuItem_Click;
-            // 
-            // gruposToolStripMenuItem
-            // 
-            gruposToolStripMenuItem.Name = "gruposToolStripMenuItem";
-            gruposToolStripMenuItem.Size = new Size(70, 24);
-            gruposToolStripMenuItem.Text = "Grupos";
-            gruposToolStripMenuItem.Click += gruposToolStripMenuItem_Click;
-            // 
-            // agregarUsuariosToolStripMenuItem
-            // 
-            agregarUsuariosToolStripMenuItem.Name = "agregarUsuariosToolStripMenuItem";
-            agregarUsuariosToolStripMenuItem.Size = new Size(137, 24);
-            agregarUsuariosToolStripMenuItem.Text = "Agregar Usuarios";
-            agregarUsuariosToolStripMenuItem.Click += agregarUsuariosToolStripMenuItem_Click;
+            cmbOpciones.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbOpciones.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cmbOpciones.FormattingEnabled = true;
+            cmbOpciones.Location = new Point(50, 45);  // ← Y: 45 (debajo del label)
+            cmbOpciones.Margin = new Padding(3, 4, 3, 4);
+            cmbOpciones.Name = "cmbOpciones";
+            cmbOpciones.Size = new Size(400, 28);  // ← Aumenté el ancho
+            cmbOpciones.TabIndex = 0;
             // 
             // FormPrincipal
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1262, 673);
-            Controls.Add(menuStrip2);
-            MainMenuStrip = menuStrip2;
+            Controls.Add(panelSuperior);
+            IsMdiContainer = true;
+            Margin = new Padding(3, 4, 3, 4);
             Name = "FormPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Planificador";
+            Text = "Planificador de Viajes";
             Shown += FormPrincipal_Shown;
             Resize += FormPrincipal_Resize;
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
-            menuStrip2.ResumeLayout(false);
-            menuStrip2.PerformLayout();
+            panelSuperior.ResumeLayout(false);
+            panelSuperior.PerformLayout();
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private MenuStrip miniToolStrip;
-        private ToolStripMenuItem categoriaGastosToolStripMenuItem;
-        private ToolStripMenuItem gastosToolStripMenuItem;
-        private ToolStripMenuItem usuariosToolStripMenuItem;
-        private ToolStripMenuItem tareaToolStripMenuItem;
-        private MenuStrip menuStrip1;
-        private MenuStrip menuStrip2;
-        private ToolStripMenuItem gastosToolStripMenuItem1;
-        private ToolStripMenuItem categoriasDeGastosToolStripMenuItem;
-        private ToolStripMenuItem usuariosToolStripMenuItem1;
-        private ToolStripMenuItem tareasToolStripMenuItem;
-        private ToolStripMenuItem planesToolStripMenuItem;
-        private ToolStripMenuItem gruposToolStripMenuItem;
-        private ToolStripMenuItem agregarUsuariosToolStripMenuItem;
+        private Panel panelSuperior;
+        private Label lblTituloOpciones;
+        private ComboBox cmbOpciones;
     }
 }

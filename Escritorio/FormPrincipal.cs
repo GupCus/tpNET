@@ -17,6 +17,7 @@ namespace Escritorio
             InitializeComponent();
             this.IsMdiContainer = true;
         }
+
         private void FormPrincipal_Shown(object sender, EventArgs e)
         {
             FormLogin appLogin = new();
@@ -24,103 +25,193 @@ namespace Escritorio
             {
                 this.Dispose();
             }
+            else
+            {
+                ConfigurarOpcionesSegunRol();
+                MostrarBienvenida();
+            }
         }
 
-        private void btnCategoriaGastos_Click(object sender, EventArgs e)
-        {
-            new FormCategoriaGastos().ShowDialog();
-        }
-
-        private void btnTareas_Click(object sender, EventArgs e)
-        {
-            new FormTarea().ShowDialog();
-        }
-
-        private void btnGasto_Click(object sender, EventArgs e)
-        {
-            new FormGasto().ShowDialog();
-        }
-
-        private void btnUsuario_Click(object sender, EventArgs e)
-        {
-            new FormUsuario().ShowDialog();
-        }
-
-        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        private void ConfigurarOpcionesSegunRol()
         {
 
+            cmbOpciones.Items.Clear();
+            cmbOpciones.SelectedIndexChanged -= CmbOpciones_SelectedIndexChanged;
+
+            if (Sesion.EsAdmin())
+            {
+                lblTituloOpciones.Text = "🔧 Navegación Administrador:";
+                lblTituloOpciones.ForeColor = Color.DarkRed;
+
+                cmbOpciones.Items.AddRange(new object[]
+                {
+                    "🚀 Seleccionar opción...",
+                    "👥 Gestión de Usuarios (FormUsuario)",
+                    "📊 Categorías de Gastos (FormCategoriaGastos)",
+                    "🏢 Gestión de Grupos del Sistema (FormGrupo)",
+                    "📅 Gestión de Planes del Sistema (FormPlan)",
+                    "✅ Gestión de Tareas del Sistema (FormTarea)",
+                    "💰 Gestión de Gastos del Sistema (FormGasto)"
+                });
+            }
+            else
+            {
+                lblTituloOpciones.Text = "👤 Navegación Usuario:";
+                lblTituloOpciones.ForeColor = Color.DarkGreen;
+
+                cmbOpciones.Items.AddRange(new object[]
+                {
+                    "👋 ¿Qué quieres hacer?",
+                    "🏠 Ver Mis Grupos de Viaje (FrmGrupos)",
+                    "➕ Crear/Editar Grupo y Participantes (FormMisGrupos)"
+                    // Solo grupos para usuarios normales
+                });
+            }
+
+            cmbOpciones.SelectedIndex = 0;
+            cmbOpciones.SelectedIndexChanged += CmbOpciones_SelectedIndexChanged;
         }
 
-
-
-        private void gastosToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void CmbOpciones_SelectedIndexChanged(object sender, EventArgs e)
         {
-            FormGasto form = new FormGasto();
-            form.MdiParent = this;
-            form.Dock = DockStyle.Fill;
-            form.Show();
+            if (cmbOpciones.SelectedIndex <= 0) return;
+
+            try
+            {
+                if (Sesion.EsAdmin())
+                {
+                    ProcesarOpcionAdmin();
+                }
+                else
+                {
+                    ProcesarOpcionUsuario();
+                }
+            }
+            finally
+            {
+                cmbOpciones.SelectedIndex = 0;
+            }
         }
 
-        private void categoriasDeGastosToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ProcesarOpcionAdmin()
         {
-            FormCategoriaGastos form = new FormCategoriaGastos();
-            form.MdiParent = this;
-            form.Dock = DockStyle.Fill;
-            form.Show();
+            switch (cmbOpciones.SelectedIndex)
+            {
+                case 1: // Gestión de Usuarios
+                    AbrirFormUsuario();
+                    break;
+                case 2: // Categorías de Gastos
+                    AbrirFormCategoriaGastos();
+                    break;
+                case 3: // Gestión de Grupos del Sistema
+                    AbrirFormGrupo();
+                    break;
+                case 4: // Gestión de Planes del Sistema
+                    AbrirFormPlan();
+                    break;
+                case 5: // Gestión de Tareas del Sistema
+                    AbrirFormTarea();
+                    break;
+                case 6: // Gestión de Gastos del Sistema
+                    AbrirFormGasto();
+                    break;
+            }
         }
 
-        private void usuariosToolStripMenuItem1_Click(object sender, EventArgs e)
+        private void ProcesarOpcionUsuario()
+        {
+            switch (cmbOpciones.SelectedIndex)
+            {
+                case 1: // Ver Mis Grupos de Viaje
+                    AbrirFrmGrupos();
+                    break;
+                case 2: // Crear/Editar Grupo y Participantes
+                    AbrirFormMisGrupos();
+                    break;
+                    // Usuarios normales solo tienen acceso a grupos
+            }
+        }
+
+        // ========== MÉTODOS PARA ABRIR FORMS ==========
+
+        private void AbrirFormUsuario()
         {
             FormUsuario form = new FormUsuario();
+            AbrirFormMDI(form, "Gestión de Usuarios");
+        }
+
+        private void AbrirFormCategoriaGastos()
+        {
+            FormCategoriaGastos form = new FormCategoriaGastos();
+            AbrirFormMDI(form, "Categorías de Gastos");
+        }
+
+        private void AbrirFormGrupo()
+        {
+            FormGrupo form = new FormGrupo();
+            AbrirFormMDI(form, "Gestión de Grupos del Sistema");
+        }
+
+        private void AbrirFormPlan()
+        {
+            FormPlan form = new FormPlan();
+            AbrirFormMDI(form, "Gestión de Planes del Sistema");
+        }
+
+        private void AbrirFormTarea()
+        {
+            FormTarea form = new FormTarea();
+            AbrirFormMDI(form, "Gestión de Tareas del Sistema");
+        }
+
+        private void AbrirFormGasto()
+        {
+            FormGasto form = new FormGasto();
+            AbrirFormMDI(form, "Gestión de Gastos del Sistema");
+        }
+
+        private void AbrirFrmGrupos()
+        {
+            FrmGrupos form = new FrmGrupos(Sesion.UsuarioActual.Id);
+            AbrirFormMDI(form, "Mis Grupos de Viaje");
+        }
+
+        private void AbrirFormMisGrupos()
+        {
+            FormMisGrupos form = new FormMisGrupos();
+            AbrirFormMDI(form, "Crear/Editar Grupo");
+        }
+
+        private void AbrirFormMDI(Form form, string titulo = "")
+        {
             form.MdiParent = this;
             form.Dock = DockStyle.Fill;
+            if (!string.IsNullOrEmpty(titulo))
+            {
+                form.Text = titulo;
+            }
             form.Show();
         }
 
-        private void tareasToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MostrarBienvenida()
         {
-            FormTarea form = new FormTarea();
-            form.MdiParent = this;
-            form.Dock = DockStyle.Fill;
-            form.Show();
+            string rol = Sesion.EsAdmin() ? "Administrador" : "Usuario";
+            string mensaje = Sesion.EsAdmin()
+                ? "Tienes acceso completo al sistema."
+                : "Puedes gestionar tus grupos de viaje.";
+
+            MessageBox.Show($"¡Bienvenido {Sesion.UsuarioActual.Nombre}!\n\nRol: {rol}\n\n{mensaje}",
+                "Inicio de Sesión Exitoso",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         private void FormPrincipal_Resize(object sender, EventArgs e)
         {
-
-
             if (this.ActiveMdiChild != null)
             {
                 this.ActiveMdiChild.Dock = DockStyle.Fill;
             }
-
-        }
-
-        private void planesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormPlan form = new FormPlan();
-            form.MdiParent = this;
-            form.Dock = DockStyle.Fill;
-
-            form.Show();
-        }
-
-        private void gruposToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormGrupo form = new FormGrupo();
-            form.MdiParent = this;
-            form.Dock = DockStyle.Fill;
-
-            form.Show();
-        }
-
-        private void agregarUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            FormMisGrupos form = new FormMisGrupos();
-            form.MdiParent = this;
-            form.Dock = DockStyle.Fill;
-
-            form.Show();
         }
     }
 }
