@@ -1,0 +1,83 @@
+﻿@page "/usuarios"
+@using API.Clients;
+@using DTOs;
+@inject NavigationManager NavigationManager
+<h3>Usuarios</h3>
+
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+@if (usuarios == null)
+{
+    <p>Cargando usuarios</p>
+}
+else if (!usuarios.Any())
+{
+    <p>No hay usuarios.</p>
+}
+else
+{
+    <button class="btn btn-success mb-3" @onclick="NuevoUsuario">Nuevo Usuario</button>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Mail</th>
+                <th>Fecha alta</th>
+                <th>Rol</th>
+               
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in usuarios)
+            {
+                <tr>
+                    <td>@usuario.Id</td>
+                    <td>@usuario.Nombre</td>
+                    <td>@usuario.Mail</td>
+                    <td>@usuario.FechaAlta</td>
+                    <td>@usuario.Rol</td>
+                    
+                    <td>
+                        <button class="btn btn-primary btn-sm me-1" @onclick="() => EditarUsuario(usuario.Id)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarUsuario(usuario.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private string mensajeError;
+    List<UsuarioDTO> usuarios;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var lista = await UsuarioApiClient.GetAllAsync();
+        usuarios = lista.ToList();
+    }
+    private void NuevoUsuario()
+    {
+        NavigationManager.NavigateTo("/usuarios/create");
+    }
+    private void EditarUsuario(int id)
+    {
+        NavigationManager.NavigateTo($"/usuarios/update/{id}");
+    }
+    private async Task EliminarUsuario(int id)
+    {
+        try
+        {
+            await UsuarioApiClient.DeleteAsync(id);
+            usuarios = usuarios.Where(p => p.Id != id).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al eliminar el usuario :{ex.Message}";
+        }
+    }
+}

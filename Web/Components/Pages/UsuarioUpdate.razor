@@ -1,0 +1,95 @@
+﻿@page "/usuarios/update/{Id:int}"
+@using DTOs
+@using API.Clients;
+
+@inject NavigationManager NavigationManager
+<h3>Actualizar usuario</h3>
+
+@if (cargando)
+{
+    <p>Cargando tarea</p>
+}
+else if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else
+{
+    <EditForm Model="usuarioUpdate" OnValidSubmit="GuardarUsuario">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Nombre</label>
+            <InputText class="form-control" @bind-Value="usuarioUpdate.Nombre" />
+        </div>
+
+        <div class="mb-3">
+            <label>Mail</label>
+            <InputText class="form-control" @bind-Value="usuarioUpdate.Mail" />
+        </div>
+        <div class="mb-3">
+            <label>Contraseña</label>
+            <InputText class="form-control" type="password" @bind-Value="usuarioUpdate.Contrasena" />
+        </div>
+        <div class="mb-3">
+            <label>Rol</label>
+            <InputText class="form-control" @bind-Value="usuarioUpdate.Rol" />
+        </div>
+
+
+        <button class="btn btn-primary" type="submit">
+            Guardar
+        </button>
+    </EditForm>
+
+    @code {
+    [Parameter] public int Id { get; set; }
+
+
+    private string mensajeError = string.Empty;
+    private bool cargando = true;
+    private UsuarioUpdateDTO usuarioUpdate = new UsuarioUpdateDTO();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var usuario = await UsuarioApiClient.GetAsync(Id);
+            usuarioUpdate.Nombre = usuario.Nombre;
+            usuarioUpdate.Id = usuario.Id;
+            usuarioUpdate.Mail = usuario.Mail;
+            usuarioUpdate.Rol = usuario.Rol;
+           usuarioUpdate.FechaAlta = usuario.FechaAlta;
+
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar el usuario: {ex.Message}";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task GuardarUsuario()
+    {
+        try
+        {
+
+            mensajeError = string.Empty;
+
+            await UsuarioApiClient.UpdateAsync(usuarioUpdate);
+            NavigationManager.NavigateTo("/usuarios");
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al actualizar el usuario: {ex.Message}";
+        }
+
+    }
+}
+}

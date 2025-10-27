@@ -1,0 +1,56 @@
+﻿@page "/usuarios/create"
+@using DTOs;
+@using API.Clients;
+@inject NavigationManager NavigationManager
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+<h3>Crear usuario</h3>
+<EditForm Model="nuevoUsuario" OnValidSubmit="GuardarUsuario">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <div class="mb-3">
+        <label>Nombre</label>
+        <InputText class="form-control" @bind-Value="nuevoUsuario.Nombre" />
+    </div>
+
+    <div class="mb-3">
+        <label>Mail</label>
+        <InputText class="form-control" @bind-Value="nuevoUsuario.Mail" />
+    </div>
+    <div class="mb-3">
+        <label>Contraseña</label>
+        <InputText class="form-control " type="password" @bind-Value="nuevoUsuario.Contrasena" />
+    </div>
+
+    <div class="mb-3">
+        <label>Rol</label>
+        <InputText class="form-control" @bind-Value="nuevoUsuario.Rol" />
+    </div>
+    
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+</EditForm>
+@code {
+    private UsuarioUpdateDTO nuevoUsuario = new UsuarioUpdateDTO();
+    private string mensajeError = string.Empty;
+    private async Task GuardarUsuario()
+    {
+
+        try
+        {
+
+            nuevoUsuario.FechaAlta = DateTime.Now;
+            await UsuarioApiClient.AddAsync(nuevoUsuario);
+            NavigationManager.NavigateTo("/usuarios");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            mensajeError = $"Error al guardar el usuario: {ex.Message}";
+
+        }
+    }
+}

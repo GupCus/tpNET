@@ -82,7 +82,7 @@ namespace Repository
                     Mail = "admin",
                     Nombre = "admin",
                     Contrasena = "admin",
-                    FechaAlta = DateTime.Now,
+                    FechaAlta = new DateTime(2025, 10, 27),
                     Rol = "Admin"
                 });
             });
