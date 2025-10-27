@@ -68,11 +68,11 @@ namespace API.EndPoints
 
             app.MapPost("/usuarios/login", (LoginDTO user, UsuarioService service) =>
             {
-                var exito = service.Login(user);
-                return Results.Ok(exito);
-            })
-            .WithName("Login")
-            .WithOpenApi();
+                var usuarioDto = service.Login(user);
+                if (usuarioDto == null)
+                    return Results.Unauthorized();
+                return Results.Ok(usuarioDto);
+            });
         }
     }
 }

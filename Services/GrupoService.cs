@@ -17,9 +17,9 @@ namespace Services
                 throw new ArgumentException($"Ya existe un grupo con el nombre '{dto.Nombre}'.");
 
             var fechaAlta = DateTime.Now;
-            var entidad = new Grupo(0, dto.Nombre, dto.Descripcion, fechaAlta);
+            var entidad = new Grupo(0, dto.Nombre, dto.Descripcion, fechaAlta, dto.IdUsuarioAdministrador);
 
-            // Asociar usuarios si se envían Ids en DTO (opcional). Aquí asumimos que dto.Usuarios trae solo Ids si corresponde.
+            
             if (dto.Usuarios != null && dto.Usuarios.Any())
             {
                 var usuarioRepo = new UsuarioRepository();
@@ -55,6 +55,7 @@ namespace Services
                 Nombre = g.Nombre,
                 Descripcion = g.Descripcion,
                 FechaAlta = g.FechaAlta,
+                IdUsuarioAdministrador = g.IdUsuarioAdministrador, 
                 Usuarios = g.Usuarios?.Select(u => new UsuarioDTO { Id = u.Id, Nombre = u.Nombre, Mail = u.Mail }).ToList()
             };
         }
@@ -68,7 +69,8 @@ namespace Services
                 Id = g.Id,
                 Nombre = g.Nombre,
                 Descripcion = g.Descripcion,
-                FechaAlta = g.FechaAlta
+                FechaAlta = g.FechaAlta,
+                IdUsuarioAdministrador = g.IdUsuarioAdministrador 
             }).ToList();
         }
 
@@ -77,16 +79,15 @@ namespace Services
             var repo = new GrupoRepository();
             if (repo.NameExists(dto.Nombre, dto.Id))
                 throw new ArgumentException($"Ya existe otro grupo con el nombre '{dto.Nombre}'.");
-            var entidad=repo.Get(dto.Id);
+            var entidad = repo.Get(dto.Id);
             entidad.SetDescripcion(dto.Descripcion);
             entidad.SetNombre(dto.Nombre);
-            //var entidad = new Grupo(dto.Id, dto.Nombre, dto.Descripcion, dto.FechaAlta);
+            entidad.SetIdUsuarioAdministrador(dto.IdUsuarioAdministrador); 
 
-            // Si se proporciona lista de usuarios en DTO, sincronizar (simple enfoque)
+           
             if (dto.Usuarios != null)
             {
                 var usuarioRepo = new UsuarioRepository();
-                // Limpiar y volver a agregar para simplicidad
                 foreach (var usuarioDto in dto.Usuarios)
                 {
                     var usuario = usuarioRepo.Get(usuarioDto.Id);
@@ -106,7 +107,8 @@ namespace Services
                 Id = g.Id,
                 Nombre = g.Nombre,
                 Descripcion = g.Descripcion,
-                FechaAlta = g.FechaAlta
+                FechaAlta = g.FechaAlta,
+                IdUsuarioAdministrador = g.IdUsuarioAdministrador 
             });
         }
     }

@@ -9,7 +9,7 @@ namespace DTOs
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public DateTime FechaAlta { get; set; }
-
+        public int IdUsuarioAdministrador { get; set; } 
         public List<UsuarioDTO>? Usuarios { get; set; }
     }
 }

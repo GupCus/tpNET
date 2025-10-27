@@ -47,6 +47,7 @@ namespace Repository
             existing.SetNombre(grupo.Nombre);
             existing.SetDescripcion(grupo.Descripcion);
             existing.SetFechaAlta(grupo.FechaAlta);
+            existing.SetIdUsuarioAdministrador(grupo.IdUsuarioAdministrador); // <-- Nuevo campo actualizado
             ctx.SaveChanges();
             return true;
         }

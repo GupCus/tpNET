@@ -43,9 +43,15 @@ namespace Escritorio
             if (nuevo)
             {
                 g.FechaAlta = DateTime.Now;
-
+                // Agregar el id del usuario logueado como administrador
+                g.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? 0; // Usar 0 si no está logueado
             }
-            else { g.Id = int.Parse(txtID.Text); }
+            else
+            {
+                g.Id = int.Parse(txtID.Text);
+                // Si quieres que el administrador se pueda editar, agrega aquí
+                // g.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? g.IdUsuarioAdministrador;
+            }
             return g;
 
         }
@@ -53,6 +59,9 @@ namespace Escritorio
         {
             txtID.Text = "";
             GrupoDTO grupo = LimpiarGrupo();
+
+            Debug.WriteLine($"ID USUARIO ACTUAL: {Sesion.UsuarioActual?.Id}");
+
             await GrupoApiClient.AddAsync(grupo);
             await CargarGrupos();
         }

@@ -7,6 +7,8 @@ namespace Escritorio
 {
     public partial class FormLogin : Form
     {
+        public static UsuarioDTO? UsuarioLogueado { get; private set; }
+
         public FormLogin()
         {
             InitializeComponent();
@@ -25,24 +27,24 @@ namespace Escritorio
 
             try
             {
-                // Crear el DTO de login
                 LoginDTO user = new()
                 {
                     Usuario = txtUsername.Text.Trim(),
                     Contrasena = txtPassword.Text.Trim()
                 };
 
-                // Consumir el servicio API del login (retorna bool)
-                bool ok = await UsuarioApiClient.Login(user);
+                UsuarioDTO? usuario = await UsuarioApiClient.Login(user);
 
-                if (ok)
+                if (usuario != null)
                 {
-                    MessageBox.Show("¡Usted ha ingresado correctamente!",
+                    MessageBox.Show($"¡Bienvenido, {usuario.Nombre}!",
                         "Login Exitoso",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
+
+                    UsuarioLogueado = usuario;
+                    Sesion.UsuarioActual = usuario;
                     this.DialogResult = DialogResult.OK;
-                    // Puedes guardar datos del usuario logueado aquí si lo necesitas
                 }
                 else
                 {

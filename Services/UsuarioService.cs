@@ -113,11 +113,20 @@ namespace Services
             });
         }
 
-        public bool Login(LoginDTO user)
+        public UsuarioDTO Login(LoginDTO user)
         {
             var users = new UsuarioRepository().GetAll();
             var usuario = users.FirstOrDefault(u => u.Nombre == user.Usuario && u.Contrasena == user.Contrasena);
-            return usuario != null;
+            if (usuario == null) return null;
+            return new UsuarioDTO
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre,
+                Mail = usuario.Mail,
+                FechaAlta = usuario.FechaAlta,
+                Rol = usuario.Rol
+                
+            };
         }
     }
 }

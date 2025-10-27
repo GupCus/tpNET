@@ -101,13 +101,15 @@ namespace API.Clients
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
 
-        public static async Task<bool> Login(LoginDTO user)
+        public static async Task<UsuarioDTO?> Login(LoginDTO user)
         {
             try
             {
-                var response = await client.PostAsJsonAsync("usuarios/login",user);
+                var response = await client.PostAsJsonAsync("usuarios/login", user);
                 if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadFromJsonAsync<bool>();
+                    return await response.Content.ReadFromJsonAsync<UsuarioDTO>();
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                    return null;
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Error al iniciar sesión. Status: {response.StatusCode}, Detalle: {error}");
             }
