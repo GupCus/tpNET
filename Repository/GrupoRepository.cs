@@ -28,7 +28,8 @@ namespace Repository
         {
             using var ctx = CreateContext();
             return ctx.Grupos
-                      .Include(g => g.Usuarios)
+                      .Include(g => g.GrupoUsuarios)
+                        .ThenInclude(gu => gu.Usuario)
                       .Include(g => g.Planes)
                       .FirstOrDefault(g => g.Id == id);
         }
@@ -36,18 +37,25 @@ namespace Repository
         public IEnumerable<Grupo> GetAll()
         {
             using var ctx = CreateContext();
-            return ctx.Grupos.Include(g => g.Usuarios).Include(g => g.Planes).ToList();
+            return ctx.Grupos
+                        .Include(g => g.GrupoUsuarios)
+                          .ThenInclude(gu => gu.Usuario)
+                        .Include(g => g.Planes)
+                        .ToList();
         }
 
         public bool Update(Grupo grupo)
         {
             using var ctx = CreateContext();
-            var existing = ctx.Grupos.Find(grupo.Id);
+            var existing = ctx.Grupos
+                              .Include(g => g.GrupoUsuarios)
+                              .FirstOrDefault(g => g.Id == grupo.Id);
             if (existing == null) return false;
             existing.SetNombre(grupo.Nombre);
             existing.SetDescripcion(grupo.Descripcion);
             existing.SetFechaAlta(grupo.FechaAlta);
-            existing.SetIdUsuarioAdministrador(grupo.IdUsuarioAdministrador); // <-- Nuevo campo actualizado
+            existing.SetIdUsuarioAdministrador(grupo.IdUsuarioAdministrador);
+            // Si necesitas actualizar usuarios, deberías hacerlo aquí
             ctx.SaveChanges();
             return true;
         }

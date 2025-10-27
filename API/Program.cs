@@ -6,18 +6,14 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Planificador API", Version = "v1" });
 });
-
-// ✅ CONFIGURACIÓN CORRECTA DEL DBCONTEXT
 builder.Services.AddDbContext<TPIContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowBlazorWasm",
@@ -29,7 +25,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-// Registrar repositorios y servicios
 builder.Services.AddScoped<CategoriaGastoRepository>();
 builder.Services.AddScoped<CategoriaGastoService>();
 builder.Services.AddScoped<GastoRepository>();
@@ -42,6 +37,8 @@ builder.Services.AddScoped<TareaRepository>();
 builder.Services.AddScoped<TareaService>();
 builder.Services.AddScoped<UsuarioRepository>();
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<UsuarioGrupoRepository>();
+builder.Services.AddScoped<UsuarioGrupoService>();    
 
 var app = builder.Build();
 
@@ -49,7 +46,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<TPIContext>();
-    // ✅ ELIMINAR Y RECREAR la base de datos (solo desarrollo)
+    // ELIMINAR Y RECREAR la base de datos (solo desarrollo)
     //context.Database.EnsureDeleted(); // Elimina la base de datos existente
     context.Database.EnsureCreated(); // Crea una nueva
 
@@ -71,6 +68,7 @@ using (var scope = app.Services.CreateScope())
     app.MapGastoEndPoints();
     app.MapGrupoEndPoints();
     app.MapPlanEndPoints();
+    app.MapUsuarioGrupoEndPoints();
 
     app.Run();
 

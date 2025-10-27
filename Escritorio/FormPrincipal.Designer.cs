@@ -41,6 +41,7 @@
             tareasToolStripMenuItem = new ToolStripMenuItem();
             planesToolStripMenuItem = new ToolStripMenuItem();
             gruposToolStripMenuItem = new ToolStripMenuItem();
+            agregarUsuariosToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
             menuStrip2.SuspendLayout();
             SuspendLayout();
@@ -60,22 +61,22 @@
             // categoriaGastosToolStripMenuItem
             // 
             categoriaGastosToolStripMenuItem.Name = "categoriaGastosToolStripMenuItem";
-            categoriaGastosToolStripMenuItem.Size = new Size(12, 20);
+            categoriaGastosToolStripMenuItem.Size = new Size(14, 20);
             // 
             // gastosToolStripMenuItem
             // 
             gastosToolStripMenuItem.Name = "gastosToolStripMenuItem";
-            gastosToolStripMenuItem.Size = new Size(12, 20);
+            gastosToolStripMenuItem.Size = new Size(14, 20);
             // 
             // usuariosToolStripMenuItem
             // 
             usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            usuariosToolStripMenuItem.Size = new Size(12, 20);
+            usuariosToolStripMenuItem.Size = new Size(14, 20);
             // 
             // tareaToolStripMenuItem
             // 
             tareaToolStripMenuItem.Name = "tareaToolStripMenuItem";
-            tareaToolStripMenuItem.Size = new Size(12, 20);
+            tareaToolStripMenuItem.Size = new Size(14, 20);
             // 
             // menuStrip1
             // 
@@ -90,63 +91,70 @@
             // menuStrip2
             // 
             menuStrip2.ImageScalingSize = new Size(20, 20);
-            menuStrip2.Items.AddRange(new ToolStripItem[] { gastosToolStripMenuItem1, categoriasDeGastosToolStripMenuItem, usuariosToolStripMenuItem1, tareasToolStripMenuItem, planesToolStripMenuItem, gruposToolStripMenuItem });
+            menuStrip2.Items.AddRange(new ToolStripItem[] { gastosToolStripMenuItem1, categoriasDeGastosToolStripMenuItem, usuariosToolStripMenuItem1, tareasToolStripMenuItem, planesToolStripMenuItem, gruposToolStripMenuItem, agregarUsuariosToolStripMenuItem });
             menuStrip2.Location = new Point(0, 0);
             menuStrip2.Name = "menuStrip2";
-            menuStrip2.Size = new Size(1104, 24);
+            menuStrip2.Padding = new Padding(7, 3, 0, 3);
+            menuStrip2.Size = new Size(1262, 30);
             menuStrip2.TabIndex = 0;
             menuStrip2.Text = "menuStrip2";
             // 
             // gastosToolStripMenuItem1
             // 
             gastosToolStripMenuItem1.Name = "gastosToolStripMenuItem1";
-            gastosToolStripMenuItem1.Size = new Size(54, 20);
+            gastosToolStripMenuItem1.Size = new Size(67, 24);
             gastosToolStripMenuItem1.Text = "Gastos";
             gastosToolStripMenuItem1.Click += gastosToolStripMenuItem1_Click;
             // 
             // categoriasDeGastosToolStripMenuItem
             // 
             categoriasDeGastosToolStripMenuItem.Name = "categoriasDeGastosToolStripMenuItem";
-            categoriasDeGastosToolStripMenuItem.Size = new Size(128, 20);
+            categoriasDeGastosToolStripMenuItem.Size = new Size(162, 24);
             categoriasDeGastosToolStripMenuItem.Text = "Categorias de gastos";
             categoriasDeGastosToolStripMenuItem.Click += categoriasDeGastosToolStripMenuItem_Click;
             // 
             // usuariosToolStripMenuItem1
             // 
             usuariosToolStripMenuItem1.Name = "usuariosToolStripMenuItem1";
-            usuariosToolStripMenuItem1.Size = new Size(64, 20);
+            usuariosToolStripMenuItem1.Size = new Size(79, 24);
             usuariosToolStripMenuItem1.Text = "Usuarios";
             usuariosToolStripMenuItem1.Click += usuariosToolStripMenuItem1_Click;
             // 
             // tareasToolStripMenuItem
             // 
             tareasToolStripMenuItem.Name = "tareasToolStripMenuItem";
-            tareasToolStripMenuItem.Size = new Size(52, 20);
+            tareasToolStripMenuItem.Size = new Size(64, 24);
             tareasToolStripMenuItem.Text = "Tareas";
             tareasToolStripMenuItem.Click += tareasToolStripMenuItem_Click;
             // 
             // planesToolStripMenuItem
             // 
             planesToolStripMenuItem.Name = "planesToolStripMenuItem";
-            planesToolStripMenuItem.Size = new Size(53, 20);
+            planesToolStripMenuItem.Size = new Size(65, 24);
             planesToolStripMenuItem.Text = "Planes";
             planesToolStripMenuItem.Click += planesToolStripMenuItem_Click;
             // 
             // gruposToolStripMenuItem
             // 
             gruposToolStripMenuItem.Name = "gruposToolStripMenuItem";
-            gruposToolStripMenuItem.Size = new Size(57, 20);
+            gruposToolStripMenuItem.Size = new Size(70, 24);
             gruposToolStripMenuItem.Text = "Grupos";
             gruposToolStripMenuItem.Click += gruposToolStripMenuItem_Click;
             // 
+            // agregarUsuariosToolStripMenuItem
+            // 
+            agregarUsuariosToolStripMenuItem.Name = "agregarUsuariosToolStripMenuItem";
+            agregarUsuariosToolStripMenuItem.Size = new Size(137, 24);
+            agregarUsuariosToolStripMenuItem.Text = "Agregar Usuarios";
+            agregarUsuariosToolStripMenuItem.Click += agregarUsuariosToolStripMenuItem_Click;
+            // 
             // FormPrincipal
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1104, 505);
+            ClientSize = new Size(1262, 673);
             Controls.Add(menuStrip2);
             MainMenuStrip = menuStrip2;
-            Margin = new Padding(3, 2, 3, 2);
             Name = "FormPrincipal";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Planificador";
@@ -175,5 +183,6 @@
         private ToolStripMenuItem tareasToolStripMenuItem;
         private ToolStripMenuItem planesToolStripMenuItem;
         private ToolStripMenuItem gruposToolStripMenuItem;
+        private ToolStripMenuItem agregarUsuariosToolStripMenuItem;
     }
 }

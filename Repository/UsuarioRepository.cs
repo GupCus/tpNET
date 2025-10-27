@@ -1,5 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,31 +31,35 @@ namespace Repository
         {
             using var ctx = CreateContext();
             return ctx.Usuarios
-                .Include(u => u.Grupos)
+                .Include(u => u.GrupoUsuarios)
+                    .ThenInclude(gu => gu.Grupo)
                 .FirstOrDefault(u => u.Id == id);
         }
 
         public IEnumerable<Usuario> GetAll()
         {
             using var ctx = CreateContext();
-            return ctx.Usuarios.Include(u => u.Grupos).ToList();
+            return ctx.Usuarios
+                .Include(u => u.GrupoUsuarios)
+                    .ThenInclude(gu => gu.Grupo)
+                .ToList();
         }
 
-public bool Update(Usuario usuario)
-{
-    using var ctx = CreateContext();
-    var existing = ctx.Usuarios.Find(usuario.Id);
-    if (existing == null) return false;
-    existing.SetMail(usuario.Mail);
-    existing.SetNombre(usuario.Nombre);
-    if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
-        existing.SetContrasena(usuario.Contrasena);
-    existing.SetFechaAlta(usuario.FechaAlta);
-    // Forzar SIEMPRE NoAdmin
-    existing.SetRol("NoAdmin");
-    ctx.SaveChanges();
-    return true;
-}
+        public bool Update(Usuario usuario)
+        {
+            using var ctx = CreateContext();
+            var existing = ctx.Usuarios.Find(usuario.Id);
+            if (existing == null) return false;
+            existing.SetMail(usuario.Mail);
+            existing.SetNombre(usuario.Nombre);
+            if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
+                existing.SetContrasena(usuario.Contrasena);
+            existing.SetFechaAlta(usuario.FechaAlta);
+            // Forzar SIEMPRE NoAdmin
+            existing.SetRol("NoAdmin");
+            ctx.SaveChanges();
+            return true;
+        }
 
         public bool EmailExists(string email, int? excludeId = null)
         {
@@ -72,6 +75,13 @@ public bool Update(Usuario usuario)
             if (string.IsNullOrWhiteSpace(texto)) return ctx.Usuarios.ToList();
             texto = texto.ToLower();
             return ctx.Usuarios.Where(u => u.Mail.ToLower().Contains(texto) || u.Nombre.ToLower().Contains(texto)).ToList();
+        }
+
+        public Usuario GetByMail(string mail)
+        {
+            using var ctx = CreateContext();
+            return ctx.Usuarios
+                .FirstOrDefault(u => u.Mail.ToLower() == mail.ToLower());
         }
     }
 }

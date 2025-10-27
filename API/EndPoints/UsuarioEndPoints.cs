@@ -73,6 +73,16 @@ namespace API.EndPoints
                     return Results.Unauthorized();
                 return Results.Ok(usuarioDto);
             });
+
+            app.MapGet("/usuarios/bymail/{mail}", (string mail, UsuarioService service) =>
+            {
+                var usuario = service.GetByMail(mail);
+                return usuario == null ? Results.NotFound() : Results.Ok(usuario);
+            })
+            .WithName("GetUsuarioByMail")
+            .Produces<UsuarioDTO>(StatusCodes.Status200OK)
+             .Produces(StatusCodes.Status404NotFound)
+            .WithOpenApi();
         }
     }
 }

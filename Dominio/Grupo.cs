@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dominio.Dominio;
 
 namespace Dominio
 {
     public class Grupo
-    {   
+    {
         public int Id { get; private set; }
         public string Nombre { get; private set; }
         public string Descripcion { get; private set; }
@@ -14,8 +15,9 @@ namespace Dominio
         // Nuevo campo: Id del usuario administrador
         public int IdUsuarioAdministrador { get; private set; }
 
-        private readonly List<Usuario> _usuarios = new List<Usuario>();
-        public IReadOnlyCollection<Usuario> Usuarios => _usuarios.AsReadOnly();
+        // Relación muchos a muchos: Grupo <-> GrupoUsuario <-> Usuario
+        private readonly List<UsuarioGrupo> _grupoUsuarios = new List<UsuarioGrupo>();
+        public IReadOnlyCollection<UsuarioGrupo> GrupoUsuarios => _grupoUsuarios.AsReadOnly();
 
         private readonly List<Plan> _planes = new List<Plan>();
         public IReadOnlyCollection<Plan> Planes => _planes.AsReadOnly();
@@ -60,21 +62,17 @@ namespace Dominio
             IdUsuarioAdministrador = idUsuarioAdministrador;
         }
 
-        public void AddUsuario(Usuario usuario)
+        public void AddGrupoUsuario(UsuarioGrupo grupoUsuario)
         {
-            if (usuario == null) throw new ArgumentNullException(nameof(usuario));
-            if (!_usuarios.Any(u => u.Id == usuario.Id)) _usuarios.Add(usuario);
-            if (!usuario.Grupos.Any(g => g.Id == this.Id)) usuario.AddGrupo(this);
+            if (grupoUsuario == null) throw new ArgumentNullException(nameof(grupoUsuario));
+            if (!_grupoUsuarios.Any(gu => gu.UsuarioId == grupoUsuario.UsuarioId))
+                _grupoUsuarios.Add(grupoUsuario);
         }
 
-        public void RemoveUsuario(int usuarioId)
+        public void RemoveGrupoUsuario(int usuarioId)
         {
-            var u = _usuarios.FirstOrDefault(x => x.Id == usuarioId);
-            if (u != null)
-            {
-                _usuarios.Remove(u);
-                u.RemoveGrupo(this.Id);
-            }
+            var gu = _grupoUsuarios.FirstOrDefault(x => x.UsuarioId == usuarioId);
+            if (gu != null) _grupoUsuarios.Remove(gu);
         }
 
         public void AddPlan(Plan plan)

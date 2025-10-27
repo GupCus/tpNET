@@ -65,6 +65,13 @@ namespace API.EndPoints
             .WithName("GetGruposByCriteria")
             .Produces<IEnumerable<GrupoDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
+
+            app.MapGet("/grupos/byadmin/{idAdministrador:int}", (int idAdministrador, GrupoService service) =>
+            {
+                var grupos = service.GetByAdministrador(idAdministrador);
+                return Results.Ok(grupos);
+            });
+
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Configuration;
 using Dominio;
 using Microsoft.Extensions.Logging;
+using System;
+using Dominio.Dominio;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Repository
 {
@@ -14,6 +16,7 @@ namespace Repository
         public DbSet<Plan> Planes { get; set; }
         public DbSet<Tarea> Tareas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<UsuarioGrupo> GrupoUsuarios { get; set; } // <<--- NUEVO
 
         public TPIContext(DbContextOptions<TPIContext> options) : base(options)
         {
@@ -78,7 +81,7 @@ namespace Repository
                     Id = 1,
                     Mail = "admin",
                     Nombre = "admin",
-                    Contrasena = "admin", 
+                    Contrasena = "admin",
                     FechaAlta = DateTime.Now,
                     Rol = "Admin"
                 });
@@ -94,29 +97,24 @@ namespace Repository
                 entity.Property(e => e.FechaAlta).IsRequired();
             });
 
-            // === Many-to-many Usuario <-> Grupo ===
-            modelBuilder.Entity<Usuario>()
-                .HasMany(u => u.Grupos)
-                .WithMany(g => g.Usuarios)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UsuarioGrupos",
-                    j => j
-                        .HasOne<Grupo>()
-                        .WithMany()
-                        .HasForeignKey("GrupoId")
-                        .HasConstraintName("FK_UsuarioGrupo_Grupo")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j => j
-                        .HasOne<Usuario>()
-                        .WithMany()
-                        .HasForeignKey("UsuarioId")
-                        .HasConstraintName("FK_UsuarioGrupo_Usuario")
-                        .OnDelete(DeleteBehavior.Cascade),
-                    j =>
-                    {
-                        j.HasKey("UsuarioId", "GrupoId");
-                        j.ToTable("UsuarioGrupos");
-                    });
+            // === Many-to-many Usuario <-> Grupo usando GrupoUsuario ===
+            modelBuilder.Entity<UsuarioGrupo>(entity =>
+            {
+                entity.HasKey(e => new { e.GrupoId, e.UsuarioId });
+                entity.Property(e => e.FechaAlta).IsRequired();
+
+                entity.HasOne(e => e.Grupo)
+                    .WithMany(g => g.GrupoUsuarios)
+                    .HasForeignKey(e => e.GrupoId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Usuario)
+                    .WithMany(u => u.GrupoUsuarios)
+                    .HasForeignKey(e => e.UsuarioId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.ToTable("GrupoUsuarios");
+            });
 
             // === Plan ===
             var dateOnlyConverter = new ValueConverter<DateOnly, DateTime>(

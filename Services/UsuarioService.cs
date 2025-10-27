@@ -54,7 +54,14 @@ namespace Services
                 Nombre = u.Nombre,
                 FechaAlta = u.FechaAlta,
                 Rol = u.Rol,
-                Grupos = u.Grupos?.Select(g => new GrupoDTO { Id = g.Id, Nombre = g.Nombre, Descripcion = g.Descripcion, FechaAlta = g.FechaAlta }).ToList()
+                Grupos = u.GrupoUsuarios?
+                    .Select(gu => new GrupoDTO
+                    {
+                        Id = gu.GrupoId,
+                        Nombre = gu.Grupo?.Nombre,
+                        Descripcion = gu.Grupo?.Descripcion,
+                        FechaAlta = gu.Grupo?.FechaAlta ?? DateTime.MinValue
+                    }).ToList()
             };
         }
 
@@ -125,7 +132,22 @@ namespace Services
                 Mail = usuario.Mail,
                 FechaAlta = usuario.FechaAlta,
                 Rol = usuario.Rol
-                
+            };
+        }
+        public UsuarioDTO GetByMail(string mail)
+        {
+            var repo = new UsuarioRepository();
+            var usuario = repo.GetByMail(mail);
+
+            if (usuario == null) return null;
+
+            return new UsuarioDTO
+            {
+                Id = usuario.Id,
+                Nombre = usuario.Nombre,
+                Mail = usuario.Mail,
+                FechaAlta = usuario.FechaAlta,
+                Rol = usuario.Rol
             };
         }
     }

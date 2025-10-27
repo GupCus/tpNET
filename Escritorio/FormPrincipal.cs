@@ -113,5 +113,14 @@ namespace Escritorio
 
             form.Show();
         }
+
+        private void agregarUsuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormMisGrupos form = new FormMisGrupos();
+            form.MdiParent = this;
+            form.Dock = DockStyle.Fill;
+
+            form.Show();
+        }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Dominio.Dominio;
 
 namespace Dominio
 {
@@ -10,15 +11,16 @@ namespace Dominio
         public int Id { get; private set; }
         public string Nombre { get; private set; }
         public string Mail { get; private set; }
-        public string Contrasena { get; private set; } // en producción guardar hashed
+        public string Contrasena { get; private set; }
         public DateTime FechaAlta { get; private set; }
         public string Rol { get; private set; }
 
-        private readonly List<Grupo> _grupos = new List<Grupo>();
-        public IReadOnlyCollection<Grupo> Grupos => _grupos.AsReadOnly();
-
         public const string RolAdministrador = "Admini";
         public const string RolUsuarioNormal = "NoAdmin";
+
+        // Relación muchos a muchos: Usuario <-> GrupoUsuario <-> Grupo
+        private readonly List<UsuarioGrupo> _grupoUsuarios = new List<UsuarioGrupo>();
+        public IReadOnlyCollection<UsuarioGrupo> GrupoUsuarios => _grupoUsuarios.AsReadOnly();
 
         public Usuario(int id, string mail, string nombre, string contrasena, DateTime fechaAlta, string rol)
         {
@@ -75,21 +77,17 @@ namespace Dominio
             Rol = rol;
         }
 
-        public void AddGrupo(Grupo grupo)
+        public void AddGrupoUsuario(UsuarioGrupo grupoUsuario)
         {
-            if (grupo == null) throw new ArgumentNullException(nameof(grupo));
-            if (!_grupos.Any(g => g.Id == grupo.Id)) _grupos.Add(grupo);
-            if (!grupo.Usuarios.Any(u => u.Id == this.Id)) grupo.AddUsuario(this);
+            if (grupoUsuario == null) throw new ArgumentNullException(nameof(grupoUsuario));
+            if (!_grupoUsuarios.Any(gu => gu.GrupoId == grupoUsuario.GrupoId))
+                _grupoUsuarios.Add(grupoUsuario);
         }
 
-        public void RemoveGrupo(int grupoId)
+        public void RemoveGrupoUsuario(int grupoId)
         {
-            var g = _grupos.FirstOrDefault(x => x.Id == grupoId);
-            if (g != null)
-            {
-                _grupos.Remove(g);
-                g.RemoveUsuario(this.Id);
-            }
+            var gu = _grupoUsuarios.FirstOrDefault(x => x.GrupoId == grupoId);
+            if (gu != null) _grupoUsuarios.Remove(gu);
         }
     }
 }

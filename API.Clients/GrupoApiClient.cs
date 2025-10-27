@@ -105,5 +105,28 @@ namespace API.Clients
             catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
+
+        public static async Task<IEnumerable<GrupoDTO>> GetByAdministradorAsync(int idAdministrador)
+        {
+            var response = await client.GetAsync($"grupos/byadmin/{idAdministrador}");
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadFromJsonAsync<IEnumerable<GrupoDTO>>() ?? new List<GrupoDTO>();
+            var error = await response.Content.ReadAsStringAsync();
+            throw new Exception($"Error al obtener grupos. Status: {response.StatusCode}, Detalle: {error}");
+        }
+
+        public static async Task<GrupoDTO> AddAndReturnAsync(GrupoDTO dto)
+        {
+            try
+            {
+                var response = await client.PostAsJsonAsync("grupos", dto);
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<GrupoDTO>();
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al crear grupo. Status: {response.StatusCode}, Detalle: {error}");
+            }
+            catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
+            catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
+        }
     }
 }
