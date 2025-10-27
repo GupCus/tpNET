@@ -1,0 +1,64 @@
+﻿@page "/tareas/create"
+@using DTOs;
+@using API.Clients;
+@inject NavigationManager NavigationManager
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+<h3>Crear tarea</h3>
+<EditForm Model="nuevaTarea" OnValidSubmit="GuardarTarea">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <div class="mb-3">
+        <label>Nombre</label>
+        <InputText class="form-control" @bind-Value="nuevaTarea.Nombre" />
+    </div>
+
+    <div class="mb-3">
+        <label>Fecha hora</label>
+        <InputDate class="form-control" @bind-Value="nuevaTarea.FechaHora" />
+    </div>
+
+    <div class="mb-3">
+        <label>Duracion</label>
+        <InputNumber class="form-control" @bind-Value="nuevaTarea.Duracion" />
+    </div>
+    <div class="mb-3">
+        <label>Descripción</label>
+        <InputTextArea class="form-control" @bind-Value="nuevaTarea.Descripcion" />
+    </div>
+    <div class="mb-3">
+        <label>Estado</label>
+        <InputSelect class="form-control" @bind-Value="nuevaTarea.Estado">
+            @foreach (var estado in Enum.GetValues(typeof(EstadoTarea)))
+            {
+                <option value="@estado">@estado</option>
+            }
+        </InputSelect>
+    </div>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+</EditForm>
+@code {
+    private TareaDTO nuevaTarea = new TareaDTO();
+    private string mensajeError = string.Empty;
+    private async Task GuardarTarea()
+    {
+
+        try
+        {
+
+            nuevaTarea.FechaAlta = DateTime.Now;
+            await TareaApiClient.AddAsync(nuevaTarea);
+            NavigationManager.NavigateTo("/tareas");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            mensajeError = $"Error al guardar la tarea: {ex.Message}";
+
+        }
+    }
+}

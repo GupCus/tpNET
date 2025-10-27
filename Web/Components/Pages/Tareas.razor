@@ -1,0 +1,87 @@
+﻿@page "/tareas"
+@using API.Clients;
+@using DTOs
+@using Dominio
+@inject NavigationManager NavigationManager
+<h3>Tareas</h3>
+
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+
+@if(tareas==null)
+{
+
+    <p>Cargando tareas...</p>
+}
+else if (!tareas.Any())
+{
+    <p>No hay tareas...</p>
+}
+else
+{
+	<button class="btn btn-success mb-3" @onclick="NuevaTarea">Agregar tarea</button>
+	<table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Fecha Hora</th>
+                <th>Duracion</th>
+                <th>Descripcion</th>
+                <th>Estado</th>
+                <th>Fecha alta</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tarea in tareas)
+            {
+                <tr>
+                    <td>@tarea.Id</td>
+                    <td>@tarea.Nombre</td>
+                    <td>@tarea.FechaHora</td>
+                    <td>@tarea.Duracion</td>
+                    <td>@tarea.Descripcion</td>
+                    <td>@tarea.Estado</td>
+                    <td>@tarea.FechaAlta</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm me-1" @onclick="() => EditarTarea(tarea.Id)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarTarea(tarea.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private string mensajeError;
+    List<TareaDTO> tareas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var lista = await TareaApiClient.GetAllAsync();
+        tareas = lista.ToList();
+    }
+    private void NuevaTarea()
+    {
+        NavigationManager.NavigateTo("/tareas/create");
+    }
+    private void EditarTarea(int id)
+    {
+        NavigationManager.NavigateTo($"/tareas/update/{id}");
+    }
+    private async Task EliminarTarea(int id)
+    {
+        try
+        {   
+            await TareaApiClient.DeleteAsync(id);
+            tareas = tareas.Where(p => p.Id != id).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al eliminar la tarea :{ex.Message}";
+        }
+    }
+}

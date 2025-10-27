@@ -1,0 +1,105 @@
+﻿@page "/tareas/update/{Id:int}"
+@using DTOs
+@using API.Clients;
+@using Dominio;
+@inject NavigationManager NavigationManager
+<h3>Actualizar tarea</h3>
+
+@if (cargando)
+{
+    <p>Cargando tarea</p>
+}
+else if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else
+{
+    <EditForm Model="tareaUpdate" OnValidSubmit="GuardarTarea">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Nombre</label>
+            <InputText class="form-control" @bind-Value="tareaUpdate.Nombre" />
+        </div>
+
+        <div class="mb-3">
+            <label>Fecha Hora</label>
+            <InputDate class="form-control" @bind-Value="tareaUpdate.FechaHora" />
+        </div>
+        <div class="mb-3">
+            <label>Duracion</label>
+            <InputNumber class="form-control" @bind-Value="tareaUpdate.Duracion" />
+        </div>
+
+
+        <div class="mb-3">
+            <label>Descripción</label>
+            <InputTextArea class="form-control" @bind-Value="tareaUpdate.Descripcion" />
+        </div>
+        <div class="mb-3">
+            <label>Estado</label>
+            <InputSelect class="form-control" @bind-Value="tareaUpdate.Estado">
+                @foreach (var estado in Enum.GetValues(typeof(EstadoTarea)))
+                {
+                    <option value="@estado">@estado</option>
+                }
+            </InputSelect>
+        </div>
+        <button class="btn btn-primary" type="submit">
+            Guardar
+        </button>
+    </EditForm>
+
+    @code {
+    [Parameter] public int Id { get; set; }
+
+
+    private string mensajeError = string.Empty;
+    private bool cargando = true;
+    private TareaDTO tareaUpdate = new TareaDTO();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var tarea = await TareaApiClient.GetAsync(Id);
+            tareaUpdate.Nombre = tarea.Nombre;
+            tareaUpdate.Id = tarea.Id;
+            tareaUpdate.FechaHora = tarea.FechaHora; ;
+            tareaUpdate.Duracion = tarea.Duracion ;
+            tareaUpdate.Descripcion = tarea.Descripcion;
+            tareaUpdate.FechaAlta = tarea.FechaAlta;
+
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar la tarea: {ex.Message}";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task GuardarTarea()
+    {
+        try
+        {
+
+            mensajeError = string.Empty;
+
+            await TareaApiClient.UpdateAsync(tareaUpdate);
+            NavigationManager.NavigateTo("/tareas");
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al actualizar la tarea: {ex.Message}";
+        }
+
+    }
+}
+}
