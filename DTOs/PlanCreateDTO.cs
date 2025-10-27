@@ -8,6 +8,8 @@ namespace DTOs
         public string Nombre { get; set; }
         public DateOnly FechaInicio { get; set; }
         public DateOnly FechaBaja { get; set; }
+
+        public int GrupoId { get; set; }
         public string Descripcion { get; set; }
         public DateOnly FechaAlta { get; set; }
 

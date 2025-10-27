@@ -162,5 +162,30 @@ namespace Services
                 }).ToList()
             }).ToList();
         }
+
+        public IEnumerable<GrupoDTO> GetByUsuario(int idUsuario)
+        {
+            var repo = new GrupoRepository();
+
+            // Obtener grupos donde el usuario es administrador O es miembro
+            var items = repo.GetAll()
+                .Where(g => g.IdUsuarioAdministrador == idUsuario ||
+                           g.GrupoUsuarios?.Any(gu => gu.UsuarioId == idUsuario) == true);
+
+            return items.Select(g => new GrupoDTO
+            {
+                Id = g.Id,
+                Nombre = g.Nombre,
+                Descripcion = g.Descripcion,
+                FechaAlta = g.FechaAlta,
+                IdUsuarioAdministrador = g.IdUsuarioAdministrador,
+                Usuarios = g.GrupoUsuarios?.Select(gu => new UsuarioDTO
+                {
+                    Id = gu.UsuarioId,
+                    Nombre = gu.Usuario?.Nombre,
+                    Mail = gu.Usuario?.Mail
+                }).ToList()
+            }).ToList();
+        }
     }
 }

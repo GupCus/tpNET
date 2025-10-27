@@ -128,5 +128,19 @@ namespace API.Clients
             catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
+
+        public static async Task<IEnumerable<GrupoDTO>> GetByUsuarioAsync(int idUsuario)
+        {
+            try
+            {
+                var response = await client.GetAsync($"grupos/byusuario/{idUsuario}");
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<IEnumerable<GrupoDTO>>() ?? new List<GrupoDTO>();
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al obtener grupos del usuario. Status: {response.StatusCode}, Detalle: {error}");
+            }
+            catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
+            catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
+        }
     }
 }

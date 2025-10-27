@@ -13,6 +13,7 @@ namespace DTOs
         public string Descripcion { get; set; }
         public EstadoTarea Estado { get; set; }
         public DateTime FechaAlta { get; set; }
+        public int PlanId { get; set; }
 
         public List<GastoDTO>? Gastos { get; set; }
     }

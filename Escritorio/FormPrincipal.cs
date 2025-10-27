@@ -34,42 +34,95 @@ namespace Escritorio
 
         private void ConfigurarOpcionesSegunRol()
         {
-
+            // Limpiar y configurar ComboBox principal
             cmbOpciones.Items.Clear();
             cmbOpciones.SelectedIndexChanged -= CmbOpciones_SelectedIndexChanged;
 
+            // Configurar segundo ComboBox (solo para admin)
             if (Sesion.EsAdmin())
             {
-                lblTituloOpciones.Text = "🔧 Navegación Administrador:";
+                // Mostrar controles de usuario normal para admin
+                lblTituloUsuarioNormal.Visible = true;
+                cmbUsuarioNormal.Visible = true;
+
+                // Configurar ComboBox de administración
+                lblTituloOpciones.Text = "🔧 Administración:";
                 lblTituloOpciones.ForeColor = Color.DarkRed;
 
                 cmbOpciones.Items.AddRange(new object[]
                 {
                     "🚀 Seleccionar opción...",
-                    "👥 Gestión de Usuarios (FormUsuario)",
-                    "📊 Categorías de Gastos (FormCategoriaGastos)",
-                    "🏢 Gestión de Grupos del Sistema (FormGrupo)",
-                    "📅 Gestión de Planes del Sistema (FormPlan)",
-                    "✅ Gestión de Tareas del Sistema (FormTarea)",
-                    "💰 Gestión de Gastos del Sistema (FormGasto)"
+                    "👥 Gestión de Usuarios",
+                    "📊 Categorías de Gastos",
+                    "🏢 Grupos del Sistema",
+                    "📅 Planes del Sistema",
+                    "✅ Tareas del Sistema",
+                    "💰 Gastos del Sistema"
                 });
+
+                // Configurar ComboBox de usuario normal
+                cmbUsuarioNormal.Items.Clear();
+                cmbUsuarioNormal.SelectedIndexChanged -= CmbUsuarioNormal_SelectedIndexChanged;
+
+                cmbUsuarioNormal.Items.AddRange(new object[]
+                {
+                    "👋 Acciones personales...",
+                    "🏠 Ver Mis Grupos de Viaje",
+                    "➕ Crear/Editar Grupo"
+                });
+
+                cmbUsuarioNormal.SelectedIndex = 0;
+                cmbUsuarioNormal.SelectedIndexChanged += CmbUsuarioNormal_SelectedIndexChanged;
+
+                // Ajustar tamaños y posiciones
+                cmbOpciones.Size = new Size(300, 28);
+                cmbUsuarioNormal.Size = new Size(300, 28);
             }
             else
             {
-                lblTituloOpciones.Text = "👤 Navegación Usuario:";
+                // Ocultar controles de usuario normal
+                lblTituloUsuarioNormal.Visible = false;
+                cmbUsuarioNormal.Visible = false;
+
+                // Configurar único ComboBox para usuarios normales
+                lblTituloOpciones.Text = "👤 Navegación:";
                 lblTituloOpciones.ForeColor = Color.DarkGreen;
 
                 cmbOpciones.Items.AddRange(new object[]
                 {
                     "👋 ¿Qué quieres hacer?",
-                    "🏠 Ver Mis Grupos de Viaje (FrmGrupos)",
-                    "➕ Crear/Editar Grupo y Participantes (FormMisGrupos)"
-                    // Solo grupos para usuarios normales
+                    "🏠 Ver Mis Grupos de Viaje",
+                    "➕ Crear/Editar Grupo y Participantes"
                 });
+
+                // Centrar el único ComboBox
+                cmbOpciones.Size = new Size(400, 28);
             }
 
             cmbOpciones.SelectedIndex = 0;
             cmbOpciones.SelectedIndexChanged += CmbOpciones_SelectedIndexChanged;
+        }
+
+        private void CmbUsuarioNormal_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbUsuarioNormal.SelectedIndex <= 0) return;
+
+            try
+            {
+                switch (cmbUsuarioNormal.SelectedIndex)
+                {
+                    case 1: // Ver Mis Grupos de Viaje
+                        AbrirFrmGrupos();
+                        break;
+                    case 2: // Crear/Editar Grupo y Participantes
+                        AbrirFormMisGrupos();
+                        break;
+                }
+            }
+            finally
+            {
+                cmbUsuarioNormal.SelectedIndex = 0;
+            }
         }
 
         private void CmbOpciones_SelectedIndexChanged(object sender, EventArgs e)
@@ -128,7 +181,6 @@ namespace Escritorio
                 case 2: // Crear/Editar Grupo y Participantes
                     AbrirFormMisGrupos();
                     break;
-                    // Usuarios normales solo tienen acceso a grupos
             }
         }
 
@@ -197,7 +249,7 @@ namespace Escritorio
         {
             string rol = Sesion.EsAdmin() ? "Administrador" : "Usuario";
             string mensaje = Sesion.EsAdmin()
-                ? "Tienes acceso completo al sistema."
+                ? "Tienes acceso completo al sistema y también puedes realizar acciones personales."
                 : "Puedes gestionar tus grupos de viaje.";
 
             MessageBox.Show($"¡Bienvenido {Sesion.UsuarioActual.Nombre}!\n\nRol: {rol}\n\n{mensaje}",

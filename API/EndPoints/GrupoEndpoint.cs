@@ -72,6 +72,15 @@ namespace API.EndPoints
                 return Results.Ok(grupos);
             });
 
+            app.MapGet("/grupos/byusuario/{idUsuario:int}", (int idUsuario, GrupoService service) =>
+            {
+                var grupos = service.GetByUsuario(idUsuario);
+                return Results.Ok(grupos);
+            })
+            .WithName("GetGruposByUsuario")
+            .Produces<IEnumerable<GrupoDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
+
         }
     }
 }
