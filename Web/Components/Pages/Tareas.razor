@@ -4,7 +4,7 @@
 @using Dominio
 @inject NavigationManager NavigationManager
 <h3>Tareas</h3>
-
+<button class="btn btn-success mb-3" @onclick="NuevaTarea">Agregar tarea</button>
 @if (!string.IsNullOrEmpty(mensajeError))
 {
     <div class="alert alert-danger">@mensajeError</div>
@@ -21,8 +21,8 @@ else if (!tareas.Any())
 }
 else
 {
-	<button class="btn btn-success mb-3" @onclick="NuevaTarea">Agregar tarea</button>
-	<table class="table table-striped">
+
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Id</th>
@@ -32,7 +32,9 @@ else
                 <th>Descripcion</th>
                 <th>Estado</th>
                 <th>Fecha alta</th>
+                <th>Plan</th>
                 <th>Acciones</th>
+                
             </tr>
         </thead>
         <tbody>
@@ -46,6 +48,7 @@ else
                     <td>@tarea.Descripcion</td>
                     <td>@tarea.Estado</td>
                     <td>@tarea.FechaAlta</td>
+                    <td>@planes.FirstOrDefault(p => p.Id == tarea.PlanId)?.Nombre</td>
                     <td>
                         <button class="btn btn-primary btn-sm me-1" @onclick="() => EditarTarea(tarea.Id)">Editar</button>
                         <button class="btn btn-danger btn-sm" @onclick="() => EliminarTarea(tarea.Id)">Eliminar</button>
@@ -58,11 +61,13 @@ else
 @code {
     private string mensajeError;
     List<TareaDTO> tareas;
+   private List<PlanDTO> planes=new();
 
     protected override async Task OnInitializedAsync()
     {
         var lista = await TareaApiClient.GetAllAsync();
         tareas = lista.ToList();
+        planes = (await PlanApiClient.GetAllAsync()).ToList();
     }
     private void NuevaTarea()
     {

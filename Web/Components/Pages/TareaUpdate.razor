@@ -47,6 +47,16 @@ else
                 }
             </InputSelect>
         </div>
+        <div class="mb-3">
+            <label>Plan</label>
+            <InputSelect class="form-control" @bind-Value="tareaUpdate.PlanId">
+                <option value="">-- Seleccione un plan --</option>
+                @foreach (var plan in planes)
+                {
+                    <option value="@plan.Id">@plan.Nombre</option>
+                }
+            </InputSelect>
+        </div>
         <button class="btn btn-primary" type="submit">
             Guardar
         </button>
@@ -55,7 +65,7 @@ else
     @code {
     [Parameter] public int Id { get; set; }
 
-
+    private List<PlanDTO> planes= new List<PlanDTO>();
     private string mensajeError = string.Empty;
     private bool cargando = true;
     private TareaDTO tareaUpdate = new TareaDTO();
@@ -66,6 +76,7 @@ else
     {
         try
         {
+            planes = (await PlanApiClient.GetAllAsync()).ToList();
             var tarea = await TareaApiClient.GetAsync(Id);
             tareaUpdate.Nombre = tarea.Nombre;
             tareaUpdate.Id = tarea.Id;
@@ -73,7 +84,7 @@ else
             tareaUpdate.Duracion = tarea.Duracion ;
             tareaUpdate.Descripcion = tarea.Descripcion;
             tareaUpdate.FechaAlta = tarea.FechaAlta;
-
+            tareaUpdate.PlanId = tarea.PlanId;
         }
         catch (Exception ex)
         {
