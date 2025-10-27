@@ -1,0 +1,79 @@
+﻿@page "/categorias"
+@using API.Clients;
+@using DTOs
+
+@inject NavigationManager NavigationManager
+<h3>Categorias</h3>
+
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+
+@if (categorias == null)
+{
+
+    <p>Cargando categorias...</p>
+}
+else if (!categorias.Any())
+{
+    <p>No hay categorias...</p>
+}
+else
+{
+    <button class="btn btn-success mb-3" @onclick="NuevaCategoria">Agregar categoria</button>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Tipo</th>
+                <th>Descripcion</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var categoria in categorias)
+            {
+                <tr>
+                    <td>@categoria.Id</td>
+                    <td>@categoria.Tipo</td>
+                    <td>@categoria.Descripcion</td>
+                    <td>
+                        <button class="btn btn-primary btn-sm me-1" @onclick="() => EditarCategoria(categoria.Id)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarCategoria(categoria.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private string mensajeError;
+    List<CategoriaGastoDTO> categorias;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var lista = await CategoriaGastoApiClient.GetAllAsync();
+        categorias = lista.ToList();
+    }
+    private void NuevaCategoria()
+    {
+        NavigationManager.NavigateTo("/categorias/create");
+    }
+    private void EditarCategoria(int id)
+    {
+        NavigationManager.NavigateTo($"/categorias/update/{id}");
+    }
+    private async Task EliminarCategoria(int id)
+    {
+        try
+        {
+            await CategoriaGastoApiClient.DeleteAsync(id);
+            categorias = categorias.Where(p => p.Id != id).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al eliminar la categoria :{ex.Message}";
+        }
+    }
+}
