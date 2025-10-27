@@ -1,0 +1,95 @@
+﻿@page "/planes/update/{Id:int}"
+@using DTOs
+@using API.Clients;
+@inject NavigationManager NavigationManager
+<h3>Actualizar plan</h3>
+
+@if (cargando)
+{
+    <p>Cargando plan</p>
+}
+else if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else
+{
+    <EditForm Model="planUpdate" OnValidSubmit="GuardarPlan">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Nombre</label>
+            <InputText class="form-control" @bind-Value="planUpdate.Nombre" />
+        </div>
+
+        <div class="mb-3">
+            <label>Fecha Inicio</label>
+            <InputDate class="form-control" @bind-Value="planUpdate.FechaInicio" />
+        </div>
+
+        <div class="mb-3">
+            <label>Fecha Fin</label>
+            <InputDate class="form-control" @bind-Value="planUpdate.FechaFin" />
+        </div>
+
+        <div class="mb-3">
+            <label>Descripción</label>
+            <InputTextArea class="form-control" @bind-Value="planUpdate.Descripcion" />
+        </div>
+
+        <button class="btn btn-primary" type="submit" >
+            Guardar
+        </button>
+    </EditForm>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+
+    private string mensajeError = string.Empty;
+    private bool cargando = true;
+    private PlanUpdateDTO planUpdate = new PlanUpdateDTO();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var plan = await PlanApiClient.GetAsync(Id);
+            planUpdate.Nombre = plan.Nombre;
+            planUpdate.Id = plan.Id;
+            planUpdate.FechaFin =plan.FechaFin.ToDateTime(TimeOnly.MinValue); ;
+            planUpdate.FechaInicio = plan.FechaInicio.ToDateTime(TimeOnly.MinValue); ;
+            planUpdate.Descripcion = plan.Descripcion;
+
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar el plan: {ex.Message}";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task GuardarPlan()
+    {
+        try
+        {
+            
+            mensajeError = string.Empty;
+
+            await PlanApiClient.UpdateAsync(planUpdate);
+            NavigationManager.NavigateTo("/planes");
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al actualizar el plan: {ex.Message}";
+        }
+       
+    }
+}
+}

@@ -10,7 +10,10 @@ namespace API.Clients
 {
     public class PlanApiClient
     {
-        private static HttpClient client = new HttpClient();
+        private static HttpClient client = new HttpClient(new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        });
 
         static PlanApiClient()
         {

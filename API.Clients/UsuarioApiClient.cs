@@ -6,7 +6,10 @@ namespace API.Clients
 {
     public class UsuarioApiClient
     {
-        private static HttpClient client = new HttpClient();
+        private static HttpClient client = new HttpClient(new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        });
 
         static UsuarioApiClient()
         {
