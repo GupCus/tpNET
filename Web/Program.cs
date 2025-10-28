@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Web.Components;
 using Web.Components.Account;
 using Web.Data;
+using Web.Services;
 
 namespace Web
 {
@@ -17,10 +18,14 @@ namespace Web
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
 
+            // SERVICIOS PERSONALIZADOS PARA AUTENTICACIÓN CON API
+            builder.Services.AddScoped<SessionService>();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             builder.Services.AddCascadingAuthenticationState();
+
+            // Servicios de Identity (puedes mantenerlos o quitarlos si no los usas)
             builder.Services.AddScoped<IdentityUserAccessor>();
             builder.Services.AddScoped<IdentityRedirectManager>();
-            builder.Services.AddScoped<AuthenticationStateProvider, IdentityRevalidatingAuthenticationStateProvider>();
 
             builder.Services.AddAuthentication(options =>
                 {

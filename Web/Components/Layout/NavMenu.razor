@@ -13,47 +13,9 @@
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Inicio de Sesión
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="grupos">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Grupos
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/planes">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Planes
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/tareas">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Tareas
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/categorias">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Categorias de gasto
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/usuarios">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Usuarios
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/gastos">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Gastos
-            </NavLink>
-        </div>
-
         <!--Todo lo de auth-->
         <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
+            <NavLink class="nav-link" href="auth" Match="NavLinkMatch.All">
                 <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
             </NavLink>
         </div>
@@ -61,19 +23,48 @@
         <AuthorizeView>
             <Authorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    <NavLink class="nav-link" href="grupos">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Grupos
+                    </NavLink>
+                </div>
+
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/planes">
+                        <span class="bi bi-calendar-check-fill-nav-menu" aria-hidden="true"></span> Planes
                     </NavLink>
                 </div>
                 <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
+                    <NavLink class="nav-link" href="/tareas">
+                        <span class="bi bi-check-square-fill-nav-menu" aria-hidden="true"></span> Tareas
+                    </NavLink>
                 </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/categorias">
+                        <span class="bi bi-tags-fill-nav-menu" aria-hidden="true"></span> Categorias de gasto
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/usuarios">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> Usuarios
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="/gastos">
+                        <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Gastos
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <span class="nav-link">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    </span>
+                </div>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Account/Logout">
+                        <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                    </NavLink>
+                </div>
+
+
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
@@ -88,6 +79,7 @@
                 </div>
             </NotAuthorized>
         </AuthorizeView>
+
     </nav>
 </div>
 
@@ -111,4 +103,3 @@
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
 }
-
