@@ -2,6 +2,8 @@
 @using API.Clients;
 @using DTOs;
 @inject NavigationManager NavigationManager
+
+
 <h3>Gastos</h3>
 <button class="btn btn-success mb-3" @onclick="NuevoGasto">Nuevo Gasto</button>
 @if (!string.IsNullOrEmpty(mensajeError))

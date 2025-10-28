@@ -54,10 +54,11 @@
                     <p>
                         <a href="Account/ForgotPassword">¿Olvidaste tu contraseña?</a>
                     </p>
-                    -->
+                    
                     <p class="my-2">
                         <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Registrarse como nuevo usuario</a>
                     </p>
+                    -->
                 </div>
             </EditForm>
         </section>
@@ -96,8 +97,10 @@
                 // Guardar el usuario en el servicio de sesión
                 SessionService.SetUsuario(usuario);
                 
-                // Redirigir al usuario sin forceLoad
-                NavigationManager.NavigateTo(ReturnUrl ?? "/");
+                // Esperar un momento para que se actualice el estado
+                await Task.Delay(500);
+                NavigationManager.NavigateTo("/");
+
             }
             else
             {
