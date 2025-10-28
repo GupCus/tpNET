@@ -37,17 +37,27 @@ else
             <label>Descripción</label>
             <InputTextArea class="form-control" @bind-Value="planUpdate.Descripcion" />
         </div>
-
+        <div class="mb-3">
+            <label>Grupo</label>
+            <InputSelect class="form-control" @bind-Value="planUpdate.GrupoId">
+                <option value="">-- Seleccione un grupo --</option>
+                @foreach (var grupo in grupos)
+                {
+                    <option value="@grupo.Id">@grupo.Nombre</option>
+                }
+            </InputSelect>
+        </div>
         <button class="btn btn-primary" type="submit" >
             Guardar
         </button>
     </EditForm>
 
-@code {
+    @code {
     [Parameter] public int Id { get; set; }
 
 
     private string mensajeError = string.Empty;
+    private List<GrupoDTO> grupos = new List<GrupoDTO>();
     private bool cargando = true;
     private PlanUpdateDTO planUpdate = new PlanUpdateDTO();
 
@@ -57,12 +67,14 @@ else
     {
         try
         {
+            grupos = (await GrupoApiClient.GetAllAsync()).ToList();
             var plan = await PlanApiClient.GetAsync(Id);
             planUpdate.Nombre = plan.Nombre;
             planUpdate.Id = plan.Id;
             planUpdate.FechaFin =plan.FechaFin.ToDateTime(TimeOnly.MinValue); ;
             planUpdate.FechaInicio = plan.FechaInicio.ToDateTime(TimeOnly.MinValue); ;
             planUpdate.Descripcion = plan.Descripcion;
+            planUpdate.GrupoId = plan.Id;
 
         }
         catch (Exception ex)

@@ -1,0 +1,135 @@
+﻿@page "/Account/Login"
+
+@using System.ComponentModel.DataAnnotations
+@using DTOs
+@using API.Clients
+@using Web.Services
+
+@inject ILogger<Login> Logger
+@inject NavigationManager NavigationManager
+@inject SessionService SessionService
+
+<PageTitle>Inicio de Sesión</PageTitle>
+
+<h1>Inicio de Sesión</h1>
+<div class="row">
+    <div class="col-md-12">
+        <section>
+            <StatusMessage Message="@errorMessage" />
+            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                <DataAnnotationsValidator />
+                <h2>Usa tu usuario para iniciar sesión.</h2>
+                <hr />
+                <ValidationSummary class="text-danger" role="alert" />
+                <div class="form-floating mb-3">
+                    <InputText @bind-Value="Input.Usuario" class="form-control" autocomplete="username" aria-required="true" placeholder="nombre de usuario" />
+                    <label for="usuario" class="form-label">Usuario</label>
+                    <ValidationMessage For="() => Input.Usuario" class="text-danger" />
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText type="password" @bind-Value="Input.Contrasena" class="form-control" autocomplete="current-password" aria-required="true" placeholder="contraseña" />
+                    <label for="password" class="form-label">Contraseña</label>
+                    <ValidationMessage For="() => Input.Contrasena" class="text-danger" />
+                </div>
+                <div class="checkbox mb-3">
+                    <label class="form-label">
+                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+                        Recordarme
+                    </label>
+                </div>
+                <div>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary" disabled="@isLoading">
+                        @if (isLoading)
+                        {
+                            <span>Iniciando sesión...</span>
+                        }
+                        else
+                        {
+                            <span>Enviar</span>
+                        }
+                    </button>
+                </div>
+                <div>
+                    <!--
+                    <p>
+                        <a href="Account/ForgotPassword">¿Olvidaste tu contraseña?</a>
+                    </p>
+                    -->
+                    <p class="my-2">
+                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Registrarse como nuevo usuario</a>
+                    </p>
+                </div>
+            </EditForm>
+        </section>
+    </div>
+</div>
+
+@code {
+    private string? errorMessage;
+    private bool isLoading = false;
+
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    public async Task LoginUser()
+    {
+        isLoading = true;
+        errorMessage = null;
+
+        try
+        {
+            var loginDto = new LoginDTO
+            {
+                Usuario = Input.Usuario,
+                Contrasena = Input.Contrasena
+            };
+
+            var usuario = await UsuarioApiClient.Login(loginDto);
+
+            if (usuario != null)
+            {
+                Logger.LogInformation("Usuario {Usuario} ha iniciado sesión correctamente.", usuario.Nombre);
+                
+                // Guardar el usuario en el servicio de sesión
+                SessionService.SetUsuario(usuario);
+                
+                // Redirigir al usuario sin forceLoad
+                NavigationManager.NavigateTo(ReturnUrl ?? "/");
+            }
+            else
+            {
+                errorMessage = "Error: Usuario o contraseña incorrectos.";
+                Logger.LogWarning("Intento de inicio de sesión fallido para el usuario {Usuario}.", Input.Usuario);
+            }
+        }
+        catch (NavigationException)
+        {
+            // Esta excepción es esperada cuando la navegación es exitosa
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+            Logger.LogError(ex, "Error durante el inicio de sesión del usuario {Usuario}.", Input.Usuario);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private sealed class InputModel
+    {
+        [Required(ErrorMessage = "El usuario es obligatorio.")]
+        public string Usuario { get; set; } = "";
+
+        [Required(ErrorMessage = "La contraseña es obligatoria.")]
+        [DataType(DataType.Password)]
+        public string Contrasena { get; set; } = "";
+
+        [Display(Name = "Recordarme")]
+        public bool RememberMe { get; set; }
+    }
+}

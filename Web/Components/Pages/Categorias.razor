@@ -4,7 +4,7 @@
 
 @inject NavigationManager NavigationManager
 <h3>Categorias</h3>
-
+<button class="btn btn-success mb-3" @onclick="NuevaCategoria">Agregar categoria</button>
 @if (!string.IsNullOrEmpty(mensajeError))
 {
     <div class="alert alert-danger">@mensajeError</div>
@@ -21,7 +21,7 @@ else if (!categorias.Any())
 }
 else
 {
-    <button class="btn btn-success mb-3" @onclick="NuevaCategoria">Agregar categoria</button>
+    
     <table class="table table-striped">
         <thead>
             <tr>

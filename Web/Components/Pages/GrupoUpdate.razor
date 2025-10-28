@@ -1,0 +1,87 @@
+﻿@page "/grupos/update/{Id:int}"
+@using DTOs
+@using API.Clients;
+@inject NavigationManager NavigationManager
+<h3>Actualizar grupo</h3>
+
+@if (cargando)
+{
+    <p>Cargando grupo</p>
+}
+else if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else
+{
+    <EditForm Model="grupoUpdate" OnValidSubmit="GuardarGrupo">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Nombre</label>
+            <InputText class="form-control" @bind-Value="grupoUpdate.Nombre" />
+        </div>
+
+        <div class="mb-3">
+            <label>Descripcion</label>
+            <InputText class="form-control" @bind-Value="grupoUpdate.Descripcion" />
+        </div>
+
+
+
+        <button class="btn btn-primary" type="submit">
+            Guardar
+        </button>
+    </EditForm>
+
+    @code {
+    [Parameter] public int Id { get; set; }
+
+
+    private string mensajeError = string.Empty;
+    private bool cargando = true;
+    private GrupoDTO grupoUpdate = new GrupoDTO();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var grupo = await GrupoApiClient.GetAsync(Id);
+            grupoUpdate.Nombre = grupo.Nombre;
+            grupoUpdate.Id = grupo.Id;
+            grupoUpdate.FechaAlta = grupo.FechaAlta;
+            grupoUpdate.IdUsuarioAdministrador = grupo.IdUsuarioAdministrador;
+            grupoUpdate.Descripcion = grupo.Descripcion;
+
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar el grupo: {ex.Message}";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task GuardarGrupo()
+    {
+        try
+        {
+
+            mensajeError = string.Empty;
+
+            await GrupoApiClient.UpdateAsync(grupoUpdate);
+            NavigationManager.NavigateTo("/grupos");
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al actualizar el grupo: {ex.Message}";
+        }
+
+    }
+}
+}

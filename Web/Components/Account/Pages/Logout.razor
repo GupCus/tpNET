@@ -1,0 +1,13 @@
+@page "/Account/Logout"
+@using Web.Services
+
+@inject SessionService SessionService
+@inject NavigationManager NavigationManager
+
+@code {
+    protected override void OnInitialized()
+    {
+        SessionService.Logout();
+        NavigationManager.NavigateTo("/Account/Login");
+    }
+}

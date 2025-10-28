@@ -1,0 +1,48 @@
+﻿@page "/grupos/create"
+@using DTOs;
+@using API.Clients;
+@inject NavigationManager NavigationManager
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+<h3>Crear grupo</h3>
+<EditForm Model="nuevoGrupo" OnValidSubmit="GuardarGrupo">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <div class="mb-3">
+        <label>Nombre</label>
+        <InputText class="form-control" @bind-Value="nuevoGrupo.Nombre" />
+    </div>
+
+    <div class="mb-3">
+        <label>Descripcion</label>
+        <InputText class="form-control" @bind-Value="nuevoGrupo.Descripcion" />
+    </div>
+
+    
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+</EditForm>
+@code {
+    private GrupoDTO nuevoGrupo = new GrupoDTO();
+    private string mensajeError = string.Empty;
+    private async Task GuardarGrupo()
+    {
+
+        try
+        {
+
+            nuevoGrupo.FechaAlta = DateTime.Now;
+            await GrupoApiClient.AddAsync(nuevoGrupo);
+            NavigationManager.NavigateTo("/grupos");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            mensajeError = $"Error al guardar el grupo: {ex.Message}";
+
+        }
+    }
+}

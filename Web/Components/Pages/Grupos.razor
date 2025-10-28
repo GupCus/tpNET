@@ -1,18 +1,32 @@
 ﻿@page "/grupos"
-
-<PageTitle>Mis Grupos</PageTitle>
-
-<!-- Tabla de Grupos -->
-<h3>Mis Grupos</h3>
-@if (grupos != null)
+@using API.Clients;
+@using DTOs;
+@inject NavigationManager NavigationManager
+<h3>Grupos</h3>
+<button class="btn btn-success mb-3" @onclick="NuevoGrupo">Nuevo Grupo</button>
+@if (!string.IsNullOrEmpty(mensajeError))
 {
-    <table class="table">
+    <div class="alert alert-danger">@mensajeError</div>
+}
+@if (grupos == null)
+{
+    <p>Cargando grupos</p>
+}
+else if (!grupos.Any())
+{
+    <p>No hay grupos.</p>
+}
+else
+{
+    
+
+    <table class="table table-striped">
         <thead>
             <tr>
+                <th>Id</th>
                 <th>Nombre</th>
-                <th>Apellido</th>
-                <th>Legajo</th>
-                <th>Direccion</th>
+                <th>Descripcion</th>
+                <th>Fecha alta</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -20,31 +34,47 @@
             @foreach (var grupo in grupos)
             {
                 <tr>
+                    <td>@grupo.Id</td>
                     <td>@grupo.Nombre</td>
+               
+                    <td>@grupo.Descripcion</td>
+                    <td>@grupo.FechaAlta</td>
                     <td>
-                        <a class="btn btn-dark" href="@($"/grupo/{grupo.Id}")">Ver más</a>
-                        <button type="button" class="btn btn-danger" @onclick="() => {}">Eliminar</button>
+                        <button class="btn btn-primary btn-sm me-1" @onclick="() => EditarGrupo(grupo.Id)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarGrupo(grupo.Id)">Eliminar</button>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 }
-else
-{
-    <p><em>Cargando...</em></p>
-}
-
 @code {
-    private Grupo[]? grupos;
+    private string mensajeError;
+    List<GrupoDTO> grupos;
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        await CargarDatos();
+        var lista = await GrupoApiClient.GetAllAsync();
+        grupos = lista.ToList();
     }
-
-    private async Task CargarDatos()
+    private void NuevoGrupo()
     {
-        var result = await GrupoApiClient.GetAllAsync();
+        NavigationManager.NavigateTo("/grupos/create");
+    }
+    private void EditarGrupo(int id)
+    {
+        NavigationManager.NavigateTo($"/grupos/update/{id}");
+    }
+    private async Task EliminarGrupo(int id)
+    {
+        try
+        {
+            await GrupoApiClient.DeleteAsync(id);
+            grupos = grupos.Where(p => p.Id != id).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al eliminar el grupo :{ex.Message}";
+        }
     }
 }
