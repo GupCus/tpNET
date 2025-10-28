@@ -72,5 +72,14 @@ namespace Repository
                 .Where(t => t.PlanId == planId)
                 .ToList();
         }
+
+        public IEnumerable<Usuario> GetUsuariosPorGrupo(int grupoId)
+        {
+            using var ctx = CreateContext();
+            return ctx.Usuarios
+                .Include(u => u.GrupoUsuarios)
+                .Where(u => u.GrupoUsuarios.Any(gu => gu.GrupoId == grupoId))
+                .ToList();
+        }
     }
 }

@@ -83,5 +83,23 @@ namespace Repository
             return ctx.Usuarios
                 .FirstOrDefault(u => u.Mail.ToLower() == mail.ToLower());
         }
+
+        public IEnumerable<Usuario> GetUsuariosPorGrupo(int grupoId)
+        {
+            using var ctx = CreateContext();
+            return ctx.Usuarios
+                .Include(u => u.GrupoUsuarios)
+                .Where(u => u.GrupoUsuarios.Any(gu => gu.GrupoId == grupoId))
+                .ToList();
+        }
+
+        public async Task<IEnumerable<Usuario>> GetUsuariosPorGrupoAsync(int grupoId)
+        {
+            using var ctx = CreateContext();
+            return await ctx.Usuarios
+                .Include(u => u.GrupoUsuarios)
+                .Where(u => u.GrupoUsuarios.Any(gu => gu.GrupoId == grupoId))
+                .ToListAsync();
+        }
     }
 }

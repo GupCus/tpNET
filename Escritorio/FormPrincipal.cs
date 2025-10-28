@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Escritorio.Forms;
 
 namespace Escritorio
 {
@@ -57,7 +58,8 @@ namespace Escritorio
                     "🏢 Grupos del Sistema",
                     "📅 Planes del Sistema",
                     "✅ Tareas del Sistema",
-                    "💰 Gastos del Sistema"
+                    "💰 Gastos del Sistema",
+                    "📈 Reportes de Gastos"  // Nueva opción para reportes
                 });
 
                 // Configurar ComboBox de usuario normal
@@ -75,7 +77,7 @@ namespace Escritorio
                 cmbUsuarioNormal.SelectedIndexChanged += CmbUsuarioNormal_SelectedIndexChanged;
 
                 // Ajustar tamaños y posiciones
-                cmbOpciones.Size = new Size(300, 28);
+                cmbOpciones.Size = new Size(400, 28);
                 cmbUsuarioNormal.Size = new Size(300, 28);
             }
             else
@@ -168,6 +170,9 @@ namespace Escritorio
                 case 6: // Gestión de Gastos del Sistema
                     AbrirFormGasto();
                     break;
+                case 7: // Reportes de Gastos
+                    AbrirFormReporteGastos();
+                    break;
             }
         }
 
@@ -234,8 +239,20 @@ namespace Escritorio
             AbrirFormMDI(form, "Crear/Editar Grupo");
         }
 
+        private void AbrirFormReporteGastos()
+        {
+            FormReporteGastos form = new FormReporteGastos();
+            AbrirFormMDI(form, "Reporte de Gastos por Grupo");
+        }
+
         private void AbrirFormMDI(Form form, string titulo = "")
         {
+            // Cerrar el form activo si existe
+            if (this.ActiveMdiChild != null)
+            {
+                this.ActiveMdiChild.Close();
+            }
+
             form.MdiParent = this;
             form.Dock = DockStyle.Fill;
             if (!string.IsNullOrEmpty(titulo))

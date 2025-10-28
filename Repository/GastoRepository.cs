@@ -83,5 +83,17 @@ namespace Repository
                             || (g.Tarea != null && g.Tarea.Nombre.ToLower().Contains(texto)))
                 .ToList();
         }
+
+        public decimal GetTotalGastadoPorUsuarioEnGrupo(int usuarioId, int grupoId)
+        {
+            using var ctx = CreateContext();
+
+            return ctx.Gastos
+                .Where(g => g.UsuarioId == usuarioId &&
+                           g.Tarea != null &&
+                           g.Tarea.Plan != null &&
+                           g.Tarea.Plan.GrupoId == grupoId)
+                .Sum(g => (decimal)g.Monto);
+        }
     }
 }
