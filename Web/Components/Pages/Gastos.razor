@@ -1,0 +1,100 @@
+﻿@page "/gastos"
+@using API.Clients;
+@using DTOs;
+@inject NavigationManager NavigationManager
+<h3>Gastos</h3>
+<button class="btn btn-success mb-3" @onclick="NuevoGasto">Nuevo Gasto</button>
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+@if (gastos == null)
+{
+    <p>Cargando gastos</p>
+}
+else if (!gastos.Any())
+{
+    <p>No hay gastos.</p>
+}
+else
+{
+
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Descripcion</th>
+                <th>Monto</th>
+                <th>Fecha hora</th>
+                <th>Fecha alta</th>
+                <th>Categoria ID</th>
+                <th>Categoria nombre</th>
+                <th>Usuario ID</th>
+                <th>Usuario nombre</th>
+                <th>Tarea ID</th>
+                <th>Tarea nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var gasto in gastos)
+            {
+                <tr>
+
+                    <th>@gasto.Id</th>
+                    <th>@gasto.Descripcion</th>
+                    <th>@gasto.Monto</th>
+                    <th>@gasto.FechaHora</th>
+                    <th>@gasto.FechaAlta</th>
+                    <th>@gasto.CategoriaGastoId</th>
+                    <th>@gasto.CategoriaGastoNombre</th>
+                    <th>@gasto.UsuarioId</th>
+                    <th>@gasto.UsuarioNombre</th>
+                    <th>@gasto.TareaId</th>
+                    <th>@gasto.TareaNombre</th
+                    <td>
+                        <button class="btn btn-primary btn-sm me-1" @onclick="() => EditarGasto(gasto.Id)">Editar</button>
+                        <button class="btn btn-danger btn-sm" @onclick="() => EliminarGasto(gasto.Id)">Eliminar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@code {
+    private string mensajeError;
+    List<GastoDTO> gastos;
+    private List<TareaDTO> tareas = new();
+    private List<UsuarioDTO> usuarios = new();
+    private List<CategoriaGastoDTO> categorias = new();
+
+
+    protected override async Task OnInitializedAsync()
+    {   
+        var lista = await GastoApiClient.GetAllAsync();
+        gastos = lista.ToList();
+        tareas = (await TareaApiClient.GetAllAsync()).ToList();
+          categorias = (await CategoriaGastoApiClient.GetAllAsync()).ToList();
+            usuarios = (await UsuarioApiClient.GetAllAsync()).ToList();
+    }
+    private void NuevoGasto()
+    {
+        NavigationManager.NavigateTo("/gastos/create");
+    }
+    private void EditarGasto(int id)
+    {
+        NavigationManager.NavigateTo($"/gastos/update/{id}");
+    }
+    private async Task EliminarGasto(int id)
+    {
+        try
+        {
+            await GastoApiClient.DeleteAsync(id);
+            gastos = gastos.Where(p => p.Id != id).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al eliminar el plan :{ex.Message}";
+        }
+    }
+}

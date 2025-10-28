@@ -1,0 +1,137 @@
+﻿@page "/gastos/update/{Id:int}"
+@using DTOs
+@using API.Clients;
+@inject NavigationManager NavigationManager
+<h3>Actualizar gasto</h3>
+
+@if (cargando)
+{
+    <p>Cargando gasto</p>
+}
+else if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+else
+{
+    <EditForm Model="gastoUpdate" OnValidSubmit="GuardarGasto">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="mb-3">
+            <label>Descripcion</label>
+            <InputText class="form-control" @bind-Value="gastoUpdate.Descripcion" />
+        </div>
+
+        <div class="mb-3">
+            <label>Monto</label>
+            <InputNumber class="form-control" @bind-Value="gastoUpdate.Monto" />
+        </div>
+
+        <div class="mb-3">
+            <label>Fecha hora</label>
+            <InputDate class="form-control" @bind-Value="gastoUpdate.FechaHora" />
+        </div>
+
+        <div class="mb-3">
+            <label>Descripción</label>
+            <InputTextArea class="form-control" @bind-Value="gastoUpdate.Descripcion" />
+        </div>
+        <div class="mb-3">
+            <label>Tarea</label>
+            <InputSelect class="form-control" @bind-Value="gastoUpdate.TareaId">
+                <option value="">-- Seleccione una tarea --</option>
+                @foreach (var tarea in tareas)
+                {
+                    <option value="@tarea.Id">@tarea.Nombre</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="mb-3">
+            <label>Usuario</label>
+            <InputSelect class="form-control" @bind-Value="gastoUpdate.UsuarioId">
+                <option value="">-- Seleccione un usuario --</option>
+                @foreach (var usuario in usuarios)
+                {
+                    <option value="@usuario.Id">@usuario.Nombre</option>
+                }
+            </InputSelect>
+        </div>
+        <div class="mb-3">
+            <label>Categoria gasto</label>
+            <InputSelect class="form-control" @bind-Value="gastoUpdate.CategoriaGastoId">
+                <option value="">-- Seleccione una categoria --</option>
+                @foreach (var categoria in categorias)
+                {
+                    <option value="@categoria.Id">@categoria.Tipo</option>
+                }
+            </InputSelect>
+        </div>
+        <button class="btn btn-primary" type="submit">
+            Guardar
+        </button>
+    </EditForm>
+
+    @code {
+    [Parameter] public int Id { get; set; }
+
+
+    private string mensajeError = string.Empty;
+    private List<TareaDTO> tareas = new List<TareaDTO>();
+    private List<UsuarioDTO> usuarios = new List<UsuarioDTO>();
+    private List<CategoriaGastoDTO> categorias = new List<CategoriaGastoDTO>();
+    private bool cargando = true;
+    private GastoDTO gastoUpdate = new GastoDTO();
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            categorias = (await CategoriaGastoApiClient.GetAllAsync()).ToList();
+            usuarios = (await UsuarioApiClient.GetAllAsync()).ToList();
+            tareas = (await TareaApiClient.GetAllAsync()).ToList();
+            var gasto = await GastoApiClient.GetAsync(Id);
+            gastoUpdate.UsuarioNombre = usuarios.FirstOrDefault(u => u.Id == gastoUpdate.UsuarioId)?.Nombre;
+            gastoUpdate.CategoriaGastoNombre = categorias.FirstOrDefault(c => c.Id == gastoUpdate.CategoriaGastoId)?.Tipo;
+            gastoUpdate.TareaNombre = tareas.FirstOrDefault(t => t.Id == gastoUpdate.TareaId)?.Nombre;
+            gastoUpdate.TareaId = gasto.TareaId;
+            gastoUpdate.UsuarioId = gasto.UsuarioId;
+            gastoUpdate.CategoriaGastoId = gasto.CategoriaGastoId;
+            gastoUpdate.Id = gasto.Id;
+            gastoUpdate.FechaAlta = gasto.FechaAlta;
+            gastoUpdate.FechaHora = gasto.FechaHora;
+            gastoUpdate.Descripcion = gasto.Descripcion;
+            gastoUpdate.Monto = gasto.Monto;
+
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar el gasto: {ex.Message}";
+        }
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    private async Task GuardarGasto()
+    {
+        try
+        {
+
+            mensajeError = string.Empty;
+
+            await GastoApiClient.UpdateAsync(gastoUpdate);
+            NavigationManager.NavigateTo("/gastos");
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al actualizar el gasto: {ex.Message}";
+        }
+
+    }
+}
+}

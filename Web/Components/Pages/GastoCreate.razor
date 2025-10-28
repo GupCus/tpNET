@@ -1,0 +1,99 @@
+﻿@page "/gastos/create"
+@using DTOs;
+@using API.Clients;
+@inject NavigationManager NavigationManager
+@if (!string.IsNullOrEmpty(mensajeError))
+{
+    <div class="alert alert-danger">@mensajeError</div>
+}
+<h3>Crear gasto</h3>
+<EditForm Model="nuevoGasto" OnValidSubmit="GuardarGasto">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+    <div class="mb-3">
+        <label>Descripcion</label>
+        <InputText class="form-control" @bind-Value="nuevoGasto.Descripcion" />
+    </div>
+    <div class="mb-3">
+        <label>Monto</label>
+        <InputNumber class="form-control" @bind-Value="nuevoGasto.Monto" />
+    </div>
+    <div class="mb-3">
+        <label>Fecha hora</label>
+        <InputDate class="form-control" @bind-Value="nuevoGasto.FechaHora" />
+    </div>
+
+    <div class="mb-3">
+        <label>Tarea</label>
+        <InputSelect class="form-control" @bind-Value="nuevoGasto.TareaId">
+            <option value="">-- Seleccione una tarea --</option>
+            @foreach (var tarea in tareas)
+            {
+                <option value="@tarea.Id">@tarea.Nombre</option>
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label>Usuario</label>
+        <InputSelect class="form-control" @bind-Value="nuevoGasto.UsuarioId">
+            <option value="">-- Seleccione un usuario --</option>
+            @foreach (var usuario in usuarios)
+            {
+                <option value="@usuario.Id">@usuario.Nombre</option>
+            }
+        </InputSelect>
+    </div>
+    <div class="mb-3">
+        <label>Categoria gasto</label>
+        <InputSelect class="form-control" @bind-Value="nuevoGasto.CategoriaGastoId">
+            <option value="">-- Seleccione una categoria --</option>
+            @foreach (var categoria in categorias)
+            {
+                <option value="@categoria.Id">@categoria.Tipo</option>
+            }
+        </InputSelect>
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar</button>
+
+</EditForm>
+@code {
+    private GastoDTO nuevoGasto= new GastoDTO();
+    private List<TareaDTO> tareas = new List<TareaDTO>();
+    private List<UsuarioDTO> usuarios= new List<UsuarioDTO>();
+    private List<CategoriaGastoDTO> categorias = new List<CategoriaGastoDTO>();
+    private string mensajeError = string.Empty;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            categorias = (await CategoriaGastoApiClient.GetAllAsync()).ToList();
+            tareas = (await TareaApiClient.GetAllAsync()).ToList();
+            usuarios=(await UsuarioApiClient.GetAllAsync()).ToList();
+        }
+        catch (Exception ex)
+        {
+            mensajeError = $"Error al cargar los gastos: {ex.Message}";
+        }
+    }
+    private async Task GuardarGasto()
+    {
+
+        try
+        {
+            nuevoGasto.UsuarioNombre = usuarios.FirstOrDefault(u => u.Id == nuevoGasto.UsuarioId)?.Nombre;
+            nuevoGasto.CategoriaGastoNombre = categorias.FirstOrDefault(c => c.Id == nuevoGasto.CategoriaGastoId)?.Tipo;
+            nuevoGasto.TareaNombre = tareas.FirstOrDefault(t => t.Id == nuevoGasto.TareaId)?.Nombre;
+
+            nuevoGasto.FechaAlta = DateTime.Now;
+            await GastoApiClient.AddAsync(nuevoGasto);
+            NavigationManager.NavigateTo("/gastos");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            mensajeError = $"Error al guardar el gasto: {ex.Message}";
+
+        }
+    }
+}
