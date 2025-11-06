@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Json;
+using System.Linq;
 using System.Windows.Forms;
 using API.Clients;
-using DTOs;  
+using DTOs;
 using Escritorio.Helpers;
 
 namespace Escritorio.Forms
 {
     public partial class FormReporteGastos : Form
     {
-        private List<GrupoDTO> _grupos; 
+        private List<GrupoDTO> _grupos;
 
         public FormReporteGastos()
         {
@@ -29,23 +28,15 @@ namespace Escritorio.Forms
             try
             {
                 var grupos = await GrupoApiClient.GetAllAsync();
-                _grupos = new List<GrupoDTO>(grupos);
+                _grupos = grupos?.ToList() ?? new List<GrupoDTO>();
 
-                if (_grupos != null && _grupos.Count > 0)
-                {
-                    cmbGrupos.DataSource = _grupos;
-                    cmbGrupos.DisplayMember = "Nombre";
-                    cmbGrupos.ValueMember = "Id";
-                    cmbGrupos.Refresh();
+                cmbGrupos.DataSource = null;
+                cmbGrupos.DataSource = _grupos;
+                cmbGrupos.DisplayMember = "Nombre";
+                cmbGrupos.ValueMember = "Id";
 
-                    if (cmbGrupos.Items.Count > 0)
-                        cmbGrupos.SelectedIndex = 0;
-                }
-                else
-                {
-                    MessageBox.Show("No se encontraron grupos", "Información",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                if (cmbGrupos.Items.Count > 0)
+                    cmbGrupos.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -58,44 +49,89 @@ namespace Escritorio.Forms
         {
             if (cmbGrupos.SelectedValue == null)
             {
-                MessageBox.Show("Por favor seleccione un grupo", "Advertencia",
-                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Por favor seleccione un grupo", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             try
             {
                 btnGenerarReporte.Enabled = false;
-                btnGenerarReporte.Text = "Generando...";
+                btnGenerarReporte.Text = "Generando PDF...";
 
-                var grupoId = (int)cmbGrupos.SelectedValue;
-                var reporte = await ReporteApiClient.GetReporteGastosGrupoAsync(grupoId);
+                int grupoId = Convert.ToInt32(cmbGrupos.SelectedValue);
 
-                if (reporte == null)
+                // Obtener gastos 
+                var gastos = await GastoApiClient.GetByGrupoIdAsync(grupoId);
+                var gastosList = gastos?.ToList() ?? new List<GastoDTO>();
+
+                if (!gastosList.Any())
                 {
-                    MessageBox.Show("El reporte recibido está vacío o es nulo", "Error",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("No se encontraron gastos para el grupo seleccionado.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                // ✅ AHORA USA DTOs.ReporteGastosGrupoDto (sin conflicto)
-                using (SaveFileDialog saveDialog = new SaveFileDialog())
-                {
-                    saveDialog.Filter = "PDF Files|*.pdf";
-                    saveDialog.FileName = $"Reporte_Gastos_{reporte.NombreGrupo}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
-
-                    if (saveDialog.ShowDialog() == DialogResult.OK)
+                // Agrupar gastos por usuario y sumar montos 
+                var gastosPorUsuario = gastosList
+                    .GroupBy(g => g.UsuarioId)
+                    .Select(grp =>
                     {
-                        ReporteHelper.GenerarPDF(reporte, saveDialog.FileName);
-                        MessageBox.Show($"Reporte generado exitosamente:\n{saveDialog.FileName}",
-                                      "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        var first = grp.FirstOrDefault();
+                        return new ReporteGastosUsuarioDto
+                        {
+                            NombreUsuario = first?.UsuarioNombre ?? $"Usuario {grp.Key}",
+                            TotalGastado = Convert.ToDecimal(grp.Sum(x => x.Monto))
+                            
+                        };
+                    })
+                    .OrderByDescending(r => r.TotalGastado)
+                    .ToList();
+
+                var grupoSeleccionado = cmbGrupos.SelectedItem as GrupoDTO;
+                var reporte = new ReporteGastosGrupoDto
+                {
+                    NombreGrupo = grupoSeleccionado?.Nombre ?? $"Grupo_{grupoId}",
+                    FechaGeneracion = DateTime.Now,
+                    GastosUsuarios = gastosPorUsuario
+                };
+
+               
+                string path = null;
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    using (var dlg = new SaveFileDialog())
+                    {
+                        dlg.Filter = "PDF Files|*.pdf";
+                        dlg.FileName = $"Reporte_Gastos_{reporte.NombreGrupo}_{DateTime.Now:yyyyMMddHHmmss}.pdf";
+
+                        if (dlg.ShowDialog(this) == DialogResult.OK)
+                        {
+                            path = dlg.FileName;
+                        }
                     }
+                }));
+
+                if (string.IsNullOrEmpty(path))
+                    return;
+
+                
+                try
+                {
+                    await StaThreadHelper.RunInSta(() =>
+                    {
+                        PdfReportGenerator.GeneratePdf(reporte, path);
+                    });
+
+                    MessageBox.Show($"Reporte PDF generado correctamente:\n{path}", "Éxito",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception exPdf)
+                {
+                    MessageBox.Show($"Error al generar PDF: {exPdf.ToString()}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al generar reporte: {ex.Message}", "Error",
-                              MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al preparar el reporte: {ex.ToString()}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {

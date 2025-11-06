@@ -25,7 +25,6 @@ namespace Escritorio
             ConfigurarColumnasDataGridView();
             ConfigurarMenuContextual();
 
-            // CARGAR GRUPOS INMEDIATAMENTE al crear el form
             _ = CargarGrupos();
         }
 
@@ -43,7 +42,6 @@ namespace Escritorio
 
             menuContextual.Items.AddRange(new ToolStripItem[] { itemPlan, itemTarea, itemGasto });
 
-            // Asignar el menú contextual al DataGridView
             dgvGrupos.ContextMenuStrip = menuContextual;
         }
 

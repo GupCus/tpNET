@@ -12,7 +12,6 @@ namespace Escritorio
     public partial class FormTarea : Form
     {
         private bool confirmarEliminar = false;
-        // Campo para guardar la fecha de alta de la tarea seleccionada
         private DateTime? fechaAltaSeleccionada = null;
         private List<PlanDTO> planes = new List<PlanDTO>();
 
@@ -63,7 +62,7 @@ namespace Escritorio
             return t;
         }
 
-        // Al seleccionar una tarea (fila), se rescatan sus datos a la UI
+        
         private void dgvTarea_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvTarea.CurrentRow != null && dgvTarea.CurrentRow.DataBoundItem is TareaDTO t)
@@ -76,7 +75,7 @@ namespace Escritorio
                 txtEstado.SelectedItem = t.Estado;
                 fechaAltaSeleccionada = t.FechaAlta;
 
-                // Seleccionar el plan correspondiente en el ComboBox
+                
                 if (cmbPlan.Items.Count > 0)
                 {
                     cmbPlan.SelectedValue = t.PlanId;
@@ -85,7 +84,7 @@ namespace Escritorio
                 btnModificar.Enabled = true;
                 btnEliminar.Enabled = true;
 
-                // Reset eliminar
+                
                 if (confirmarEliminar)
                 {
                     btnEliminar.Text = "ELIMINAR TAREA";
@@ -94,13 +93,13 @@ namespace Escritorio
             }
         }
 
-        // GET ALL Tarea || Actualización de la tabla principal
+        
         private async Task GetTareas()
         {
             try
             {
                 var tareas = await TareaApiClient.GetAllAsync();
-                dgvTarea.DataSource = null; // Limpia antes de asignar
+                dgvTarea.DataSource = null; 
                 dgvTarea.AutoGenerateColumns = true;
                 dgvTarea.DataSource = tareas.ToList();
             }
@@ -110,7 +109,7 @@ namespace Escritorio
             }
         }
 
-        // POST Tarea
+        
         private async void btnNuevo_Click(object sender, EventArgs e)
         {
             if (cmbPlan.SelectedValue == null || cmbPlan.SelectedIndex == -1)
@@ -121,7 +120,7 @@ namespace Escritorio
             }
 
             txtID.Text = "";
-            fechaAltaSeleccionada = DateTime.Now; // Nueva tarea, asigna ahora
+            fechaAltaSeleccionada = DateTime.Now; 
             TareaDTO t = LimpiarTarea();
             try
             {
@@ -135,7 +134,7 @@ namespace Escritorio
             }
         }
 
-        // PUT Tarea
+        
         private async void btnModificar_Click(object sender, EventArgs e)
         {
             if (cmbPlan.SelectedValue == null || cmbPlan.SelectedIndex == -1)
@@ -158,7 +157,7 @@ namespace Escritorio
             }
         }
 
-        // DELETE tarea
+        
         private async void btnEliminar_Click(object sender, EventArgs e)
         {
             if (!confirmarEliminar)

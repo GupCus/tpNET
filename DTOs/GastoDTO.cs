@@ -11,8 +11,6 @@ namespace DTOs
 
         public int UsuarioId { get; set; }
         public string? UsuarioNombre { get; set; }
-
-        // NUEVO: Relación con Tarea (opcional)
         public int? TareaId { get; set; }
         public string? TareaNombre { get; set; }
 

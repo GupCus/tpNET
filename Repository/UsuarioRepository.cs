@@ -55,7 +55,6 @@ namespace Repository
             if (!string.IsNullOrWhiteSpace(usuario.Contrasena))
                 existing.SetContrasena(usuario.Contrasena);
             existing.SetFechaAlta(usuario.FechaAlta);
-            // Forzar SIEMPRE NoAdmin
             existing.SetRol("NoAdmin");
             ctx.SaveChanges();
             return true;

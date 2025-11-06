@@ -14,12 +14,11 @@ namespace API.Clients
 
         static GastoApiClient()
         {
-            // Si usas HTTPS y certificado autofirmado en desarrollo, usa este handler:
             client = new HttpClient(new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
             });
-            client.BaseAddress = new Uri("https://localhost:5183/"); // Cambia a http si tu API está en http.
+            client.BaseAddress = new Uri("https://localhost:5183/"); 
             client.DefaultRequestHeaders.Accept.Clear();
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
@@ -106,6 +105,21 @@ namespace API.Clients
                     return await response.Content.ReadFromJsonAsync<IEnumerable<GastoDTO>>() ?? new List<GastoDTO>();
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Error en búsqueda. Status: {response.StatusCode}, Detalle: {error}");
+            }
+            catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
+            catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
+        }
+
+        // Obtiene todos los gastos de todas las tareas de todos los planes de un grupo
+        public static async Task<IEnumerable<GastoDTO>> GetByGrupoIdAsync(int grupoId)
+        {
+            try
+            {
+                var response = await client.GetAsync($"gastos/grupo/{grupoId}");
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<IEnumerable<GastoDTO>>() ?? new List<GastoDTO>();
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al obtener gastos del grupo {grupoId}. Status: {response.StatusCode}, Detalle: {error}");
             }
             catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }

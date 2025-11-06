@@ -14,7 +14,6 @@ namespace Escritorio
 
         private async void FormUsuario_Load(object sender, EventArgs e)
         {
-            // Cargar roles en el ComboBox
             comRol.Items.Clear();
             comRol.Items.Add("Admin");
             comRol.Items.Add("NoAdmin");
@@ -60,7 +59,7 @@ namespace Escritorio
             this.txtNombre.Text = "";
             this.txtMail.Text = "";
             this.txtContraseña.Text = "";
-            comRol.SelectedIndex = 1; // Por defecto "NoAdmin"
+            comRol.SelectedIndex = 1; 
         }
 
         private void Txt_Click(object sender, EventArgs e)
@@ -75,13 +74,13 @@ namespace Escritorio
                 txtID.Text = u.Id.ToString();
                 txtNombre.Text = u.Nombre;
                 txtMail.Text = u.Mail;
-                txtContraseña.Text = ""; // Por seguridad, no se muestra la contraseña
+                txtContraseña.Text = ""; 
 
-                // Seleccionar el rol en el ComboBox
+               
                 if (u.Rol == "Admin" || u.Rol == "NoAdmin")
                     comRol.SelectedItem = u.Rol;
                 else
-                    comRol.SelectedIndex = 1; // Default "NoAdmin"
+                    comRol.SelectedIndex = 1; 
 
                 Nuevo.Enabled = true;
                 Editar.Enabled = true;

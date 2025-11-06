@@ -147,7 +147,7 @@ namespace Escritorio
         private async void btnNuevo_Click(object sender, EventArgs e)
         {
             txtID.Text = "";
-            fechaAltaSeleccionada = DateTime.Now; // Nueva fecha para alta
+            fechaAltaSeleccionada = DateTime.Now;
             try
             {
                 GastoDTO g = this.LimpiarGasto();

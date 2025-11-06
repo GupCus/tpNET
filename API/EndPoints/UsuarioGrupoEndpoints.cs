@@ -2,7 +2,7 @@
 using DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc; // ✅ AGREGAR ESTE USING
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.EndPoints
 {
@@ -10,7 +10,7 @@ namespace API.EndPoints
     {
         public static void MapUsuarioGrupoEndPoints(this WebApplication app)
         {
-            // Agregar relación usuario-grupo
+           
             app.MapPost("/usuario-grupo", ([FromBody] UsuarioGrupoDTO input, [FromServices] UsuarioGrupoService service) =>
             {
                 service.Add(input.UsuarioId, input.GrupoId);
@@ -19,8 +19,7 @@ namespace API.EndPoints
             .WithName("CreateUsuarioGrupo")
             .Produces<UsuarioGrupoDTO>(StatusCodes.Status201Created)
             .WithOpenApi();
-
-            // Eliminar relación usuario-grupo
+           
             app.MapDelete("/usuario-grupo", ([FromBody] UsuarioGrupoDTO input, [FromServices] UsuarioGrupoService service) =>
             {
                 var ok = service.Delete(input.UsuarioId, input.GrupoId);
@@ -31,7 +30,6 @@ namespace API.EndPoints
             .Produces(StatusCodes.Status404NotFound)
             .WithOpenApi();
 
-            // Obtener grupos de un usuario
             app.MapGet("/usuario-grupo/usuario/{usuarioId:int}", (int usuarioId, [FromServices] UsuarioGrupoService service) =>
             {
                 var grupos = service.GetGruposDeUsuario(usuarioId);
@@ -41,7 +39,6 @@ namespace API.EndPoints
             .Produces<IEnumerable<GrupoDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
 
-            // Obtener usuarios de un grupo
             app.MapGet("/usuario-grupo/grupo/{grupoId:int}", (int grupoId, [FromServices] UsuarioGrupoService service) =>
             {
                 var usuarios = service.GetUsuariosDeGrupo(grupoId);

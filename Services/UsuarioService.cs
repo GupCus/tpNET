@@ -18,7 +18,6 @@ namespace Services
 
             var fechaAlta = DateTime.Now;
 
-            // Usa el rol del DTO, validando que sea "Admin" o "NoAdmin" (por seguridad)
             var rol = (dto.Rol == "Admin" || dto.Rol == "NoAdmin") ? dto.Rol : "NoAdmin";
 
             var entidad = new Usuario(0, dto.Mail, dto.Nombre, dto.Contrasena ?? string.Empty, fechaAlta, rol);
@@ -86,20 +85,16 @@ namespace Services
             if (repo.EmailExists(dto.Mail, dto.Id))
                 throw new ArgumentException($"Ya existe otro usuario con el mail '{dto.Mail}'.");
 
-            // Traer usuario actual
             var usuarioActual = repo.Get(dto.Id);
             if (usuarioActual == null)
                 throw new ArgumentException("El usuario no existe.");
 
-            // Si la contraseña es nula o vacía, usar la actual
             var contrasenaFinal = string.IsNullOrEmpty(dto.Contrasena)
                 ? usuarioActual.Contrasena
                 : dto.Contrasena;
 
-            // Siempre usar la fecha de alta original
             var fechaAltaFinal = usuarioActual.FechaAlta;
 
-            // Usa el rol del DTO, validando que sea "Admin" o "NoAdmin"
             var rol = (dto.Rol == "Admin" || dto.Rol == "NoAdmin") ? dto.Rol : "NoAdmin";
 
             var entidad = new Usuario(dto.Id, dto.Mail, dto.Nombre, contrasenaFinal, fechaAltaFinal, rol);

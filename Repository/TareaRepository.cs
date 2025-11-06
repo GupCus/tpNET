@@ -63,7 +63,6 @@ namespace Repository
             return ctx.Tareas.Where(t => t.Nombre.ToLower().Contains(texto) || (t.Descripcion != null && t.Descripcion.ToLower().Contains(texto))).ToList();
         }
 
-        // Método adicional para buscar tareas por PlanId
         public IEnumerable<Tarea> GetByPlanId(int planId)
         {
             using var ctx = CreateContext();

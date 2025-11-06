@@ -6,7 +6,6 @@ namespace Escritorio
 {
     public partial class FormCategoriaGastos : Form
     {
-        /* Lógica del form */
         private bool confirmarEliminar = false;
        
 
@@ -22,7 +21,6 @@ namespace Escritorio
             Debug.WriteLine("Form1_Load completado");
         }
 
-        //Metodo que se encarga de sanitizar la categoria para no enviar nulos
         private object LimpiarCategoria()
         {
             bool nuevo = string.IsNullOrEmpty(txtID.Text);
@@ -47,13 +45,11 @@ namespace Escritorio
 
             }
         }
-        //Limpia las casillas al hacer click
         private void Txt_Click(object sender, EventArgs e)
         {
             ((TextBox)sender).Text = "";
         }
 
-        //Al Seleccionar una categoria (fila), se rescatan sus datos a la UI
         private void dgvCategoria_SelectionChanged(object sender, EventArgs e)
         {
             if (dgvCategoria.CurrentRow != null && dgvCategoria.CurrentRow.DataBoundItem is CategoriaGastoDTO cg)
@@ -66,7 +62,6 @@ namespace Escritorio
                 Modificar.Enabled = true;
                 Eliminar.Enabled = true;
 
-                //Reset eliminar
                 if (confirmarEliminar)
                 {
                     Eliminar.Text = "ELIMINAR CATEGOR�A";
@@ -76,8 +71,6 @@ namespace Escritorio
             }
         }
 
-        /* API CategoriasGastos */
-        //GET ALL Categorias || Actualizaci�n de la tabla principal
         private async Task GetCategorias()
         {
             try
@@ -98,7 +91,6 @@ namespace Escritorio
             }
         }
 
-        //POST Categoria
         private async void Cargar_Click(object sender, EventArgs e)
         {
             txtID.Text = "";
@@ -106,7 +98,7 @@ namespace Escritorio
             await CategoriaGastoApiClient.AddAsync(cg);
             await GetCategorias();
         }
-        //PUT Categoria
+
         private async void Modificar_Click(object sender, EventArgs e)
         {
             CategoriaGastoUpdateDTO cg = (CategoriaGastoUpdateDTO)this.LimpiarCategoria();
@@ -114,7 +106,6 @@ namespace Escritorio
             await GetCategorias();
         }
 
-        //DELETE Categoria
         private async void Eliminar_Click(object sender, EventArgs e)
         {
             if (!confirmarEliminar)
@@ -122,7 +113,7 @@ namespace Escritorio
                 Eliminar.Text = "¿ESTÁ SEGURO?";
                 confirmarEliminar = true;
             }
-            //Hacer click de vuelta para ejecutar esto
+
             else
             {
                 await CategoriaGastoApiClient.DeleteAsync(((CategoriaGastoDTO)dgvCategoria.CurrentRow.DataBoundItem).Id);

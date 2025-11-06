@@ -19,7 +19,6 @@ namespace API.Clients
         {
             try
             {
-                // ✅ CAMBIAR: quitar "api/" para que coincida con el endpoint
                 var response = await client.PostAsJsonAsync("usuario-grupo", dto);
                 if (!response.IsSuccessStatusCode)
                 {
@@ -35,7 +34,7 @@ namespace API.Clients
         {
             try
             {
-                // ✅ CAMBIAR: quitar "api/" para que coincida con el endpoint
+                
                 var request = new HttpRequestMessage(HttpMethod.Delete, "usuario-grupo")
                 {
                     Content = JsonContent.Create(dto)
@@ -55,7 +54,7 @@ namespace API.Clients
         {
             try
             {
-                // ✅ CAMBIAR: quitar "api/" para que coincida con el endpoint
+                
                 var response = await client.GetAsync($"usuario-grupo/usuario/{usuarioId}");
                 if (response.IsSuccessStatusCode)
                     return await response.Content.ReadFromJsonAsync<IEnumerable<GrupoDTO>>() ?? new List<GrupoDTO>();
@@ -70,7 +69,6 @@ namespace API.Clients
         {
             try
             {
-                // ✅ CAMBIAR: quitar "api/" para que coincida con el endpoint
                 var response = await client.GetAsync($"usuario-grupo/grupo/{grupoId}");
                 if (response.IsSuccessStatusCode)
                     return await response.Content.ReadFromJsonAsync<IEnumerable<UsuarioDTO>>() ?? new List<UsuarioDTO>();

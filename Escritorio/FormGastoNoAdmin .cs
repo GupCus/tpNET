@@ -2,9 +2,6 @@
 using DTOs;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -38,7 +35,6 @@ namespace Escritorio
             {
                 Cursor = Cursors.WaitCursor;
 
-                // USAR EL API CLIENT REAL para obtener categorías
                 categorias = (await CategoriaGastoApiClient.GetAllAsync()).ToList();
 
                 cmbCategoria.Items.Clear();
@@ -62,27 +58,60 @@ namespace Escritorio
             }
         }
 
+        // MODIFICADO: ahora carga las tareas usando el endpoint /tareas/grupo/{grupoId}
+        // Si no hay tareas, solo se DESHABILITA el botón de registrar gasto (no se muestra warning).
         private async Task CargarTareas()
         {
             try
             {
-                var todasLasTareas = await TareaApiClient.GetAllAsync();
-                tareasDelGrupo = todasLasTareas.ToList();
+                Cursor = Cursors.WaitCursor;
+
+                // Llamada al endpoint que devuelve solo las tareas del grupo
+                var tareas = await TareaApiClient.GetByGrupoIdAsync(this.grupoId);
+                tareasDelGrupo = tareas?.ToList() ?? new List<TareaDTO>();
 
                 cmbTarea.Items.Clear();
-                cmbTarea.Items.Add("Sin tarea específica...");
-                foreach (var tarea in tareasDelGrupo)
+
+                if (!tareasDelGrupo.Any())
                 {
-                    cmbTarea.Items.Add(new { Text = tarea.Nombre, Value = tarea.Id });
+                    // No hay tareas: dejar una entrada informativa y deshabilitar el botón de crear gasto
+                    cmbTarea.Items.Add("No hay tareas en el grupo");
+                    cmbTarea.SelectedIndex = 0;
+                    cmbTarea.Enabled = false;
+
+                    btnNuevoGasto.Enabled = false;
                 }
-                cmbTarea.DisplayMember = "Text";
-                cmbTarea.ValueMember = "Value";
-                cmbTarea.SelectedIndex = 0;
+                else
+                {
+                    cmbTarea.Items.Add("Sin tarea específica...");
+                    foreach (var tarea in tareasDelGrupo)
+                    {
+                        cmbTarea.Items.Add(new { Text = tarea.Nombre ?? $"Tarea {tarea.Id}", Value = tarea.Id });
+                    }
+
+                    cmbTarea.DisplayMember = "Text";
+                    cmbTarea.ValueMember = "Value";
+                    cmbTarea.SelectedIndex = 0;
+                    cmbTarea.Enabled = true;
+
+                    btnNuevoGasto.Enabled = true;
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar tareas: {ex.Message}", "Error",
+                MessageBox.Show($"Error al cargar tareas del grupo {grupoId}: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // En caso de error, por seguridad deshabilitamos creación
+                cmbTarea.Items.Clear();
+                cmbTarea.Items.Add("Error al cargar tareas");
+                cmbTarea.SelectedIndex = 0;
+                cmbTarea.Enabled = false;
+                btnNuevoGasto.Enabled = false;
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
 
@@ -93,8 +122,9 @@ namespace Escritorio
                 Cursor = Cursors.WaitCursor;
                 dgvGastos.Rows.Clear();
 
-                var todosLosGastos = await GastoApiClient.GetAllAsync();
-                gastosDelGrupo = todosLosGastos.ToList();
+                // Obtener solo los gastos correspondientes a cualquier tarea de los planes del grupo
+                var gastos = await GastoApiClient.GetByGrupoIdAsync(this.grupoId);
+                gastosDelGrupo = gastos?.ToList() ?? new List<GastoDTO>();
 
                 foreach (var gasto in gastosDelGrupo)
                 {
@@ -135,6 +165,8 @@ namespace Escritorio
         {
             try
             {
+                // Nota: el botón ya se deshabilita cuando no hay tareas, pero dejamos comprobaciones normales de validación.
+
                 if (cmbCategoria.SelectedIndex <= 0)
                 {
                     MessageBox.Show("Seleccione una categoría", "Validación",
@@ -159,7 +191,6 @@ namespace Escritorio
                     return;
                 }
 
-                // Obtener el ID de la categoría seleccionada
                 var categoriaSeleccionada = cmbCategoria.SelectedItem as dynamic;
                 if (categoriaSeleccionada == null)
                 {
@@ -170,9 +201,9 @@ namespace Escritorio
 
                 int categoriaId = categoriaSeleccionada.Value;
 
-                // Obtener el ID de la tarea si se seleccionó una
+                // Obtener el ID de la tarea si se seleccionó una (las tareas provienen del endpoint por grupo)
                 int? tareaId = null;
-                if (cmbTarea.SelectedIndex > 0)
+                if (cmbTarea.Enabled && cmbTarea.SelectedIndex > 0)
                 {
                     var tareaSeleccionada = cmbTarea.SelectedItem as dynamic;
                     tareaId = tareaSeleccionada?.Value;
@@ -208,8 +239,8 @@ namespace Escritorio
         {
             txtDescripcion.Clear();
             txtMonto.Clear();
-            cmbCategoria.SelectedIndex = 0;
-            cmbTarea.SelectedIndex = 0;
+            if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
+            if (cmbTarea.Items.Count > 0) cmbTarea.SelectedIndex = 0;
             dtpFechaHora.Value = DateTime.Now;
         }
 
@@ -264,7 +295,6 @@ namespace Escritorio
 
             lblContador.Text = $"{dgvGastos.Rows.Count} gastos encontrados";
 
-            // Recalcular total con los gastos filtrados
             var total = gastosDelGrupo.Where(g =>
                 string.IsNullOrEmpty(textoBusqueda) ||
                 g.Descripcion.ToLower().Contains(textoBusqueda) ||
@@ -283,13 +313,11 @@ namespace Escritorio
 
         private void txtMonto_KeyPress(object sender, KeyPressEventArgs e)
         {
-            // Permitir solo números, punto decimal y tecla de control
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && e.KeyChar != '.')
             {
                 e.Handled = true;
             }
 
-            // Permitir solo un punto decimal
             if (e.KeyChar == '.' && (sender as TextBox).Text.IndexOf('.') > -1)
             {
                 e.Handled = true;

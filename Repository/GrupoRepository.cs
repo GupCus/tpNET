@@ -55,7 +55,6 @@ namespace Repository
             existing.SetDescripcion(grupo.Descripcion);
             existing.SetFechaAlta(grupo.FechaAlta);
             existing.SetIdUsuarioAdministrador(grupo.IdUsuarioAdministrador);
-            // Si necesitas actualizar usuarios, deberías hacerlo aquí
             ctx.SaveChanges();
             return true;
         }

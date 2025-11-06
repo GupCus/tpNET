@@ -65,6 +65,16 @@ namespace API.EndPoints
             .WithName("GetPlanesByCriteria")
             .Produces<IEnumerable<PlanCreateDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
+
+            // Obtiene todos los planes de un grupo por su id.
+            app.MapGet("/planes/grupo/{grupoId:int}", (int grupoId, PlanService service) =>
+            {
+                var items = service.GetByGrupoId(grupoId);
+                return Results.Ok(items);
+            })
+            .WithName("GetPlanesByGrupo")
+            .Produces<IEnumerable<PlanDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
         }
     }
 }

@@ -11,18 +11,14 @@ namespace Dominio
         public string Nombre { get; private set; }
         public string Descripcion { get; private set; }
         public DateTime FechaAlta { get; private set; }
-
-        // Nuevo campo: Id del usuario administrador
         public int IdUsuarioAdministrador { get; private set; }
 
-        // Relación muchos a muchos: Grupo <-> GrupoUsuario <-> Usuario
         private readonly List<UsuarioGrupo> _grupoUsuarios = new List<UsuarioGrupo>();
         public IReadOnlyCollection<UsuarioGrupo> GrupoUsuarios => _grupoUsuarios.AsReadOnly();
 
         private readonly List<Plan> _planes = new List<Plan>();
         public IReadOnlyCollection<Plan> Planes => _planes.AsReadOnly();
 
-        // Constructor actualizado con el nuevo campo
         public Grupo(int id, string nombre, string descripcion, DateTime fechaAlta, int idUsuarioAdministrador)
         {
             SetId(id);

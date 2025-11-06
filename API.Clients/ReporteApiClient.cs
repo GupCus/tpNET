@@ -14,7 +14,6 @@ namespace API.Clients
 
         static ReporteApiClient()
         {
-            // Si usas HTTPS y certificado autofirmado en desarrollo, usa este handler:
             client = new HttpClient(new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true

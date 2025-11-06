@@ -21,11 +21,6 @@ namespace Services
             if (usuarioRepo.Get(dto.UsuarioId) == null)
                 throw new ArgumentException($"No existe Usuario con Id {dto.UsuarioId}.");
 
-            // Si hay tarea, podrías validar aquí si existe la Tarea
-            // var tareaRepo = new TareaRepository();
-            // if (dto.TareaId != null && tareaRepo.Get(dto.TareaId.Value) == null)
-            //     throw new ArgumentException($"No existe Tarea con Id {dto.TareaId}.");
-
             var fechaHora = dto.FechaHora == default ? DateTime.Now : dto.FechaHora;
             var fechaAlta = DateTime.Now;
 
@@ -37,7 +32,7 @@ namespace Services
                 dto.Descripcion,
                 fechaHora,
                 fechaAlta,
-                dto.TareaId 
+                dto.TareaId
             );
 
             repo.Add(entidad);
@@ -110,7 +105,7 @@ namespace Services
                 dto.Descripcion,
                 dto.FechaHora,
                 dto.FechaAlta,
-                dto.TareaId 
+                dto.TareaId
             );
             return repo.Update(entidad);
         }
@@ -133,6 +128,52 @@ namespace Services
                 FechaHora = g.FechaHora,
                 FechaAlta = g.FechaAlta
             });
+        }
+
+        // Devuelve todos los gastos que pertenecen a cualquier tarea de cualquier plan
+        public IEnumerable<GastoDTO> GetByGrupoId(int grupoId)
+        {
+            var planRepo = new PlanRepository();
+            var tareaRepo = new TareaRepository();
+            var gastoRepo = new GastoRepository();
+
+            // Obtener planes del grupo
+            var planes = planRepo.GetAll() ?? Enumerable.Empty<Plan>();
+            var planIds = planes.Where(p => p.GrupoId == grupoId).Select(p => p.Id).ToList();
+
+            if (!planIds.Any())
+                return new List<GastoDTO>();
+
+            // Obtener tareas que pertenecen a esos planes
+            var tareas = tareaRepo.GetAll() ?? Enumerable.Empty<Tarea>();
+            var tareaIds = tareas.Where(t => planIds.Contains(t.PlanId)).Select(t => t.Id).ToList();
+
+            if (!tareaIds.Any())
+                return new List<GastoDTO>();
+
+            // Obtener gastos que pertenecen a esas tareas
+            var gastos = gastoRepo.GetAll() ?? Enumerable.Empty<Gasto>();
+            var gastosDelGrupo = gastos
+                .Where(g => g.TareaId != null && tareaIds.Contains(g.TareaId.Value))
+                .ToList();
+
+            
+            var gastoDtos = gastosDelGrupo.Select(g => new GastoDTO
+            {
+                Id = g.Id,
+                CategoriaGastoId = g.CategoriaGastoId,
+                CategoriaGastoNombre = g.CategoriaGasto?.Tipo,
+                UsuarioId = g.UsuarioId,
+                UsuarioNombre = g.Usuario?.Nombre,
+                TareaId = g.TareaId,
+                TareaNombre = g.Tarea?.Nombre,
+                Monto = g.Monto,
+                Descripcion = g.Descripcion,
+                FechaHora = g.FechaHora,
+                FechaAlta = g.FechaAlta
+            }).ToList();
+
+            return gastoDtos;
         }
     }
 }

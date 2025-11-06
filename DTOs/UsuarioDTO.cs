@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace DTOs
 {
-    // DTO para lectura/representación pública del usuario (sin contraseña)
     public class UsuarioDTO
     {
         public int Id { get; set; }

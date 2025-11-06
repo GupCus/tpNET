@@ -43,14 +43,11 @@ namespace Escritorio
             if (nuevo)
             {
                 g.FechaAlta = DateTime.Now;
-                // Agregar el id del usuario logueado como administrador
-                g.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? 0; // Usar 0 si no está logueado
+                g.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? 0; 
             }
             else
             {
                 g.Id = int.Parse(txtID.Text);
-                // Si quieres que el administrador se pueda editar, agrega aquí
-                // g.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? g.IdUsuarioAdministrador;
             }
             return g;
 
@@ -80,7 +77,7 @@ namespace Escritorio
                 btnEliminar.Text = "¿ESTÁ SEGURO?";
                 confirma = true;
             }
-            //Hacer click de vuelta para ejecutar esto
+
             else
             {
                 await GrupoApiClient.DeleteAsync(((GrupoDTO)dataGridView1.CurrentRow.DataBoundItem).Id);
@@ -103,7 +100,6 @@ namespace Escritorio
                 btnEditar.Enabled = true;
                 btnEliminar.Enabled = true;
 
-                //Reset eliminar
                 if (confirma)
                 {
                     btnEliminar.Text = "ELIMINAR GRUPO";

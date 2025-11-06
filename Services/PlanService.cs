@@ -92,5 +92,24 @@ namespace Services
                 GrupoId = p.GrupoId
             });
         }
+
+        //Devuelve todos los planes de un grupo dado por su id.
+        public IEnumerable<PlanDTO> GetByGrupoId(int grupoId)
+        {
+            var repo = new PlanRepository();
+
+            var items = repo.GetAll().Where(p => p.GrupoId == grupoId);
+
+            return items.Select(p => new PlanDTO
+            {
+                Id = p.Id,
+                Nombre = p.Nombre,
+                FechaInicio = p.FechaInicio,
+                FechaFin = p.FechaFin,
+                Descripcion = p.Descripcion,
+                FechaAlta = p.FechaAlta,
+                GrupoId = p.GrupoId
+            }).ToList();
+        }
     }
 }

@@ -108,5 +108,20 @@ namespace API.Clients
             catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
+
+        // Obtiene todos los planes de un grupo por su id.
+        public static async Task<IEnumerable<PlanDTO>> GetByGrupoIdAsync(int grupoId)
+        {
+            try
+            {
+                var response = await client.GetAsync($"planes/grupo/{grupoId}");
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<IEnumerable<PlanDTO>>() ?? new List<PlanDTO>();
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al obtener planes del grupo {grupoId}. Status: {response.StatusCode}, Detalle: {error}");
+            }
+            catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
+            catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
+        }
     }
 }

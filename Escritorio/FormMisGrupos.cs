@@ -20,7 +20,6 @@ namespace Escritorio
             dataGridViewGrupos.AutoGenerateColumns = false;
             dataGridViewGrupos.Columns.Clear();
 
-            // Columna ID
             dataGridViewGrupos.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 Name = "Id",
@@ -30,7 +29,6 @@ namespace Escritorio
                 ReadOnly = true
             });
 
-            // Columna Nombre
             dataGridViewGrupos.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 Name = "Nombre",
@@ -40,7 +38,6 @@ namespace Escritorio
                 ReadOnly = true
             });
 
-            // Columna Descripción
             dataGridViewGrupos.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 Name = "Descripcion",
@@ -50,7 +47,6 @@ namespace Escritorio
                 ReadOnly = true
             });
 
-            // Columna Fecha de Alta
             dataGridViewGrupos.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 Name = "FechaAlta",
@@ -60,7 +56,6 @@ namespace Escritorio
                 ReadOnly = true
             });
 
-            // Columna Administrador
             dataGridViewGrupos.Columns.Add(new DataGridViewTextBoxColumn()
             {
                 Name = "IdUsuarioAdministrador",
@@ -87,7 +82,6 @@ namespace Escritorio
                 dataGridViewGrupos.DataSource = null;
                 dataGridViewGrupos.DataSource = grupos.ToList();
 
-                // Actualizar el título con la cantidad de grupos
                 this.Text = $"Mis Grupos - Administrador ({grupos.Count()} grupos)";
 
                 ActualizarEstadoControles();
@@ -109,7 +103,7 @@ namespace Escritorio
             btnAgregarUsuario.Enabled = hayGrupoSeleccionado;
             txtUsuarioMail.Enabled = hayGrupoSeleccionado;
 
-            // Actualizar etiquetas de estado
+
             if (dataGridViewGrupos.Rows.Count == 0)
             {
                 lblEstado.Text = "No tienes grupos como administrador";
@@ -119,7 +113,7 @@ namespace Escritorio
                 lblEstado.Text = $"Selecciona un grupo para editarlo ({dataGridViewGrupos.Rows.Count} grupos encontrados)";
             }
 
-            // Limpiar campos si no hay selección
+
             if (!hayGrupoSeleccionado && string.IsNullOrEmpty(txtNombre.Text))
             {
                 LimpiarFormulario();
@@ -211,9 +205,9 @@ namespace Escritorio
             try
             {
                 var grupo = ObtenerGrupoDelFormulario();
-                grupo.Id = grupoSeleccionado.Id; // Asegurar que mantenemos el ID
-                grupo.IdUsuarioAdministrador = grupoSeleccionado.IdUsuarioAdministrador; // Mantener el administrador original
-                grupo.FechaAlta = grupoSeleccionado.FechaAlta; // Mantener la fecha original
+                grupo.Id = grupoSeleccionado.Id; 
+                grupo.IdUsuarioAdministrador = grupoSeleccionado.IdUsuarioAdministrador; 
+                grupo.FechaAlta = grupoSeleccionado.FechaAlta; 
 
                 if (!ValidarGrupo(grupo))
                     return;
@@ -296,7 +290,7 @@ namespace Escritorio
 
             try
             {
-                // ✅ BUSCAR USUARIO DIRECTAMENTE POR MAIL (método nuevo y eficiente)
+                
                 var usuarioAAgregar = await UsuarioApiClient.GetByMailAsync(mail);
 
                 if (usuarioAAgregar == null)
@@ -305,7 +299,7 @@ namespace Escritorio
                     return;
                 }
 
-                // Verificar si el usuario ya está en el grupo
+                
                 bool usuarioYaEnGrupo = false;
                 try
                 {
@@ -314,7 +308,7 @@ namespace Escritorio
                 }
                 catch (Exception ex)
                 {
-                    // Si falla al obtener usuarios del grupo, asumimos que no está y continuamos
+                    
                     Debug.WriteLine($"Advertencia: No se pudo verificar usuarios del grupo: {ex.Message}");
                     usuarioYaEnGrupo = false;
                 }
@@ -325,7 +319,7 @@ namespace Escritorio
                     return;
                 }
 
-                // Agregar usuario al grupo
+                
                 var relacion = new UsuarioGrupoDTO
                 {
                     UsuarioId = usuarioAAgregar.Id,

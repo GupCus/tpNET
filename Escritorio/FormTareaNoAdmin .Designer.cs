@@ -1,4 +1,9 @@
-﻿namespace Escritorio
+﻿using System;
+using System.Drawing;
+using System.Windows.Forms;
+using Dominio;
+
+namespace Escritorio
 {
     partial class FormTareaNoAdmin
     {
@@ -54,15 +59,21 @@
 
             var lblEstado = new Label { Text = "Estado:", Location = new Point(300, 105), AutoSize = true };
             cmbEstado = new ComboBox { Location = new Point(380, 102), Size = new Size(120, 20), DropDownStyle = ComboBoxStyle.DropDownList };
-            cmbEstado.Items.AddRange(new object[] { "Pendiente", "EnProgreso", "Completada", "Cancelada" });
-            cmbEstado.SelectedIndex = 0;
+
+            // POBLAR solo con los dos estados necesarios (evitar duplicados)
+            // Usamos objetos con Text/Value para mostrar texto y leer el valor numérico (0/1) al crear la tarea.
+            cmbEstado.DisplayMember = "Text";
+            cmbEstado.ValueMember = "Value";
+            cmbEstado.Items.Add(new { Text = "Activo", Value = (int)EstadoTarea.Activo });
+            cmbEstado.Items.Add(new { Text = "Pendiente", Value = (int)EstadoTarea.Pendiente });
+            cmbEstado.SelectedIndex = 0; // por defecto "Activo"
 
             btnNuevaTarea = new Button { Text = "Crear Tarea", Location = new Point(520, 95), Size = new Size(100, 30) };
 
             panelCreacion.Controls.AddRange(new Control[] {
-            lblTituloCreacion, lblPlan, cmbPlan, lblNombre, txtNombre, lblDescripcion, txtDescripcion,
-            lblFechaHora, dtpFechaHora, lblDuracion, txtDuracion, lblEstado, cmbEstado, btnNuevaTarea
-        });
+                lblTituloCreacion, lblPlan, cmbPlan, lblNombre, txtNombre, lblDescripcion, txtDescripcion,
+                lblFechaHora, dtpFechaHora, lblDuracion, txtDuracion, lblEstado, cmbEstado, btnNuevaTarea
+            });
 
             // Panel lista - DataGridView
             panelLista = new Panel { Dock = DockStyle.Fill };
@@ -77,14 +88,19 @@
                 AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill
             };
 
+            // Columnas: Id (oculta), Nombre, Descripción, Fecha/Hora, Duración, Estado, PlanId
             dgvTareas.Columns.Add("colId", "ID");
             dgvTareas.Columns.Add("colNombre", "Nombre");
             dgvTareas.Columns.Add("colDescripcion", "Descripción");
             dgvTareas.Columns.Add("colFechaHora", "Fecha/Hora");
             dgvTareas.Columns.Add("colDuracion", "Duración");
             dgvTareas.Columns.Add("colEstado", "Estado");
-            dgvTareas.Columns.Add("colCantGastos", "Gastos");
+            dgvTareas.Columns.Add("colPlanId", "Plan ID");
+
+            // Ocultar Id si no quieres mostrarlo
             dgvTareas.Columns["colId"].Visible = false;
+            // Puedes ocultar PlanId si prefieres no mostrarlo en la grilla:
+            // dgvTareas.Columns["colPlanId"].Visible = false;
 
             // Panel inferior - Contador
             var panelInferior = new Panel { Dock = DockStyle.Bottom, Height = 40, BackColor = Color.LightGray };

@@ -14,7 +14,6 @@ namespace API.Clients
 
         static TareaApiClient()
         {
-            // Ignora la validación del certificado SOLO en desarrollo
             client = new HttpClient(new HttpClientHandler
             {
                 ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
@@ -106,6 +105,21 @@ namespace API.Clients
                     return await response.Content.ReadFromJsonAsync<IEnumerable<TareaDTO>>() ?? new List<TareaDTO>();
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Error en búsqueda. Status: {response.StatusCode}, Detalle: {error}");
+            }
+            catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
+            catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
+        }
+
+        // Obtiene todas las tareas de todos los planes de un grupo por su id.
+        public static async Task<IEnumerable<TareaDTO>> GetByGrupoIdAsync(int grupoId)
+        {
+            try
+            {
+                var response = await client.GetAsync($"tareas/grupo/{grupoId}");
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<IEnumerable<TareaDTO>>() ?? new List<TareaDTO>();
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error al obtener tareas del grupo {grupoId}. Status: {response.StatusCode}, Detalle: {error}");
             }
             catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }

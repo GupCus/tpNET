@@ -73,7 +73,7 @@ namespace Services
         public IEnumerable<TareaDTO> GetAll()
         {
             var repo = new TareaRepository();
-            var items = repo.GetAll();
+            var items = repo.GetAll() ?? Enumerable.Empty<Tarea>();
             return items.Select(t => new TareaDTO
             {
                 Id = t.Id,
@@ -119,8 +119,67 @@ namespace Services
                 Descripcion = t.Descripcion,
                 Estado = t.Estado,
                 FechaAlta = t.FechaAlta,
-                PlanId = t.PlanId
+                PlanId = t.PlanId,
+                Gastos = t.Gastos?.Select(g => new GastoDTO
+                {
+                    Id = g.Id,
+                    CategoriaGastoId = g.CategoriaGastoId,
+                    CategoriaGastoNombre = g.CategoriaGasto?.Tipo,
+                    UsuarioId = g.UsuarioId,
+                    UsuarioNombre = g.Usuario?.Nombre,
+                    Monto = g.Monto,
+                    Descripcion = g.Descripcion,
+                    FechaHora = g.FechaHora,
+                    FechaAlta = g.FechaAlta
+                }).ToList()
             });
+        }
+
+        
+        public IEnumerable<TareaDTO> GetByGrupoId(int grupoId)
+        {
+            var planRepo = new PlanRepository();
+            var planesDelGrupoIds = planRepo.GetAll()
+                                            .Where(p => p.GrupoId == grupoId)
+                                            .Select(p => p.Id)
+                                            .ToList();
+
+            if (!planesDelGrupoIds.Any())
+                return new List<TareaDTO>();
+
+            
+            var tareaRepo = new TareaRepository();
+            var tareasAll = tareaRepo.GetAll() ?? Enumerable.Empty<Tarea>();
+
+            
+            var tareasFiltradasDto = tareasAll
+                .Where(t => planesDelGrupoIds.Contains(t.PlanId))
+                .Select(t => new TareaDTO
+                {
+                    Id = t.Id,
+                    Nombre = t.Nombre,
+                    FechaHora = t.FechaHora,
+                    Duracion = t.Duracion,
+                    Descripcion = t.Descripcion,
+                    Estado = t.Estado,
+                    FechaAlta = t.FechaAlta,
+                    PlanId = t.PlanId,
+                    Gastos = t.Gastos?.Select(g => new GastoDTO
+                    {
+                        Id = g.Id,
+                        CategoriaGastoId = g.CategoriaGastoId,
+                        CategoriaGastoNombre = g.CategoriaGasto?.Tipo,
+                        UsuarioId = g.UsuarioId,
+                        UsuarioNombre = g.Usuario?.Nombre,
+                        Monto = g.Monto,
+                        Descripcion = g.Descripcion,
+                        FechaHora = g.FechaHora,
+                        FechaAlta = g.FechaAlta
+                    }).ToList()
+                })
+                .ToList();
+
+            return tareasFiltradasDto;
         }
     }
 }

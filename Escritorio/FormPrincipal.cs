@@ -35,18 +35,18 @@ namespace Escritorio
 
         private void ConfigurarOpcionesSegunRol()
         {
-            // Limpiar y configurar ComboBox principal
+            
             cmbOpciones.Items.Clear();
             cmbOpciones.SelectedIndexChanged -= CmbOpciones_SelectedIndexChanged;
 
-            // Configurar segundo ComboBox (solo para admin)
+            
             if (Sesion.EsAdmin())
             {
-                // Mostrar controles de usuario normal para admin
+                
                 lblTituloUsuarioNormal.Visible = true;
                 cmbUsuarioNormal.Visible = true;
 
-                // Configurar ComboBox de administración
+                
                 lblTituloOpciones.Text = "🔧 Administración:";
                 lblTituloOpciones.ForeColor = Color.DarkRed;
 
@@ -59,10 +59,10 @@ namespace Escritorio
                     "📅 Planes del Sistema",
                     "✅ Tareas del Sistema",
                     "💰 Gastos del Sistema",
-                    "📈 Reportes de Gastos"  // Nueva opción para reportes
+                    "📈 Reportes de Gastos"  
                 });
 
-                // Configurar ComboBox de usuario normal
+                //ComboBox de usuario normal
                 cmbUsuarioNormal.Items.Clear();
                 cmbUsuarioNormal.SelectedIndexChanged -= CmbUsuarioNormal_SelectedIndexChanged;
 
@@ -76,17 +76,17 @@ namespace Escritorio
                 cmbUsuarioNormal.SelectedIndex = 0;
                 cmbUsuarioNormal.SelectedIndexChanged += CmbUsuarioNormal_SelectedIndexChanged;
 
-                // Ajustar tamaños y posiciones
+            
                 cmbOpciones.Size = new Size(400, 28);
                 cmbUsuarioNormal.Size = new Size(300, 28);
             }
             else
             {
-                // Ocultar controles de usuario normal
+                
                 lblTituloUsuarioNormal.Visible = false;
                 cmbUsuarioNormal.Visible = false;
 
-                // Configurar único ComboBox para usuarios normales
+                
                 lblTituloOpciones.Text = "👤 Navegación:";
                 lblTituloOpciones.ForeColor = Color.DarkGreen;
 
@@ -97,7 +97,7 @@ namespace Escritorio
                     "➕ Crear/Editar Grupo y Participantes"
                 });
 
-                // Centrar el único ComboBox
+                
                 cmbOpciones.Size = new Size(400, 28);
             }
 
@@ -113,10 +113,10 @@ namespace Escritorio
             {
                 switch (cmbUsuarioNormal.SelectedIndex)
                 {
-                    case 1: // Ver Mis Grupos de Viaje
+                    case 1: 
                         AbrirFrmGrupos();
                         break;
-                    case 2: // Crear/Editar Grupo y Participantes
+                    case 2: 
                         AbrirFormMisGrupos();
                         break;
                 }

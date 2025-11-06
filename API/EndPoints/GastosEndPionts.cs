@@ -65,6 +65,16 @@ namespace API.EndPoints
             .WithName("GetGastosByCriteria")
             .Produces<IEnumerable<GastoDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
+
+            // Obtener todos los gastos de todas las tareas de todos los planes de un grupo
+            app.MapGet("/gastos/grupo/{grupoId:int}", (int grupoId, GastoService service) =>
+            {
+                var items = service.GetByGrupoId(grupoId);
+                return Results.Ok(items);
+            })
+            .WithName("GetGastosByGrupo")
+            .Produces<IEnumerable<GastoDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
         }
     }
 }

@@ -65,6 +65,16 @@ namespace API.EndPoints
             .WithName("GetTareasByCriteria")
             .Produces<IEnumerable<TareaDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
+
+            // Obtiene todas las tareas de todos los planes de un grupo por su id.
+            app.MapGet("/tareas/grupo/{grupoId:int}", (int grupoId, TareaService service) =>
+            {
+                var items = service.GetByGrupoId(grupoId);
+                return Results.Ok(items);
+            })
+            .WithName("GetTareasByGrupo")
+            .Produces<IEnumerable<TareaDTO>>(StatusCodes.Status200OK)
+            .WithOpenApi();
         }
     }
 }

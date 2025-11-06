@@ -36,9 +36,9 @@ namespace Escritorio
                 Cursor = Cursors.WaitCursor;
                 dgvPlanes.Rows.Clear();
 
-                // Obtener todos los planes y filtrar por grupo (esto puede mejorarse con un endpoint específico)
-                var todosLosPlanes = await PlanApiClient.GetAllAsync();
-                planesDelGrupo = todosLosPlanes.ToList(); // Por ahora mostramos todos
+                
+                var planes = await PlanApiClient.GetByGrupoIdAsync(this.grupoId);
+                planesDelGrupo = planes.ToList();
 
                 foreach (var plan in planesDelGrupo)
                 {
@@ -90,7 +90,7 @@ namespace Escritorio
                     FechaInicio = DateOnly.FromDateTime(dtpFechaInicio.Value),
                     FechaBaja = DateOnly.FromDateTime(dtpFechaFin.Value),
                     FechaAlta = DateOnly.FromDateTime(DateTime.Now),
-                    GrupoId = this.grupoId // ASIGNAR EL GRUPO ID
+                    GrupoId = this.grupoId 
                 };
 
                 await PlanApiClient.AddAsync(nuevoPlan);
@@ -143,8 +143,8 @@ namespace Escritorio
             {
                 dgvPlanes.Rows.Clear();
                 var planesFiltrados = planesDelGrupo.Where(p =>
-                    p.Nombre.ToLower().Contains(textoBusqueda) ||
-                    p.Descripcion.ToLower().Contains(textoBusqueda)
+                    p.Nombre != null && p.Nombre.ToLower().Contains(textoBusqueda) ||
+                    p.Descripcion != null && p.Descripcion.ToLower().Contains(textoBusqueda)
                 );
 
                 foreach (var plan in planesFiltrados)

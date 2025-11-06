@@ -81,7 +81,7 @@ namespace Escritorio
                 txtFechaDesde.Value = new DateTime(pl.FechaInicio.Year, pl.FechaInicio.Month, pl.FechaInicio.Day);
                 txtFechaHasta.Value = new DateTime(pl.FechaFin.Year, pl.FechaFin.Month, pl.FechaFin.Day);
 
-                // Seleccionar el grupo correspondiente en el ComboBox
+                
                 if (cmbGrupo.Items.Count > 0)
                 {
                     cmbGrupo.SelectedValue = pl.GrupoId;

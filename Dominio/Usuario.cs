@@ -18,7 +18,6 @@ namespace Dominio
         public const string RolAdministrador = "Admini";
         public const string RolUsuarioNormal = "NoAdmin";
 
-        // Relación muchos a muchos: Usuario <-> GrupoUsuario <-> Grupo
         private readonly List<UsuarioGrupo> _grupoUsuarios = new List<UsuarioGrupo>();
         public IReadOnlyCollection<UsuarioGrupo> GrupoUsuarios => _grupoUsuarios.AsReadOnly();
 
