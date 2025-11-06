@@ -19,9 +19,10 @@ namespace Web
                 .AddInteractiveServerComponents();
 
             // SERVICIOS PERSONALIZADOS PARA AUTENTICACIÓN CON API
-            builder.Services.AddScoped<SessionService>();
+            builder.Services.AddSingleton<SessionService>(); 
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
             builder.Services.AddCascadingAuthenticationState();
+            builder.Services.AddAuthorizationCore(); 
 
             // Servicios de Identity (puedes mantenerlos o quitarlos si no los usas)
             builder.Services.AddScoped<IdentityUserAccessor>();

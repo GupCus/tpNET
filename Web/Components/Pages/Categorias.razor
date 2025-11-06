@@ -1,8 +1,10 @@
 ﻿@page "/categorias"
 @using API.Clients;
 @using DTOs
-
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
 <h3>Categorias</h3>
 <button class="btn btn-success mb-3" @onclick="NuevaCategoria">Agregar categoria</button>
 @if (!string.IsNullOrEmpty(mensajeError))

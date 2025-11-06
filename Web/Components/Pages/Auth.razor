@@ -2,13 +2,11 @@
 @page "/auth"
 
 @using Microsoft.AspNetCore.Authorization
-
 @attribute [Authorize]
 
-<PageTitle>Auth</PageTitle>
-
-<h1>You are authenticated</h1>
+<PageTitle>Autenticación</PageTitle>
 
 <AuthorizeView>
-    Hello @context.User.Identity?.Name!
+    <h1>Estás autenticado!</h1>
+    Hola @context.User.Identity?.Name , sos groso, sabelo!
 </AuthorizeView>

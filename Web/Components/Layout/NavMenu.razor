@@ -14,11 +14,6 @@
     <nav class="flex-column">
 
         <!--Todo lo de auth-->
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth" Match="NavLinkMatch.All">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-            </NavLink>
-        </div>
 
         <AuthorizeView>
             <Authorized>
@@ -67,11 +62,13 @@
 
             </Authorized>
             <NotAuthorized>
+                <!--
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Register">
                         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
                     </NavLink>
                 </div>
+                -->
                 <div class="nav-item px-3">
                     <NavLink class="nav-link" href="Account/Login">
                         <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
