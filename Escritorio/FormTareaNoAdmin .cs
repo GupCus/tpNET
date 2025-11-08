@@ -26,6 +26,18 @@ namespace Escritorio
 
         private async void FormTareaNoAdmin_Load(object sender, EventArgs e)
         {
+            // Poblamos cmbEstado en tiempo de ejecución (evita problemas en el diseñador).
+            var estados = new List<KeyValuePair<int, string>>
+            {
+                new KeyValuePair<int, string>((int)EstadoTarea.Activo, "Activo"),
+                new KeyValuePair<int, string>((int)EstadoTarea.Pendiente, "Pendiente")
+            };
+            cmbEstado.DisplayMember = "Value";
+            cmbEstado.ValueMember = "Key";
+            cmbEstado.Items.Clear();
+            foreach (var kv in estados) cmbEstado.Items.Add(kv);
+            if (cmbEstado.Items.Count > 0) cmbEstado.SelectedIndex = 0;
+
             await CargarPlanes();
             await CargarTareas();
         }
@@ -43,7 +55,7 @@ namespace Escritorio
 
                 if (!planesDelGrupo.Any())
                 {
-                    
+
                     cmbPlan.Items.Add("No hay planes en el grupo");
                     cmbPlan.SelectedIndex = 0;
                     cmbPlan.Enabled = false;
@@ -62,7 +74,7 @@ namespace Escritorio
                     cmbPlan.SelectedIndex = 0;
                     cmbPlan.Enabled = true;
 
-                    
+
                     btnNuevaTarea.Enabled = true;
                 }
             }
@@ -71,7 +83,7 @@ namespace Escritorio
                 MessageBox.Show($"Error al cargar planes: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                
+
                 cmbPlan.Items.Clear();
                 cmbPlan.Items.Add("Error al cargar planes");
                 cmbPlan.SelectedIndex = 0;
@@ -91,7 +103,7 @@ namespace Escritorio
                 Cursor = Cursors.WaitCursor;
                 dgvTareas.Rows.Clear();
 
-                
+
                 var tareas = await TareaApiClient.GetByGrupoIdAsync(this.grupoId);
                 tareasDelGrupo = tareas?.ToList() ?? new List<TareaDTO>();
 
@@ -132,7 +144,6 @@ namespace Escritorio
             {
                 if (!btnNuevaTarea.Enabled)
                 {
-                    
                     MessageBox.Show("No hay planes disponibles para asignar la tarea.", "Validación",
                         MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -155,7 +166,6 @@ namespace Escritorio
                     return;
                 }
 
-                
                 var planSeleccionado = cmbPlan.SelectedItem as dynamic;
                 int planId = planSeleccionado?.Value ?? 0;
 
@@ -166,12 +176,12 @@ namespace Escritorio
                     return;
                 }
 
-                
-                var estadoSeleccionado = cmbEstado.SelectedItem as dynamic;
-                var estadoValue = estadoSeleccionado?.Value;
+                // Leer estado desde KeyValuePair<int,string> que pobla en Load
                 EstadoTarea estado = EstadoTarea.Activo;
-                if (estadoValue != null)
-                    estado = (EstadoTarea)Convert.ToInt32(estadoValue);
+                if (cmbEstado.SelectedItem is KeyValuePair<int, string> kvp)
+                {
+                    estado = (EstadoTarea)kvp.Key;
+                }
 
                 var nuevaTarea = new TareaDTO
                 {
@@ -206,65 +216,8 @@ namespace Escritorio
             txtDuracion.Clear();
             dtpFechaHora.Value = DateTime.Now;
 
-            
             if (cmbEstado.Items.Count > 0) cmbEstado.SelectedIndex = 0;
             if (cmbPlan.Enabled && cmbPlan.Items.Count > 0) cmbPlan.SelectedIndex = 0;
-        }
-
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            BuscarTareas();
-        }
-
-        private void BuscarTareas()
-        {
-            var textoBusqueda = txtBusqueda.Text.Trim().ToLower();
-
-            if (string.IsNullOrEmpty(textoBusqueda))
-            {
-                dgvTareas.Rows.Clear();
-                foreach (var tarea in tareasDelGrupo)
-                {
-                    dgvTareas.Rows.Add(
-                        tarea.Id,
-                        tarea.Nombre,
-                        tarea.Descripcion,
-                        tarea.FechaHora?.ToString("dd/MM/yyyy HH:mm") ?? "No definida",
-                        tarea.Duracion?.ToString() ?? "N/A",
-                        tarea.Estado.ToString(),
-                        tarea.PlanId
-                    );
-                }
-            }
-            else
-            {
-                dgvTareas.Rows.Clear();
-                var tareasFiltradas = tareasDelGrupo.Where(t =>
-                    (t.Nombre ?? string.Empty).ToLower().Contains(textoBusqueda) ||
-                    (t.Descripcion ?? string.Empty).ToLower().Contains(textoBusqueda) ||
-                    t.Estado.ToString().ToLower().Contains(textoBusqueda)
-                );
-
-                foreach (var tarea in tareasFiltradas)
-                {
-                    dgvTareas.Rows.Add(
-                        tarea.Id,
-                        tarea.Nombre,
-                        tarea.Descripcion,
-                        tarea.FechaHora?.ToString("dd/MM/yyyy HH:mm") ?? "No definida",
-                        tarea.Duracion?.ToString() ?? "N/A",
-                        tarea.Estado.ToString(),
-                        tarea.PlanId
-                    );
-                }
-            }
-
-            lblContador.Text = $"{dgvTareas.Rows.Count} tareas encontradas";
-        }
-
-        private void btnActualizar_Click(object sender, EventArgs e)
-        {
-            _ = CargarTareas();
         }
 
         private void dgvTareas_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

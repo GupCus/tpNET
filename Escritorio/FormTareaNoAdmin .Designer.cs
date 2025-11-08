@@ -15,27 +15,13 @@ namespace Escritorio
         private DateTimePicker dtpFechaHora;
         private ComboBox cmbEstado;
         private Button btnNuevaTarea;
-        private TextBox txtBusqueda;
-        private Button btnBuscar;
         private Label lblContador;
-        private Label lblBuscar;
-        private Button btnActualizar;
         private Panel panelCreacion;
         private Panel panelLista;
 
         private void InitializeComponent()
         {
             this.SuspendLayout();
-
-            // Panel superior - Búsqueda
-            var panelSuperior = new Panel { Dock = DockStyle.Top, Height = 60, BackColor = Color.LightGray };
-
-            lblBuscar = new Label { Text = "Buscar:", Location = new Point(20, 20), AutoSize = true };
-            txtBusqueda = new TextBox { Location = new Point(80, 17), Size = new Size(200, 20) };
-            btnBuscar = new Button { Text = "Buscar", Location = new Point(290, 15), Size = new Size(75, 25) };
-            btnActualizar = new Button { Text = "Actualizar", Location = new Point(375, 15), Size = new Size(80, 25) };
-
-            panelSuperior.Controls.AddRange(new Control[] { lblBuscar, txtBusqueda, btnBuscar, btnActualizar });
 
             // Panel creación - Formulario de nueva tarea
             panelCreacion = new Panel { Dock = DockStyle.Top, Height = 180, BackColor = Color.LightGreen };
@@ -58,15 +44,8 @@ namespace Escritorio
             txtDuracion = new TextBox { Location = new Point(380, 72), Size = new Size(80, 20) };
 
             var lblEstado = new Label { Text = "Estado:", Location = new Point(300, 105), AutoSize = true };
+            // En el diseñador SOLO creamos el combobox, NO lo poblamos con objetos anónimos ni valores.
             cmbEstado = new ComboBox { Location = new Point(380, 102), Size = new Size(120, 20), DropDownStyle = ComboBoxStyle.DropDownList };
-
-            // POBLAR solo con los dos estados necesarios (evitar duplicados)
-            // Usamos objetos con Text/Value para mostrar texto y leer el valor numérico (0/1) al crear la tarea.
-            cmbEstado.DisplayMember = "Text";
-            cmbEstado.ValueMember = "Value";
-            cmbEstado.Items.Add(new { Text = "Activo", Value = (int)EstadoTarea.Activo });
-            cmbEstado.Items.Add(new { Text = "Pendiente", Value = (int)EstadoTarea.Pendiente });
-            cmbEstado.SelectedIndex = 0; // por defecto "Activo"
 
             btnNuevaTarea = new Button { Text = "Crear Tarea", Location = new Point(520, 95), Size = new Size(100, 30) };
 
@@ -107,15 +86,13 @@ namespace Escritorio
             lblContador = new Label { Text = "0 tareas", Location = new Point(20, 12), AutoSize = true };
             panelInferior.Controls.Add(lblContador);
 
-            // Agregar controles al form
+            // Agregar controles al form (sin panel de búsqueda)
             panelLista.Controls.Add(dgvTareas);
-            this.Controls.AddRange(new Control[] { panelLista, panelCreacion, panelSuperior, panelInferior });
+            this.Controls.AddRange(new Control[] { panelLista, panelCreacion, panelInferior });
 
             // Eventos
             this.Load += FormTareaNoAdmin_Load;
             btnNuevaTarea.Click += btnNuevaTarea_Click;
-            btnBuscar.Click += btnBuscar_Click;
-            btnActualizar.Click += btnActualizar_Click;
             dgvTareas.CellDoubleClick += dgvTareas_CellDoubleClick;
 
             this.Size = new Size(800, 600);

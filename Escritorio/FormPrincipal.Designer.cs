@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panelSuperior = new Panel();
+            button1 = new Button();
             lblTituloUsuarioNormal = new Label();
             cmbUsuarioNormal = new ComboBox();
             lblTituloOpciones = new Label();
@@ -39,6 +40,7 @@
             // panelSuperior
             // 
             panelSuperior.BackColor = Color.LightSteelBlue;
+            panelSuperior.Controls.Add(button1);
             panelSuperior.Controls.Add(lblTituloUsuarioNormal);
             panelSuperior.Controls.Add(cmbUsuarioNormal);
             panelSuperior.Controls.Add(lblTituloOpciones);
@@ -50,6 +52,16 @@
             panelSuperior.Size = new Size(1262, 100);
             panelSuperior.TabIndex = 0;
             // 
+            // button1
+            // 
+            button1.Location = new Point(1046, 44);
+            button1.Name = "button1";
+            button1.Size = new Size(171, 29);
+            button1.TabIndex = 4;
+            button1.Text = "Cerrar Sesion";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
             // lblTituloUsuarioNormal
             // 
             lblTituloUsuarioNormal.AutoSize = true;
@@ -57,7 +69,7 @@
             lblTituloUsuarioNormal.ForeColor = Color.DarkGreen;
             lblTituloUsuarioNormal.Location = new Point(500, 15);
             lblTituloUsuarioNormal.Name = "lblTituloUsuarioNormal";
-            lblTituloUsuarioNormal.Size = new Size(167, 23);
+            lblTituloUsuarioNormal.Size = new Size(182, 23);
             lblTituloUsuarioNormal.TabIndex = 3;
             lblTituloUsuarioNormal.Text = "👤 Opciones Usuario:";
             // 
@@ -79,7 +91,7 @@
             lblTituloOpciones.ForeColor = Color.DarkBlue;
             lblTituloOpciones.Location = new Point(50, 15);
             lblTituloOpciones.Name = "lblTituloOpciones";
-            lblTituloOpciones.Size = new Size(103, 23);
+            lblTituloOpciones.Size = new Size(108, 23);
             lblTituloOpciones.TabIndex = 1;
             lblTituloOpciones.Text = "Navegación:";
             // 
@@ -119,5 +131,6 @@
         private ComboBox cmbOpciones;
         private Label lblTituloUsuarioNormal;
         private ComboBox cmbUsuarioNormal;
+        private Button button1;
     }
 }

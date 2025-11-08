@@ -3,9 +3,6 @@ using DTOs;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -36,7 +33,6 @@ namespace Escritorio
                 Cursor = Cursors.WaitCursor;
                 dgvPlanes.Rows.Clear();
 
-                
                 var planes = await PlanApiClient.GetByGrupoIdAsync(this.grupoId);
                 planesDelGrupo = planes.ToList();
 
@@ -90,7 +86,7 @@ namespace Escritorio
                     FechaInicio = DateOnly.FromDateTime(dtpFechaInicio.Value),
                     FechaBaja = DateOnly.FromDateTime(dtpFechaFin.Value),
                     FechaAlta = DateOnly.FromDateTime(DateTime.Now),
-                    GrupoId = this.grupoId 
+                    GrupoId = this.grupoId
                 };
 
                 await PlanApiClient.AddAsync(nuevoPlan);
@@ -114,52 +110,6 @@ namespace Escritorio
             txtDescripcion.Clear();
             dtpFechaInicio.Value = DateTime.Now;
             dtpFechaFin.Value = DateTime.Now.AddMonths(1);
-        }
-
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            BuscarPlanes();
-        }
-
-        private void BuscarPlanes()
-        {
-            var textoBusqueda = txtBusqueda.Text.Trim().ToLower();
-
-            if (string.IsNullOrEmpty(textoBusqueda))
-            {
-                dgvPlanes.Rows.Clear();
-                foreach (var plan in planesDelGrupo)
-                {
-                    dgvPlanes.Rows.Add(
-                        plan.Id,
-                        plan.Nombre,
-                        plan.Descripcion,
-                        plan.FechaInicio.ToString("dd/MM/yyyy"),
-                        plan.FechaFin.ToString("dd/MM/yyyy")
-                    );
-                }
-            }
-            else
-            {
-                dgvPlanes.Rows.Clear();
-                var planesFiltrados = planesDelGrupo.Where(p =>
-                    p.Nombre != null && p.Nombre.ToLower().Contains(textoBusqueda) ||
-                    p.Descripcion != null && p.Descripcion.ToLower().Contains(textoBusqueda)
-                );
-
-                foreach (var plan in planesFiltrados)
-                {
-                    dgvPlanes.Rows.Add(
-                        plan.Id,
-                        plan.Nombre,
-                        plan.Descripcion,
-                        plan.FechaInicio.ToString("dd/MM/yyyy"),
-                        plan.FechaFin.ToString("dd/MM/yyyy")
-                    );
-                }
-            }
-
-            lblContador.Text = $"{dgvPlanes.Rows.Count} planes encontrados";
         }
 
         private void btnActualizar_Click(object sender, EventArgs e)

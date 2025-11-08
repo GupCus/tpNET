@@ -242,68 +242,6 @@ namespace Escritorio
             panelOpciones.BringToFront();
         }
 
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            BuscarGrupos();
-        }
-
-        private async void BuscarGrupos()
-        {
-            try
-            {
-                Cursor = Cursors.WaitCursor;
-                dgvGrupos.Rows.Clear();
-
-                var textoBusqueda = txtBusqueda.Text.Trim();
-                IEnumerable<GrupoDTO> grupos;
-
-                if (string.IsNullOrEmpty(textoBusqueda))
-                {
-                    grupos = await GrupoApiClient.GetByUsuarioAsync(usuarioId);
-                }
-                else
-                {
-                    grupos = await GrupoApiClient.GetByUsuarioAsync(usuarioId);
-                    grupos = grupos.Where(g =>
-                        g.Nombre.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase) ||
-                        g.Descripcion.Contains(textoBusqueda, StringComparison.OrdinalIgnoreCase)
-                    );
-                }
-
-                foreach (var grupo in grupos)
-                {
-                    dgvGrupos.Rows.Add(
-                        grupo.Id,
-                        grupo.Nombre,
-                        grupo.Descripcion,
-                        grupo.FechaAlta.ToString("dd/MM/yyyy"),
-                        grupo.Usuarios?.Count ?? 0,
-                        grupo.IdUsuarioAdministrador == usuarioId ? "Administrador" : "Miembro"
-                    );
-                }
-
-                lblContador.Text = $"{dgvGrupos.Rows.Count} grupos encontrados";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error al buscar grupos: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                Cursor = Cursors.Default;
-            }
-        }
-
-        private void txtBusqueda_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if (e.KeyChar == (char)Keys.Enter)
-            {
-                BuscarGrupos();
-                e.Handled = true;
-            }
-        }
-
         private void dgvGrupos_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)

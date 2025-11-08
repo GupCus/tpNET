@@ -57,16 +57,12 @@ namespace Escritorio
                 Cursor = Cursors.Default;
             }
         }
-
-        // MODIFICADO: ahora carga las tareas usando el endpoint /tareas/grupo/{grupoId}
-        // Si no hay tareas, solo se DESHABILITA el botón de registrar gasto (no se muestra warning).
         private async Task CargarTareas()
         {
             try
             {
                 Cursor = Cursors.WaitCursor;
 
-                // Llamada al endpoint que devuelve solo las tareas del grupo
                 var tareas = await TareaApiClient.GetByGrupoIdAsync(this.grupoId);
                 tareasDelGrupo = tareas?.ToList() ?? new List<TareaDTO>();
 
@@ -74,11 +70,9 @@ namespace Escritorio
 
                 if (!tareasDelGrupo.Any())
                 {
-                    // No hay tareas: dejar una entrada informativa y deshabilitar el botón de crear gasto
                     cmbTarea.Items.Add("No hay tareas en el grupo");
                     cmbTarea.SelectedIndex = 0;
                     cmbTarea.Enabled = false;
-
                     btnNuevoGasto.Enabled = false;
                 }
                 else
@@ -93,7 +87,6 @@ namespace Escritorio
                     cmbTarea.ValueMember = "Value";
                     cmbTarea.SelectedIndex = 0;
                     cmbTarea.Enabled = true;
-
                     btnNuevoGasto.Enabled = true;
                 }
             }
@@ -102,7 +95,6 @@ namespace Escritorio
                 MessageBox.Show($"Error al cargar tareas del grupo {grupoId}: {ex.Message}", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                // En caso de error, por seguridad deshabilitamos creación
                 cmbTarea.Items.Clear();
                 cmbTarea.Items.Add("Error al cargar tareas");
                 cmbTarea.SelectedIndex = 0;
@@ -122,7 +114,6 @@ namespace Escritorio
                 Cursor = Cursors.WaitCursor;
                 dgvGastos.Rows.Clear();
 
-                // Obtener solo los gastos correspondientes a cualquier tarea de los planes del grupo
                 var gastos = await GastoApiClient.GetByGrupoIdAsync(this.grupoId);
                 gastosDelGrupo = gastos?.ToList() ?? new List<GastoDTO>();
 
@@ -141,7 +132,6 @@ namespace Escritorio
 
                 lblContador.Text = $"{dgvGastos.Rows.Count} gastos encontrados";
 
-                // Calcular total
                 var total = gastosDelGrupo.Sum(g => g.Monto);
                 lblTotal.Text = $"Total: {total:C2}";
             }
@@ -165,8 +155,6 @@ namespace Escritorio
         {
             try
             {
-                // Nota: el botón ya se deshabilita cuando no hay tareas, pero dejamos comprobaciones normales de validación.
-
                 if (cmbCategoria.SelectedIndex <= 0)
                 {
                     MessageBox.Show("Seleccione una categoría", "Validación",
@@ -201,7 +189,6 @@ namespace Escritorio
 
                 int categoriaId = categoriaSeleccionada.Value;
 
-                // Obtener el ID de la tarea si se seleccionó una (las tareas provienen del endpoint por grupo)
                 int? tareaId = null;
                 if (cmbTarea.Enabled && cmbTarea.SelectedIndex > 0)
                 {
@@ -244,67 +231,6 @@ namespace Escritorio
             dtpFechaHora.Value = DateTime.Now;
         }
 
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            BuscarGastos();
-        }
-
-        private void BuscarGastos()
-        {
-            var textoBusqueda = txtBusqueda.Text.Trim().ToLower();
-
-            if (string.IsNullOrEmpty(textoBusqueda))
-            {
-                dgvGastos.Rows.Clear();
-                foreach (var gasto in gastosDelGrupo)
-                {
-                    dgvGastos.Rows.Add(
-                        gasto.Id,
-                        gasto.Descripcion,
-                        gasto.Monto.ToString("C2"),
-                        gasto.CategoriaGastoNombre ?? "Sin categoría",
-                        gasto.TareaNombre ?? "Sin tarea",
-                        gasto.FechaHora.ToString("dd/MM/yyyy HH:mm"),
-                        gasto.UsuarioNombre ?? "Sin usuario"
-                    );
-                }
-            }
-            else
-            {
-                dgvGastos.Rows.Clear();
-                var gastosFiltrados = gastosDelGrupo.Where(g =>
-                    g.Descripcion.ToLower().Contains(textoBusqueda) ||
-                    g.CategoriaGastoNombre?.ToLower().Contains(textoBusqueda) == true ||
-                    g.TareaNombre?.ToLower().Contains(textoBusqueda) == true ||
-                    g.Monto.ToString().Contains(textoBusqueda)
-                );
-
-                foreach (var gasto in gastosFiltrados)
-                {
-                    dgvGastos.Rows.Add(
-                        gasto.Id,
-                        gasto.Descripcion,
-                        gasto.Monto.ToString("C2"),
-                        gasto.CategoriaGastoNombre ?? "Sin categoría",
-                        gasto.TareaNombre ?? "Sin tarea",
-                        gasto.FechaHora.ToString("dd/MM/yyyy HH:mm"),
-                        gasto.UsuarioNombre ?? "Sin usuario"
-                    );
-                }
-            }
-
-            lblContador.Text = $"{dgvGastos.Rows.Count} gastos encontrados";
-
-            var total = gastosDelGrupo.Where(g =>
-                string.IsNullOrEmpty(textoBusqueda) ||
-                g.Descripcion.ToLower().Contains(textoBusqueda) ||
-                g.CategoriaGastoNombre?.ToLower().Contains(textoBusqueda) == true ||
-                g.TareaNombre?.ToLower().Contains(textoBusqueda) == true ||
-                g.Monto.ToString().Contains(textoBusqueda)
-            ).Sum(g => g.Monto);
-
-            lblTotal.Text = $"Total: {total:C2}";
-        }
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
@@ -335,6 +261,11 @@ namespace Escritorio
                 MessageBox.Show($"Gasto seleccionado:\n\nDescripción: {gastoDescripcion}\nMonto: {gastoMonto}\nID: {gastoId}",
                     "Detalles del Gasto", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void cmbTarea_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

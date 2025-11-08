@@ -35,18 +35,18 @@ namespace Escritorio
 
         private void ConfigurarOpcionesSegunRol()
         {
-            
+
             cmbOpciones.Items.Clear();
             cmbOpciones.SelectedIndexChanged -= CmbOpciones_SelectedIndexChanged;
 
-            
+
             if (Sesion.EsAdmin())
             {
-                
+
                 lblTituloUsuarioNormal.Visible = true;
                 cmbUsuarioNormal.Visible = true;
 
-                
+
                 lblTituloOpciones.Text = "🔧 Administración:";
                 lblTituloOpciones.ForeColor = Color.DarkRed;
 
@@ -59,7 +59,7 @@ namespace Escritorio
                     "📅 Planes del Sistema",
                     "✅ Tareas del Sistema",
                     "💰 Gastos del Sistema",
-                    "📈 Reportes de Gastos"  
+                    "📈 Reportes de Gastos"
                 });
 
                 //ComboBox de usuario normal
@@ -76,17 +76,17 @@ namespace Escritorio
                 cmbUsuarioNormal.SelectedIndex = 0;
                 cmbUsuarioNormal.SelectedIndexChanged += CmbUsuarioNormal_SelectedIndexChanged;
 
-            
+
                 cmbOpciones.Size = new Size(400, 28);
                 cmbUsuarioNormal.Size = new Size(300, 28);
             }
             else
             {
-                
+
                 lblTituloUsuarioNormal.Visible = false;
                 cmbUsuarioNormal.Visible = false;
 
-                
+
                 lblTituloOpciones.Text = "👤 Navegación:";
                 lblTituloOpciones.ForeColor = Color.DarkGreen;
 
@@ -97,7 +97,7 @@ namespace Escritorio
                     "➕ Crear/Editar Grupo y Participantes"
                 });
 
-                
+
                 cmbOpciones.Size = new Size(400, 28);
             }
 
@@ -113,10 +113,10 @@ namespace Escritorio
             {
                 switch (cmbUsuarioNormal.SelectedIndex)
                 {
-                    case 1: 
+                    case 1:
                         AbrirFrmGrupos();
                         break;
-                    case 2: 
+                    case 2:
                         AbrirFormMisGrupos();
                         break;
                 }
@@ -281,6 +281,38 @@ namespace Escritorio
             {
                 this.ActiveMdiChild.Dock = DockStyle.Fill;
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                foreach (var child in this.MdiChildren)
+                {
+                    child.Close();
+                }
+            }
+            catch
+            {
+               
+            }
+
+            
+            using (FormLogin appLogin = new())
+            {
+                var result = appLogin.ShowDialog();
+
+                if (result != DialogResult.OK)
+                {
+                   
+                    this.Dispose();
+                    return;
+                }
+            }
+
+            // Login exitoso
+            ConfigurarOpcionesSegunRol();
+            MostrarBienvenida();
         }
     }
 }
