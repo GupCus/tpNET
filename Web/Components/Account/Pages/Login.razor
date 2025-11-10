@@ -1,4 +1,5 @@
-﻿@page "/Account/Login"
+﻿
+@page "/Account/Login"
 
 @using System.ComponentModel.DataAnnotations
 @using DTOs
@@ -93,13 +94,10 @@
             if (usuario != null)
             {
                 Logger.LogInformation("Usuario {Usuario} ha iniciado sesión correctamente.", usuario.Nombre);
-                
+
                 // Guardar el usuario en el servicio de sesión
                 SessionService.SetUsuario(usuario);
-                
-                // Esperar un momento para que se actualice el estado
-                await Task.Delay(500);
-                NavigationManager.NavigateTo("/");
+
 
             }
             else
@@ -107,10 +105,6 @@
                 errorMessage = "Error: Usuario o contraseña incorrectos.";
                 Logger.LogWarning("Intento de inicio de sesión fallido para el usuario {Usuario}.", Input.Usuario);
             }
-        }
-        catch (NavigationException)
-        {
-            // Esta excepción es esperada cuando la navegación es exitosa
         }
         catch (Exception ex)
         {
@@ -121,6 +115,7 @@
         {
             isLoading = false;
         }
+        NavigationManager.NavigateTo("/grupos");
     }
 
     private sealed class InputModel
