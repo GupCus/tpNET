@@ -79,12 +79,24 @@ namespace Escritorio
                     return;
                 }
 
+                // Validación: la fecha de inicio no puede ser mayor que la fecha de baja
+                var fechaInicio = DateOnly.FromDateTime(dtpFechaInicio.Value.Date);
+                var fechaBaja = DateOnly.FromDateTime(dtpFechaFin.Value.Date);
+
+                if (fechaInicio > fechaBaja)
+                {
+                    MessageBox.Show("La fecha de inicio no puede ser posterior a la fecha de baja.", "Validación",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    dtpFechaInicio.Focus();
+                    return;
+                }
+
                 var nuevoPlan = new PlanCreateDTO
                 {
                     Nombre = nombre,
                     Descripcion = descripcion,
-                    FechaInicio = DateOnly.FromDateTime(dtpFechaInicio.Value),
-                    FechaBaja = DateOnly.FromDateTime(dtpFechaFin.Value),
+                    FechaInicio = fechaInicio,
+                    FechaBaja = fechaBaja,
                     FechaAlta = DateOnly.FromDateTime(DateTime.Now),
                     GrupoId = this.grupoId
                 };

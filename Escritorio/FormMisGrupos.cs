@@ -139,12 +139,21 @@ namespace Escritorio
 
             if (!string.IsNullOrEmpty(txtID.Text))
             {
+                // If there's an ID in the textbox we treat it as editing an existing group.
+                // Note: callers (e.g. btnCrear) may override Id/IdUsuarioAdministrador/FechaAlta explicitly when needed.
                 grupo.Id = int.Parse(txtID.Text);
             }
             else
             {
+                // New group: set admin and creation date
                 grupo.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? 0;
                 grupo.FechaAlta = DateTime.Now;
+            }
+
+            // Safety: if for any reason IdUsuarioAdministrador wasn't set above, ensure it's filled from session
+            if (grupo.IdUsuarioAdministrador == 0)
+            {
+                grupo.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? 0;
             }
 
             return grupo;
@@ -177,7 +186,14 @@ namespace Escritorio
         {
             try
             {
+                // Ensure that creating a new group does not accidentally reuse the currently selected group's ID.
+                // For example, if the user previously selected a group, txtID may have a value; when creating we must ignore it.
                 var grupo = ObtenerGrupoDelFormulario();
+
+                // Force creation semantics: reset Id (so the server creates a new entity) and ensure the admin comes from the current session.
+                grupo.Id = 0;
+                grupo.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? 0;
+                grupo.FechaAlta = DateTime.Now;
 
                 if (!ValidarGrupo(grupo))
                     return;
@@ -205,9 +221,9 @@ namespace Escritorio
             try
             {
                 var grupo = ObtenerGrupoDelFormulario();
-                grupo.Id = grupoSeleccionado.Id; 
-                grupo.IdUsuarioAdministrador = grupoSeleccionado.IdUsuarioAdministrador; 
-                grupo.FechaAlta = grupoSeleccionado.FechaAlta; 
+                grupo.Id = grupoSeleccionado.Id;
+                grupo.IdUsuarioAdministrador = grupoSeleccionado.IdUsuarioAdministrador;
+                grupo.FechaAlta = grupoSeleccionado.FechaAlta;
 
                 if (!ValidarGrupo(grupo))
                     return;
@@ -290,7 +306,7 @@ namespace Escritorio
 
             try
             {
-                
+
                 var usuarioAAgregar = await UsuarioApiClient.GetByMailAsync(mail);
 
                 if (usuarioAAgregar == null)
@@ -299,7 +315,7 @@ namespace Escritorio
                     return;
                 }
 
-                
+
                 bool usuarioYaEnGrupo = false;
                 try
                 {
@@ -308,7 +324,7 @@ namespace Escritorio
                 }
                 catch (Exception ex)
                 {
-                    
+
                     Debug.WriteLine($"Advertencia: No se pudo verificar usuarios del grupo: {ex.Message}");
                     usuarioYaEnGrupo = false;
                 }
@@ -319,7 +335,7 @@ namespace Escritorio
                     return;
                 }
 
-                
+
                 var relacion = new UsuarioGrupoDTO
                 {
                     UsuarioId = usuarioAAgregar.Id,

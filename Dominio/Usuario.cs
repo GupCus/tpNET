@@ -15,7 +15,7 @@ namespace Dominio
         public DateTime FechaAlta { get; private set; }
         public string Rol { get; private set; }
 
-        public const string RolAdministrador = "Admini";
+        public const string RolAdministrador = "Admin";
         public const string RolUsuarioNormal = "NoAdmin";
 
         private readonly List<UsuarioGrupo> _grupoUsuarios = new List<UsuarioGrupo>();

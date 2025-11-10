@@ -19,48 +19,52 @@ namespace Escritorio.Forms
 
         private void InitializeComponent()
         {
-            this.cmbGrupos = new ComboBox();
-            this.btnGenerarReporte = new Button();
-            this.label1 = new Label();
-            this.SuspendLayout();
-
+            cmbGrupos = new ComboBox();
+            btnGenerarReporte = new Button();
+            label1 = new Label();
+            SuspendLayout();
+            // 
             // cmbGrupos
-            this.cmbGrupos.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbGrupos.FormattingEnabled = true;
-            this.cmbGrupos.Location = new System.Drawing.Point(120, 30);
-            this.cmbGrupos.Name = "cmbGrupos";
-            this.cmbGrupos.Size = new System.Drawing.Size(250, 28);
-            this.cmbGrupos.TabIndex = 0;
-
-            // label1
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 33);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(84, 20);
-            this.label1.TabIndex = 1;
-            this.label1.Text = "Seleccionar Grupo:";
-
+            // 
+            cmbGrupos.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbGrupos.FormattingEnabled = true;
+            cmbGrupos.Location = new Point(150, 30);
+            cmbGrupos.Name = "cmbGrupos";
+            cmbGrupos.Size = new Size(250, 28);
+            cmbGrupos.TabIndex = 0;
+            // 
             // btnGenerarReporte
-            this.btnGenerarReporte.Location = new System.Drawing.Point(150, 80);
-            this.btnGenerarReporte.Name = "btnGenerarReporte";
-            this.btnGenerarReporte.Size = new System.Drawing.Size(150, 40);
-            this.btnGenerarReporte.TabIndex = 2;
-            this.btnGenerarReporte.Text = "Generar Reporte PDF";
-            this.btnGenerarReporte.UseVisualStyleBackColor = true;
-            this.btnGenerarReporte.Click += new System.EventHandler(this.btnGenerarReporte_Click);
-
+            // 
+            btnGenerarReporte.Location = new Point(150, 64);
+            btnGenerarReporte.Name = "btnGenerarReporte";
+            btnGenerarReporte.Size = new Size(150, 40);
+            btnGenerarReporte.TabIndex = 2;
+            btnGenerarReporte.Text = "Generar Reporte PDF";
+            btnGenerarReporte.UseVisualStyleBackColor = true;
+            btnGenerarReporte.Click += btnGenerarReporte_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(12, 33);
+            label1.Name = "label1";
+            label1.Size = new Size(133, 20);
+            label1.TabIndex = 1;
+            label1.Text = "Seleccionar Grupo:";
+            // 
             // FormReporteGastos
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(450, 150);
-            this.Controls.Add(this.btnGenerarReporte);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.cmbGrupos);
-            this.Name = "FormReporteGastos";
-            this.Text = "Reporte de Gastos por Grupo";
-            this.Load += new System.EventHandler(this.FormReporteGastos_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            // 
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            ClientSize = new Size(450, 150);
+            Controls.Add(btnGenerarReporte);
+            Controls.Add(label1);
+            Controls.Add(cmbGrupos);
+            Name = "FormReporteGastos";
+            Text = "Reporte de Gastos por Grupo";
+            Load += FormReporteGastos_Load;
+            ResumeLayout(false);
+            PerformLayout();
         }
     }
 }

@@ -151,13 +151,13 @@
             Eliminar.BackColor = Color.White;
             Eliminar.Dock = DockStyle.Fill;
             Eliminar.Enabled = false;
-            Eliminar.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            Eliminar.Font = new Font("Segoe UI", 10F);
             Eliminar.ForeColor = SystemColors.MenuText;
             Eliminar.Location = new Point(629, 41);
             Eliminar.Name = "Eliminar";
             Eliminar.Size = new Size(119, 63);
             Eliminar.TabIndex = 15;
-            Eliminar.Text = "ELIMINAR CATEGORÍA";
+            Eliminar.Text = "Eliminar";
             Eliminar.UseVisualStyleBackColor = false;
             Eliminar.Click += Eliminar_Click;
             // 

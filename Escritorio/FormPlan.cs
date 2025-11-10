@@ -81,7 +81,7 @@ namespace Escritorio
                 txtFechaDesde.Value = new DateTime(pl.FechaInicio.Year, pl.FechaInicio.Month, pl.FechaInicio.Day);
                 txtFechaHasta.Value = new DateTime(pl.FechaFin.Year, pl.FechaFin.Month, pl.FechaFin.Day);
 
-                
+
                 if (cmbGrupo.Items.Count > 0)
                 {
                     cmbGrupo.SelectedValue = pl.GrupoId;
@@ -129,12 +129,53 @@ namespace Escritorio
             }
         }
 
+        private bool ValidarFechas()
+        {
+            if (txtFechaHasta.Value <= txtFechaDesde.Value)
+            {
+                MessageBox.Show("La fecha 'Hasta' debe ser mayor que la fecha 'Desde'",
+                                "Error de validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaHasta.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        private void ValidarFechasEnTiempoReal()
+        {
+            if (txtFechaHasta.Value <= txtFechaDesde.Value)
+            {
+                txtFechaHasta.BackColor = Color.LightPink;
+            }
+            else
+            {
+                txtFechaHasta.BackColor = SystemColors.Window;
+            }
+        }
+
+        private void txtFechaHasta_ValueChanged(object sender, EventArgs e)
+        {
+            ValidarFechasEnTiempoReal();
+        }
+
+        private void txtFechaDesde_ValueChanged(object sender, EventArgs e)
+        {
+            ValidarFechasEnTiempoReal();
+        }
+
         private async void btnAgregar_Click(object sender, EventArgs e)
         {
             if (cmbGrupo.SelectedValue == null || cmbGrupo.SelectedIndex == -1)
             {
                 MessageBox.Show("Por favor, seleccione un grupo", "Advertencia",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validación de fechas
+            if (!ValidarFechas())
+            {
                 return;
             }
 
@@ -159,6 +200,12 @@ namespace Escritorio
             {
                 MessageBox.Show("Por favor, seleccione un grupo", "Advertencia",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validación de fechas
+            if (!ValidarFechas())
+            {
                 return;
             }
 
@@ -221,6 +268,7 @@ namespace Escritorio
             txtDescripcion.Text = "";
             txtFechaDesde.Value = DateTime.Today;
             txtFechaHasta.Value = DateTime.Today.AddDays(30);
+            txtFechaHasta.BackColor = SystemColors.Window; // Resetear color
             cmbGrupo.SelectedIndex = -1;
             btnEditar.Enabled = false;
             btnEliminar.Enabled = false;

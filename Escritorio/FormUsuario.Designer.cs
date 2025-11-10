@@ -204,6 +204,7 @@
             Eliminar.TabIndex = 31;
             Eliminar.Text = "Eliminar usuario";
             Eliminar.UseVisualStyleBackColor = true;
+            Eliminar.Click += Eliminar_Click;
             // 
             // txtID
             // 
