@@ -50,7 +50,7 @@ namespace Services
                 reporte.GastosUsuarios.Add(new ReporteGastosUsuarioDto
                 {
                     NombreUsuario = usuario.Nombre,
-                    Email = usuario.Mail,
+                    Mail = usuario.Mail,
                     TotalGastado = totalGastado
                 });
             }

@@ -1,13 +1,16 @@
 using DTOs;
 using API.Clients;
+using System;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Escritorio
 {
     public partial class FormCategoriaGastos : Form
     {
         private bool confirmarEliminar = false;
-       
 
         public FormCategoriaGastos()
         {
@@ -42,9 +45,9 @@ namespace Escritorio
                     Descripcion = string.IsNullOrEmpty(txtDescripcion.Text) ? "Descripcion" : txtDescripcion.Text,
                 };
                 return cg;
-
             }
         }
+
         private void Txt_Click(object sender, EventArgs e)
         {
             ((TextBox)sender).Text = "";
@@ -54,7 +57,6 @@ namespace Escritorio
         {
             if (dgvCategoria.CurrentRow != null && dgvCategoria.CurrentRow.DataBoundItem is CategoriaGastoDTO cg)
             {
-
                 txtID.Text = cg.Id.ToString();
                 txtTipo.Text = cg.Tipo;
                 txtDescripcion.Text = cg.Descripcion;
@@ -64,10 +66,9 @@ namespace Escritorio
 
                 if (confirmarEliminar)
                 {
-                    Eliminar.Text = "ELIMINAR CATEGOR�A";
+                    Eliminar.Text = "ELIMINAR CATEGORÍA";
                     confirmarEliminar = false;
                 }
-
             }
         }
 
@@ -80,9 +81,8 @@ namespace Escritorio
                 this.dgvCategoria.DataSource = null;
                 this.dgvCategoria.AutoGenerateColumns = true;
                 this.dgvCategoria.DataSource = cgs;
-                
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine($"ERROR: {ex.Message}");
                 Debug.WriteLine($"StackTrace: {ex.StackTrace}");
@@ -112,14 +112,47 @@ namespace Escritorio
             {
                 Eliminar.Text = "¿ESTÁ SEGURO?";
                 confirmarEliminar = true;
+                return;
             }
 
-            else
+            if (dgvCategoria.CurrentRow == null || !(dgvCategoria.CurrentRow.DataBoundItem is CategoriaGastoDTO cgDto))
             {
-                await CategoriaGastoApiClient.DeleteAsync(((CategoriaGastoDTO)dgvCategoria.CurrentRow.DataBoundItem).Id);
-                await GetCategorias();
-                Eliminar.Text = "ELIMINAR CATEGORIA";
+                MessageBox.Show("Seleccione una categoría para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 confirmarEliminar = false;
+                Eliminar.Text = "ELIMINAR CATEGORÍA";
+                return;
+            }
+
+            int id = cgDto.Id;
+
+            try
+            {
+                var gastos = await GastoApiClient.GetAllAsync();
+                if (gastos.Any(g => g.CategoriaGastoId == id))
+                {
+                    MessageBox.Show(
+                        "No se puede eliminar esta categoría porque tiene gastos asociados. Elimine o reasigne esos gastos antes de eliminar la categoría.",
+                        "Operación no permitida",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    confirmarEliminar = false;
+                    Eliminar.Text = "ELIMINAR CATEGORÍA";
+                    return;
+                }
+
+                Eliminar.Enabled = false; 
+                await CategoriaGastoApiClient.DeleteAsync(id);
+                await GetCategorias();
+                Eliminar.Text = "ELIMINAR CATEGORÍA";
+                confirmarEliminar = false;
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error al eliminar la categoría.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Eliminar.Enabled = true;
             }
         }
     }

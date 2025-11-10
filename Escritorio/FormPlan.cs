@@ -229,24 +229,38 @@ namespace Escritorio
             {
                 btnEliminar.Text = "¿ESTÁ SEGURO?";
                 confirma = true;
+                return;
             }
             else
             {
+                if (dataGridView1.CurrentRow == null || !(dataGridView1.CurrentRow.DataBoundItem is PlanDTO plDto))
+                {
+                    MessageBox.Show("Seleccione un plan para eliminar.", "Advertencia",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    confirma = false;
+                    btnEliminar.Text = "ELIMINAR PLAN";
+                    return;
+                }
+
+                int id = plDto.Id;
+
                 try
                 {
-                    await PlanApiClient.DeleteAsync(((PlanDTO)dataGridView1.CurrentRow.DataBoundItem).Id);
+                    btnEliminar.Enabled = false; 
+                    await PlanApiClient.DeleteAsync(id);
                     await CargarPlanes();
                     LimpiarFormulario();
+                    btnEliminar.Text = "ELIMINAR PLAN";
+                    confirma = false;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    MessageBox.Show($"Error al eliminar plan: {ex.Message}", "Error",
+                    MessageBox.Show("Error al eliminar plan.", "Error",
                                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
-                    btnEliminar.Text = "ELIMINAR PLAN";
-                    confirma = false;
+                    btnEliminar.Enabled = true;
                 }
             }
         }

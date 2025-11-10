@@ -1,5 +1,10 @@
 ﻿using DTOs;
 using API.Clients;
+using System;
+using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Escritorio
 {
@@ -59,7 +64,7 @@ namespace Escritorio
             this.txtNombre.Text = "";
             this.txtMail.Text = "";
             this.txtContraseña.Text = "";
-            comRol.SelectedIndex = 1; 
+            comRol.SelectedIndex = 1;
         }
 
         private void Txt_Click(object sender, EventArgs e)
@@ -74,13 +79,12 @@ namespace Escritorio
                 txtID.Text = u.Id.ToString();
                 txtNombre.Text = u.Nombre;
                 txtMail.Text = u.Mail;
-                txtContraseña.Text = ""; 
+                txtContraseña.Text = "";
 
-               
                 if (u.Rol == "Admin" || u.Rol == "NoAdmin")
                     comRol.SelectedItem = u.Rol;
                 else
-                    comRol.SelectedIndex = 1; 
+                    comRol.SelectedIndex = 1;
 
                 Nuevo.Enabled = true;
                 Editar.Enabled = true;
@@ -130,11 +134,39 @@ namespace Escritorio
             }
             else
             {
-                int id = int.Parse(txtID.Text);
-                await UsuarioApiClient.DeleteAsync(id);
-                await this.GetUsuarios();
-                Eliminar.Text = "Eliminar";
-                confirma = false;
+                if (string.IsNullOrWhiteSpace(txtID.Text))
+                {
+                    MessageBox.Show("Seleccione un usuario para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    confirma = false;
+                    Eliminar.Text = "Eliminar";
+                    return;
+                }
+
+                if (!int.TryParse(txtID.Text, out int id))
+                {
+                    MessageBox.Show("ID inválido.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    confirma = false;
+                    Eliminar.Text = "Eliminar";
+                    return;
+                }
+
+                try
+                {
+                    Eliminar.Enabled = false; // evitar múltiples clicks
+                    await UsuarioApiClient.DeleteAsync(id);
+                    await this.GetUsuarios();
+                    Eliminar.Text = "Eliminar";
+                    confirma = false;
+                }
+                catch (Exception)
+                {
+                    // Mostrar mensaje genérico al usuario en caso de cualquier error al eliminar
+                    MessageBox.Show("Error al eliminar el usuario.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    Eliminar.Enabled = true;
+                }
             }
         }
 

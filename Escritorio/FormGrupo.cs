@@ -76,16 +76,37 @@ namespace Escritorio
             {
                 btnEliminar.Text = "¿ESTÁ SEGURO?";
                 confirma = true;
+                return;
             }
 
-            else
+            // Confirmado por el usuario
+            if (dataGridView1.CurrentRow == null || !(dataGridView1.CurrentRow.DataBoundItem is GrupoDTO gDto))
             {
-                await GrupoApiClient.DeleteAsync(((GrupoDTO)dataGridView1.CurrentRow.DataBoundItem).Id);
+                MessageBox.Show("Seleccione un grupo para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                confirma = false;
+                btnEliminar.Text = "ELIMINAR GRUPO";
+                return;
+            }
+
+            int id = gDto.Id;
+
+            try
+            {
+                btnEliminar.Enabled = false; // evitar múltiples clicks
+                await GrupoApiClient.DeleteAsync(id);
                 await CargarGrupos();
-                btnEliminar.Text = "ELIMINAR CATEGORIA";
+                btnEliminar.Text = "ELIMINAR GRUPO";
                 confirma = false;
             }
-
+            catch (Exception)
+            {
+                // Mensaje genérico solo para la operación de eliminar
+                MessageBox.Show("Error al eliminar el grupo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnEliminar.Enabled = true;
+            }
         }
 
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)

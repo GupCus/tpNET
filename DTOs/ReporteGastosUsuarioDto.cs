@@ -10,7 +10,7 @@ namespace DTOs
     {
         public string NombreUsuario { get; set; }
         public decimal TotalGastado { get; set; }
-        public string Email { get; set; }
+        public string Mail { get; set; }
     }
 
     public class ReporteGastosGrupoDto
