@@ -41,7 +41,7 @@ namespace Escritorio
 
 
             if (Sesion.EsAdmin())
-            {
+            { // Si es Administrador, mostrar opciones de administración y usuario normal(ambos)
 
                 lblTituloUsuarioNormal.Visible = true;
                 cmbUsuarioNormal.Visible = true;
@@ -81,7 +81,7 @@ namespace Escritorio
                 cmbUsuarioNormal.Size = new Size(300, 28);
             }
             else
-            {
+            { //Si no es administrador, mostrar solo opciones de usuario normal
 
                 lblTituloUsuarioNormal.Visible = false;
                 cmbUsuarioNormal.Visible = false;

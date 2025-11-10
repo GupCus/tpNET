@@ -32,9 +32,9 @@ namespace Escritorio
         {
             menuContextual = new ContextMenuStrip();
 
-            var itemPlan = new ToolStripMenuItem("📅 Crear Nuevo Plan");
-            var itemTarea = new ToolStripMenuItem("✅ Crear Nueva Tarea");
-            var itemGasto = new ToolStripMenuItem("💰 Registrar Gasto");
+            var itemPlan = new ToolStripMenuItem("📅 Crear/Editar Plan");
+            var itemTarea = new ToolStripMenuItem("✅ Crear/Editar Tarea");
+            var itemGasto = new ToolStripMenuItem("💰 Crear/Editar Gasto");
 
             itemPlan.Click += (s, e) => CrearPlan();
             itemTarea.Click += (s, e) => CrearTarea();

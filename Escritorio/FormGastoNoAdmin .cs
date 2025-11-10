@@ -15,6 +15,9 @@ namespace Escritorio
         private List<TareaDTO> tareasDelGrupo;
         private List<GastoDTO> gastosDelGrupo;
 
+        private ContextMenuStrip menuContextual;
+        private int? editingGastoId = null; // null = modo creación, tiene valor = modo edición
+
         public FormGastoNoAdmin(int grupoId)
         {
             InitializeComponent();
@@ -24,9 +27,46 @@ namespace Escritorio
 
         private async void FormGastoNoAdmin_Load(object sender, EventArgs e)
         {
+            ConfigurarMenuContextual();
+            dgvGastos.CellMouseDown += dgvGastos_CellMouseDown;
+
             await CargarCategorias();
             await CargarTareas();
             await CargarGastos();
+        }
+
+        private void ConfigurarMenuContextual()
+        {
+            menuContextual = new ContextMenuStrip();
+
+            var itemEditar = new ToolStripMenuItem("✏️ Editar Gasto");
+            var itemCancelar = new ToolStripMenuItem("✖️ Cancelar edición");
+
+            itemEditar.Click += (s, e) => EditarGastoDesdeMenuContextual();
+            itemCancelar.Click += (s, e) => CancelarEdicion();
+
+            menuContextual.Items.AddRange(new ToolStripItem[] { itemEditar, itemCancelar });
+
+            dgvGastos.ContextMenuStrip = menuContextual;
+        }
+
+        // Selecciona la fila bajo el cursor cuando se hace click derecho para que la acción del menú actúe sobre esa fila
+        private void dgvGastos_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
+            {
+                dgvGastos.ClearSelection();
+                dgvGastos.Rows[e.RowIndex].Selected = true;
+
+                if (e.ColumnIndex >= 0)
+                {
+                    dgvGastos.CurrentCell = dgvGastos.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                }
+                else
+                {
+                    dgvGastos.CurrentCell = dgvGastos.Rows[e.RowIndex].Cells.Cast<DataGridViewCell>().FirstOrDefault() ?? dgvGastos.Rows[e.RowIndex].Cells[0];
+                }
+            }
         }
 
         private async Task CargarCategorias()
@@ -148,7 +188,14 @@ namespace Escritorio
 
         private void btnNuevoGasto_Click(object sender, EventArgs e)
         {
-            CrearNuevoGasto();
+            if (editingGastoId.HasValue)
+            {
+                _ = GuardarEdicionGasto();
+            }
+            else
+            {
+                CrearNuevoGasto();
+            }
         }
 
         private async void CrearNuevoGasto()
@@ -222,6 +269,167 @@ namespace Escritorio
             }
         }
 
+        // Método llamado desde el menú contextual "Editar Gasto"
+        private void EditarGastoDesdeMenuContextual()
+        {
+            if (dgvGastos.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione un gasto primero", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Obtener ID (columna 0 según carga en CargarGastos)
+            if (!int.TryParse(dgvGastos.CurrentRow.Cells[0].Value?.ToString(), out int gastoId))
+            {
+                MessageBox.Show("No se pudo obtener el ID del gasto seleccionado", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var gasto = gastosDelGrupo.FirstOrDefault(g => g.Id == gastoId);
+            if (gasto == null)
+            {
+                MessageBox.Show("No se encontró el gasto seleccionado en la lista cargada", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Llenar controles con datos del gasto y pasar a modo edición
+            editingGastoId = gasto.Id;
+            txtDescripcion.Text = gasto.Descripcion;
+            txtMonto.Text = gasto.Monto.ToString();
+
+            // Categoría: buscar índice del item cuyo Value == gasto.CategoriaGastoId
+            int catIndex = -1;
+            for (int i = 0; i < cmbCategoria.Items.Count; i++)
+            {
+                var item = cmbCategoria.Items[i];
+                if (item is not string && item.GetType().GetProperty("Value") != null)
+                {
+                    var val = (int)item.GetType().GetProperty("Value").GetValue(item);
+                    if (val == gasto.CategoriaGastoId)
+                    {
+                        catIndex = i;
+                        break;
+                    }
+                }
+            }
+            if (catIndex >= 0) cmbCategoria.SelectedIndex = catIndex;
+
+            // Tarea: si tiene tarea asociada, seleccionar el item correspondiente
+            int tareaIndex = -1;
+            if (gasto.TareaId.HasValue)
+            {
+                for (int i = 0; i < cmbTarea.Items.Count; i++)
+                {
+                    var item = cmbTarea.Items[i];
+                    if (item is not string && item.GetType().GetProperty("Value") != null)
+                    {
+                        var val = (int)item.GetType().GetProperty("Value").GetValue(item);
+                        if (val == gasto.TareaId.Value)
+                        {
+                            tareaIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (tareaIndex >= 0) cmbTarea.SelectedIndex = tareaIndex;
+            else if (cmbTarea.Items.Count > 0) cmbTarea.SelectedIndex = 0;
+
+            // FechaHora
+            dtpFechaHora.Value = gasto.FechaHora != default ? gasto.FechaHora : DateTime.Now;
+
+            btnNuevoGasto.Text = "Guardar cambios";
+        }
+
+        private async Task GuardarEdicionGasto()
+        {
+            if (editingGastoId == null)
+            {
+                MessageBox.Show("No hay ningún gasto en edición", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cmbCategoria.SelectedIndex <= 0)
+            {
+                MessageBox.Show("Seleccione una categoría", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var descripcion = txtDescripcion.Text.Trim();
+            var montoText = txtMonto.Text.Trim();
+
+            if (string.IsNullOrEmpty(descripcion))
+            {
+                MessageBox.Show("La descripción del gasto es obligatoria", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (string.IsNullOrEmpty(montoText) || !float.TryParse(montoText, out float monto) || monto <= 0)
+            {
+                MessageBox.Show("El monto debe ser un número válido mayor a 0", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var categoriaSeleccionada = cmbCategoria.SelectedItem as dynamic;
+            if (categoriaSeleccionada == null)
+            {
+                MessageBox.Show("Seleccione una categoría válida", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            int categoriaId = categoriaSeleccionada.Value;
+
+            int? tareaId = null;
+            if (cmbTarea.Enabled && cmbTarea.SelectedIndex > 0)
+            {
+                var tareaSeleccionada = cmbTarea.SelectedItem as dynamic;
+                tareaId = tareaSeleccionada?.Value;
+            }
+
+            try
+            {
+                // Obtener la fecha de alta original para evitar enviar null
+                var original = gastosDelGrupo.FirstOrDefault(g => g.Id == editingGastoId.Value);
+                DateTime fechaAlta = original?.FechaAlta ?? DateTime.Now;
+                int usuarioId = original?.UsuarioId ?? Sesion.UsuarioActual.Id;
+
+                var gastoUpdate = new GastoDTO
+                {
+                    Id = editingGastoId.Value,
+                    Descripcion = descripcion,
+                    Monto = monto,
+                    CategoriaGastoId = categoriaId,
+                    TareaId = tareaId,
+                    UsuarioId = usuarioId,
+                    FechaHora = dtpFechaHora.Value,
+                    FechaAlta = fechaAlta
+                };
+
+                await GastoApiClient.UpdateAsync(gastoUpdate); // debe llamar al PUT /gastos
+
+                MessageBox.Show("Gasto actualizado correctamente", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Resetear estado de edición
+                editingGastoId = null;
+                btnNuevoGasto.Text = "Registrar Gasto";
+                LimpiarCampos();
+                await CargarGastos();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al actualizar gasto: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void LimpiarCampos()
         {
             txtDescripcion.Clear();
@@ -229,8 +437,28 @@ namespace Escritorio
             if (cmbCategoria.Items.Count > 0) cmbCategoria.SelectedIndex = 0;
             if (cmbTarea.Items.Count > 0) cmbTarea.SelectedIndex = 0;
             dtpFechaHora.Value = DateTime.Now;
+
+            // Salir de modo edición si corresponde
+            editingGastoId = null;
+            btnNuevoGasto.Text = "Registrar Gasto";
         }
 
+        private void CancelarEdicion()
+        {
+            if (editingGastoId.HasValue)
+            {
+                var result = MessageBox.Show("Cancelar la edición actual?", "Confirmar",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    LimpiarCampos();
+                }
+            }
+            else
+            {
+                LimpiarCampos();
+            }
+        }
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {

@@ -186,11 +186,7 @@ namespace Escritorio
         {
             try
             {
-                // Ensure that creating a new group does not accidentally reuse the currently selected group's ID.
-                // For example, if the user previously selected a group, txtID may have a value; when creating we must ignore it.
                 var grupo = ObtenerGrupoDelFormulario();
-
-                // Force creation semantics: reset Id (so the server creates a new entity) and ensure the admin comes from the current session.
                 grupo.Id = 0;
                 grupo.IdUsuarioAdministrador = Sesion.UsuarioActual?.Id ?? 0;
                 grupo.FechaAlta = DateTime.Now;

@@ -173,7 +173,7 @@ namespace Escritorio
                 return;
             }
 
-            // Validación de fechas
+            // Validamos las fechas
             if (!ValidarFechas())
             {
                 return;
@@ -268,7 +268,7 @@ namespace Escritorio
             txtDescripcion.Text = "";
             txtFechaDesde.Value = DateTime.Today;
             txtFechaHasta.Value = DateTime.Today.AddDays(30);
-            txtFechaHasta.BackColor = SystemColors.Window; // Resetear color
+            txtFechaHasta.BackColor = SystemColors.Window;
             cmbGrupo.SelectedIndex = -1;
             btnEditar.Enabled = false;
             btnEliminar.Enabled = false;

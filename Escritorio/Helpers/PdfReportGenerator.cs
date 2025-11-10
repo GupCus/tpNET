@@ -86,16 +86,13 @@ namespace Escritorio.Helpers
                 leyendaIndex++;
             }
 
-            // Guardar a bytes PNG (usar System.Drawing.Imaging.ImageFormat calificado para evitar ambigüedad)
             using var ms = new MemoryStream();
             bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
             return ms.ToArray();
         }
 
-        // Generador del PDF que incluye el gráfico de torta y la tabla de totales por usuario.
         public static void GeneratePdf(ReporteGastosGrupoDto reporte, string filePath)
         {
-            // Asegurar licencia (es seguro llamarlo repetidamente)
             QuestPDF.Settings.License = LicenseType.Community;
 
             if (reporte == null) throw new ArgumentNullException(nameof(reporte));
@@ -104,7 +101,6 @@ namespace Escritorio.Helpers
             var gastos = reporte.GastosUsuarios ?? new List<ReporteGastosUsuarioDto>();
             var total = reporte.TotalGrupo;
 
-            // Generar la imagen del gráfico (PNG en memoria)
             var piePng = RenderPieChartPng(gastos, width: 700, height: 320);
 
             var doc = Document.Create(container =>
@@ -113,7 +109,7 @@ namespace Escritorio.Helpers
                 {
                     page.Size(PageSizes.A4);
                     page.Margin(40);
-                    page.PageColor(Colors.White); // QuestPDF color
+                    page.PageColor(Colors.White); 
                     page.DefaultTextStyle(x => x.FontSize(11));
 
                     page.Header()

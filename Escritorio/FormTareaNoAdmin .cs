@@ -15,6 +15,9 @@ namespace Escritorio
         private List<PlanDTO> planesDelGrupo;
         private List<TareaDTO> tareasDelGrupo;
 
+        private ContextMenuStrip menuContextual;
+        private int? editingTareaId = null; 
+
         public FormTareaNoAdmin(int grupoId)
         {
             InitializeComponent();
@@ -26,7 +29,7 @@ namespace Escritorio
 
         private async void FormTareaNoAdmin_Load(object sender, EventArgs e)
         {
-            // Poblamos cmbEstado en tiempo de ejecución (evita problemas en el diseñador).
+            //Para evitar problemas en el diseñador despues
             var estados = new List<KeyValuePair<int, string>>
             {
                 new KeyValuePair<int, string>((int)EstadoTarea.Activo, "Activo"),
@@ -38,8 +41,44 @@ namespace Escritorio
             foreach (var kv in estados) cmbEstado.Items.Add(kv);
             if (cmbEstado.Items.Count > 0) cmbEstado.SelectedIndex = 0;
 
+            ConfigurarMenuContextual();
+            dgvTareas.CellMouseDown += dgvTareas_CellMouseDown;
+
             await CargarPlanes();
             await CargarTareas();
+        }
+
+        private void ConfigurarMenuContextual()
+        {
+            menuContextual = new ContextMenuStrip();
+
+            var itemEditar = new ToolStripMenuItem("✏️ Editar Tarea");
+            var itemCancelar = new ToolStripMenuItem("✖️ Cancelar edición");
+
+            itemEditar.Click += (s, e) => EditarTareaDesdeMenuContextual();
+            itemCancelar.Click += (s, e) => CancelarEdicion();
+
+            menuContextual.Items.AddRange(new ToolStripItem[] { itemEditar, itemCancelar });
+
+            dgvTareas.ContextMenuStrip = menuContextual;
+        }
+
+        private void dgvTareas_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
+            {
+                dgvTareas.ClearSelection();
+                dgvTareas.Rows[e.RowIndex].Selected = true;
+
+                if (e.ColumnIndex >= 0)
+                {
+                    dgvTareas.CurrentCell = dgvTareas.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                }
+                else
+                {
+                    dgvTareas.CurrentCell = dgvTareas.Rows[e.RowIndex].Cells.Cast<DataGridViewCell>().FirstOrDefault() ?? dgvTareas.Rows[e.RowIndex].Cells[0];
+                }
+            }
         }
 
         private async Task CargarPlanes()
@@ -135,7 +174,14 @@ namespace Escritorio
 
         private void btnNuevaTarea_Click(object sender, EventArgs e)
         {
-            CrearNuevaTarea();
+            if (editingTareaId.HasValue)
+            {
+                _ = GuardarEdicionTarea();
+            }
+            else
+            {
+                CrearNuevaTarea();
+            }
         }
 
         private async void CrearNuevaTarea()
@@ -176,11 +222,44 @@ namespace Escritorio
                     return;
                 }
 
-                // Leer estado desde KeyValuePair<int,string> que pobla en Load
                 EstadoTarea estado = EstadoTarea.Activo;
                 if (cmbEstado.SelectedItem is KeyValuePair<int, string> kvp)
                 {
                     estado = (EstadoTarea)kvp.Key;
+                }
+
+                var plan = planesDelGrupo.FirstOrDefault(p => p.Id == planId);
+                if (plan != null)
+                {
+                    DateTime planInicio, planFin;
+                    try
+                    {
+                        planInicio = plan.FechaInicio is DateOnly di ? di.ToDateTime(TimeOnly.MinValue) : DateTime.Parse(plan.FechaInicio.ToString());
+                        planFin = plan.FechaFin is DateOnly df ? df.ToDateTime(TimeOnly.MinValue) : DateTime.Parse(plan.FechaFin.ToString());
+                        if (dtpFechaHora.Value.Date < planInicio.Date || dtpFechaHora.Value.Date > planFin.Date)
+                        {
+                            MessageBox.Show("La fecha/hora de la tarea debe estar dentro del rango del plan seleccionado.", "Validación",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                    }
+                    catch
+                    {
+                       
+                    }
+                }
+
+                int? duracion = null;
+                if (!string.IsNullOrWhiteSpace(txtDuracion.Text))
+                {
+                    if (int.TryParse(txtDuracion.Text.Trim(), out int d))
+                        duracion = d;
+                    else
+                    {
+                        MessageBox.Show("Duración inválida. Ingrese un número entero.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                 }
 
                 var nuevaTarea = new TareaDTO
@@ -188,7 +267,7 @@ namespace Escritorio
                     Nombre = nombre,
                     Descripcion = descripcion,
                     FechaHora = dtpFechaHora.Value,
-                    Duracion = string.IsNullOrEmpty(txtDuracion.Text) ? null : int.Parse(txtDuracion.Text),
+                    Duracion = duracion,
                     Estado = estado,
                     FechaAlta = DateTime.Now,
                     PlanId = planId
@@ -209,6 +288,187 @@ namespace Escritorio
             }
         }
 
+        private void EditarTareaDesdeMenuContextual()
+        {
+            if (dgvTareas.CurrentRow == null)
+            {
+                MessageBox.Show("Seleccione una tarea primero", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!int.TryParse(dgvTareas.CurrentRow.Cells[0].Value?.ToString(), out int tareaId))
+            {
+                MessageBox.Show("No se pudo obtener el ID de la tarea seleccionada", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            var tarea = tareasDelGrupo.FirstOrDefault(t => t.Id == tareaId);
+            if (tarea == null)
+            {
+                MessageBox.Show("No se encontró la tarea seleccionada en la lista cargada", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            editingTareaId = tarea.Id;
+            txtNombre.Text = tarea.Nombre;
+            txtDescripcion.Text = tarea.Descripcion;
+            txtDuracion.Text = tarea.Duracion?.ToString() ?? "";
+
+            dtpFechaHora.Value = tarea.FechaHora ?? DateTime.Now;
+
+
+            int estadoIndex = -1;
+            for (int i = 0; i < cmbEstado.Items.Count; i++)
+            {
+                if (cmbEstado.Items[i] is KeyValuePair<int, string> kv && kv.Key == (int)tarea.Estado)
+                {
+                    estadoIndex = i;
+                    break;
+                }
+            }
+            if (estadoIndex >= 0) cmbEstado.SelectedIndex = estadoIndex;
+
+            int planIndex = -1;
+            for (int i = 0; i < cmbPlan.Items.Count; i++)
+            {
+                var item = cmbPlan.Items[i];
+                if (item is not string && item.GetType().GetProperty("Value") != null)
+                {
+                    var val = (int)item.GetType().GetProperty("Value").GetValue(item);
+                    if (val == tarea.PlanId)
+                    {
+                        planIndex = i;
+                        break;
+                    }
+                }
+            }
+            if (planIndex >= 0) cmbPlan.SelectedIndex = planIndex;
+
+            btnNuevaTarea.Text = "Guardar cambios";
+        }
+
+        private async Task GuardarEdicionTarea()
+        {
+            if (editingTareaId == null)
+            {
+                MessageBox.Show("No hay ninguna tarea en edición", "Advertencia",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var nombre = txtNombre.Text.Trim();
+            var descripcion = txtDescripcion.Text.Trim();
+
+            if (string.IsNullOrEmpty(nombre))
+            {
+                MessageBox.Show("El nombre de la tarea es obligatorio", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!btnNuevaTarea.Enabled)
+            {
+                MessageBox.Show("No hay planes disponibles para asignar la tarea.", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (cmbPlan.SelectedIndex <= 0)
+            {
+                MessageBox.Show("Seleccione un plan primero", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var planSeleccionado = cmbPlan.SelectedItem as dynamic;
+            int planId = planSeleccionado?.Value ?? 0;
+
+            if (planId == 0)
+            {
+                MessageBox.Show("Plan no válido seleccionado", "Validación",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Estado
+            EstadoTarea estado = EstadoTarea.Activo;
+            if (cmbEstado.SelectedItem is KeyValuePair<int, string> kvp)
+            {
+                estado = (EstadoTarea)kvp.Key;
+            }
+
+            var plan = planesDelGrupo.FirstOrDefault(p => p.Id == planId);
+            if (plan != null)
+            {
+                try
+                {
+                    DateTime planInicio = plan.FechaInicio is DateOnly di ? di.ToDateTime(TimeOnly.MinValue) : DateTime.Parse(plan.FechaInicio.ToString());
+                    DateTime planFin = plan.FechaFin is DateOnly df ? df.ToDateTime(TimeOnly.MinValue) : DateTime.Parse(plan.FechaFin.ToString());
+                    if (dtpFechaHora.Value.Date < planInicio.Date || dtpFechaHora.Value.Date > planFin.Date)
+                    {
+                        MessageBox.Show("La fecha/hora de la tarea debe estar dentro del rango del plan seleccionado.", "Validación",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+                }
+                catch
+                {
+                   
+                }
+            }
+
+            int? duracion = null;
+            if (!string.IsNullOrWhiteSpace(txtDuracion.Text))
+            {
+                if (int.TryParse(txtDuracion.Text.Trim(), out int d))
+                    duracion = d;
+                else
+                {
+                    MessageBox.Show("Duración inválida. Ingrese un número entero.", "Validación",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            try
+            {
+               
+                var original = tareasDelGrupo.FirstOrDefault(t => t.Id == editingTareaId.Value);
+                DateTime fechaAlta = original?.FechaAlta ?? DateTime.Now;
+
+                var tareaUpdate = new TareaDTO
+                {
+                    Id = editingTareaId.Value,
+                    Nombre = nombre,
+                    Descripcion = descripcion,
+                    FechaHora = dtpFechaHora.Value,
+                    Duracion = duracion,
+                    Estado = estado,
+                    PlanId = planId,
+                    FechaAlta = fechaAlta 
+                };
+
+                await TareaApiClient.UpdateAsync(tareaUpdate); 
+
+                MessageBox.Show("Tarea actualizada correctamente", "Éxito",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                
+                editingTareaId = null;
+                btnNuevaTarea.Text = "Crear Tarea";
+                LimpiarCampos();
+                await CargarTareas();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al actualizar tarea: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void LimpiarCampos()
         {
             txtNombre.Clear();
@@ -218,6 +478,25 @@ namespace Escritorio
 
             if (cmbEstado.Items.Count > 0) cmbEstado.SelectedIndex = 0;
             if (cmbPlan.Enabled && cmbPlan.Items.Count > 0) cmbPlan.SelectedIndex = 0;
+            editingTareaId = null;
+            btnNuevaTarea.Text = "Crear Tarea";
+        }
+
+        private void CancelarEdicion()
+        {
+            if (editingTareaId.HasValue)
+            {
+                var result = MessageBox.Show("Cancelar la edición actual?", "Confirmar",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    LimpiarCampos();
+                }
+            }
+            else
+            {
+                LimpiarCampos();
+            }
         }
 
         private void dgvTareas_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -231,6 +510,11 @@ namespace Escritorio
                 MessageBox.Show($"Tarea seleccionada: {tareaNombre}\nID: {tareaId}\nPlan ID: {planId}",
                     "Tarea Seleccionada", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            _ = CargarTareas();
         }
     }
 }
