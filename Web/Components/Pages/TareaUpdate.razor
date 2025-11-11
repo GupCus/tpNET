@@ -2,6 +2,11 @@
 @using DTOs
 @using API.Clients;
 @using Dominio;
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @inject NavigationManager NavigationManager
 <h3>Actualizar tarea</h3>
 

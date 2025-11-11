@@ -1,6 +1,12 @@
 ﻿@page "/usuarios"
 @using API.Clients;
 @using DTOs;
+
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @inject NavigationManager NavigationManager
 <h3>Usuarios</h3>
 

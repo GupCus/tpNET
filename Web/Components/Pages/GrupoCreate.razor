@@ -1,6 +1,11 @@
 ﻿@page "/grupos/create"
 @using DTOs;
 @using API.Clients;
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @inject NavigationManager NavigationManager
 @if (!string.IsNullOrEmpty(mensajeError))
 {

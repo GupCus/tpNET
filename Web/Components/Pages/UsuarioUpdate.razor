@@ -2,6 +2,10 @@
 @using DTOs
 @using API.Clients;
 
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @inject NavigationManager NavigationManager
 <h3>Actualizar usuario</h3>
 

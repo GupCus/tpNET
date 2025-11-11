@@ -2,6 +2,11 @@
 @using API.Clients;
 @using DTOs
 @using Dominio
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @inject NavigationManager NavigationManager
 <h3>Tareas</h3>
 <button class="btn btn-success mb-3" @onclick="NuevaTarea">Agregar tarea</button>

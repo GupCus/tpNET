@@ -1,6 +1,11 @@
 ﻿@page "/categorias/create"
 @using DTOs;
 @using API.Clients;
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @inject NavigationManager NavigationManager
 
 

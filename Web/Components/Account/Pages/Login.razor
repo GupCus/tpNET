@@ -50,17 +50,6 @@
                         }
                     </button>
                 </div>
-                <div>
-                    <!--
-                    <p>
-                        <a href="Account/ForgotPassword">¿Olvidaste tu contraseña?</a>
-                    </p>
-                    
-                    <p class="my-2">
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Registrarse como nuevo usuario</a>
-                    </p>
-                    -->
-                </div>
             </EditForm>
         </section>
     </div>
@@ -93,18 +82,20 @@
 
             if (usuario != null)
             {
-                Logger.LogInformation("Usuario {Usuario} ha iniciado sesión correctamente.", usuario.Nombre);
 
+                if(usuario.Rol != "Admin") { throw new Exception("El usuario no es un administrador"); }
                 // Guardar el usuario en el servicio de sesión
                 SessionService.SetUsuario(usuario);
-
-
+                NavigationManager.NavigateTo("/home");
             }
             else
             {
-                errorMessage = "Error: Usuario o contraseña incorrectos.";
-                Logger.LogWarning("Intento de inicio de sesión fallido para el usuario {Usuario}.", Input.Usuario);
+                throw new Exception("El usuario no se encuentra");
             }
+        }
+        catch (NavigationException ne)
+        {
+            NavigationManager.NavigateTo("/home");
         }
         catch (Exception ex)
         {
@@ -114,8 +105,9 @@
         finally
         {
             isLoading = false;
+            
         }
-        NavigationManager.NavigateTo("/grupos");
+
     }
 
     private sealed class InputModel

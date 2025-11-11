@@ -1,6 +1,11 @@
 ﻿@page "/gastos"
 @using API.Clients;
 @using DTOs;
+
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+
 @inject NavigationManager NavigationManager
 
 
