@@ -181,7 +181,7 @@ namespace Escritorio.Helpers
                                     {
                                         var porcentaje = total > 0 ? (double)((u.TotalGastado / total) * 100) : 0.0;
                                         table.Cell().Element(CellStyle).Text(u.NombreUsuario ?? "").FontSize(11);
-                                        table.Cell().Element(CellStyle).Text(u.Mail ?? "").FontSize(11);
+                                        table.Cell().Element(CellStyle).Text(u.MailUsuario ?? "").FontSize(11);
                                         table.Cell().Element(CellStyle).AlignRight().Text($"{u.TotalGastado:C2}").FontSize(11);
                                         table.Cell().Element(CellStyle).AlignRight().Text($"{porcentaje:F1}%").FontSize(11);
                                     }

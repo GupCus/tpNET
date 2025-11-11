@@ -166,7 +166,9 @@ namespace Escritorio
                         gasto.CategoriaGastoNombre ?? "Sin categoría",
                         gasto.TareaNombre ?? "Sin tarea",
                         gasto.FechaHora.ToString("dd/MM/yyyy HH:mm"),
-                        gasto.UsuarioNombre ?? "Sin usuario"
+                        gasto.UsuarioNombre ?? "Sin usuario",
+                        gasto.UsuarioMail,
+                        gasto.TareaId
                     );
                 }
 

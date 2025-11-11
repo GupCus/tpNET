@@ -60,41 +60,14 @@ namespace Escritorio.Forms
 
                 int grupoId = Convert.ToInt32(cmbGrupos.SelectedValue);
 
-                // Obtener gastos 
-                var gastos = await GastoApiClient.GetByGrupoIdAsync(grupoId);
-                var gastosList = gastos?.ToList() ?? new List<GastoDTO>();
-
-                if (!gastosList.Any())
+                var reporte = await GastoApiClient.GetReporteByGrupoIdAsync(grupoId);
+                if (reporte == null || !reporte.GastosUsuarios.Any())
                 {
-                    MessageBox.Show("No se encontraron gastos para el grupo seleccionado.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("No se encontraron gastos para el grupo seleccionado.",
+                                   "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                // Agrupar gastos por usuario y sumar montos 
-                var gastosPorUsuario = gastosList
-                    .GroupBy(g => g.UsuarioId)
-                    .Select(grp =>
-                    {
-                        var first = grp.FirstOrDefault();
-                        return new ReporteGastosUsuarioDto
-                        {
-                            NombreUsuario = first?.UsuarioNombre ?? $"Usuario {grp.Key}",
-                            TotalGastado = Convert.ToDecimal(grp.Sum(x => x.Monto))
-                            
-                        };
-                    })
-                    .OrderByDescending(r => r.TotalGastado)
-                    .ToList();
-
-                var grupoSeleccionado = cmbGrupos.SelectedItem as GrupoDTO;
-                var reporte = new ReporteGastosGrupoDto
-                {
-                    NombreGrupo = grupoSeleccionado?.Nombre ?? $"Grupo_{grupoId}",
-                    FechaGeneracion = DateTime.Now,
-                    GastosUsuarios = gastosPorUsuario
-                };
-
-               
                 string path = null;
                 this.Invoke((MethodInvoker)(() =>
                 {

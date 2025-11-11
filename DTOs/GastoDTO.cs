@@ -10,6 +10,7 @@ namespace DTOs
         public string? CategoriaGastoNombre { get; set; }
 
         public int UsuarioId { get; set; }
+        public string? UsuarioMail { get; set; }    
         public string? UsuarioNombre { get; set; }
         public int? TareaId { get; set; }
         public string? TareaNombre { get; set; }

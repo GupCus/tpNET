@@ -69,6 +69,7 @@ using (var scope = app.Services.CreateScope())
     app.MapGrupoEndPoints();
     app.MapPlanEndPoints();
     app.MapUsuarioGrupoEndPoints();
+    app.MapReporteEndpoints();
 
     app.Run();
 

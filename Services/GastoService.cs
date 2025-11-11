@@ -4,6 +4,7 @@ using DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Services
 {
@@ -130,50 +131,38 @@ namespace Services
             });
         }
 
-        // Devuelve todos los gastos que pertenecen a cualquier tarea de cualquier plan
+        
         public IEnumerable<GastoDTO> GetByGrupoId(int grupoId)
         {
-            var planRepo = new PlanRepository();
-            var tareaRepo = new TareaRepository();
             var gastoRepo = new GastoRepository();
+            return gastoRepo.GetByGrupoId(grupoId);
+        }
 
-            // Obtener planes del grupo
-            var planes = planRepo.GetAll() ?? Enumerable.Empty<Plan>();
-            var planIds = planes.Where(p => p.GrupoId == grupoId).Select(p => p.Id).ToList();
+        
+        public ReporteGastosGrupoDto GetReporteByGrupoId(int grupoId)
+        {
+            if (grupoId <= 0)
+                throw new ArgumentException("El ID del grupo debe ser mayor a 0", nameof(grupoId));
 
-            if (!planIds.Any())
-                return new List<GastoDTO>();
+            var gastoRepo = new GastoRepository();
+            var reporte = gastoRepo.GetReporteByGrupoId(grupoId);
 
-            // Obtener tareas que pertenecen a esos planes
-            var tareas = tareaRepo.GetAll() ?? Enumerable.Empty<Tarea>();
-            var tareaIds = tareas.Where(t => planIds.Contains(t.PlanId)).Select(t => t.Id).ToList();
-
-            if (!tareaIds.Any())
-                return new List<GastoDTO>();
-
-            // Obtener gastos que pertenecen a esas tareas
-            var gastos = gastoRepo.GetAll() ?? Enumerable.Empty<Gasto>();
-            var gastosDelGrupo = gastos
-                .Where(g => g.TareaId != null && tareaIds.Contains(g.TareaId.Value))
-                .ToList();
-
-            
-            var gastoDtos = gastosDelGrupo.Select(g => new GastoDTO
+            if (reporte == null)
             {
-                Id = g.Id,
-                CategoriaGastoId = g.CategoriaGastoId,
-                CategoriaGastoNombre = g.CategoriaGasto?.Tipo,
-                UsuarioId = g.UsuarioId,
-                UsuarioNombre = g.Usuario?.Nombre,
-                TareaId = g.TareaId,
-                TareaNombre = g.Tarea?.Nombre,
-                Monto = g.Monto,
-                Descripcion = g.Descripcion,
-                FechaHora = g.FechaHora,
-                FechaAlta = g.FechaAlta
-            }).ToList();
+                var grupoRepo = new GrupoRepository();
+                var grupo = grupoRepo.Get(grupoId);
 
-            return gastoDtos;
+                return new ReporteGastosGrupoDto
+                {
+                    NombreGrupo = grupo?.Nombre ?? $"Grupo_{grupoId}",
+                    FechaGeneracion = DateTime.Now,
+                    GastosUsuarios = new List<ReporteGastosUsuarioDto>()
+                };
+                
+            }
+            Debug.WriteLine("reporte en gasto service: "+ reporte);
+
+            return reporte;
         }
     }
 }

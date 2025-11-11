@@ -1,6 +1,9 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using Dominio;
+using DTOs;
+using Microsoft.Data.SqlClient;
+using System.Diagnostics;
 
 namespace Repository
 {
@@ -95,5 +98,142 @@ namespace Repository
                            g.Tarea.Plan.GrupoId == grupoId)
                 .Sum(g => (decimal)g.Monto);
         }
+        public ReporteGastosGrupoDto GetReporteByGrupoId(int grupoId)
+        {
+            var reporte = new ReporteGastosGrupoDto
+            {
+                FechaGeneracion = DateTime.Now,
+                GastosUsuarios = new List<ReporteGastosUsuarioDto>()
+            };
+
+            using (SqlConnection con = new SqlConnection(@"Server=localhost\SQLEXPRESS;
+                                Initial Catalog=Planificador;
+                                Integrated Security=true;
+                                TrustServerCertificate=True"))
+            {
+                con.Open();
+
+                // obtengo nombre del grupo
+                string sqlGrupo = @"
+            SELECT Nombre 
+            FROM Grupos 
+            WHERE Id = @grupoId";
+
+                using (SqlCommand cmd = new SqlCommand(sqlGrupo, con))
+                {
+                    cmd.Parameters.AddWithValue("@grupoId", grupoId);
+                    var nombreGrupo = cmd.ExecuteScalar();
+                    reporte.NombreGrupo = nombreGrupo?.ToString() ?? $"Grupo_{grupoId}";
+                }
+                //obtengo gastos por usuario
+                string sql = @"
+            SELECT 
+                u.Id AS UsuarioId,
+                u.Nombre AS UsuarioNombre,
+                u.Mail AS UsuarioMail,
+                SUM(gas.Monto) AS TotalGastado
+            FROM Gastos gas
+            INNER JOIN Tareas tar ON gas.TareaId = tar.Id
+            INNER JOIN Planes p ON tar.PlanId = p.Id
+            INNER JOIN Usuarios u ON u.Id = gas.UsuarioId
+            WHERE p.GrupoId = @grupoId
+            GROUP BY u.Id, u.Nombre, u.Mail
+            ORDER BY SUM(gas.Monto) DESC;
+        ";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@grupoId", grupoId);
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            reporte.GastosUsuarios.Add(new ReporteGastosUsuarioDto
+                            {
+                                NombreUsuario = dr.GetString(dr.GetOrdinal("UsuarioNombre")),
+                                MailUsuario = dr.IsDBNull(dr.GetOrdinal("UsuarioMail"))
+                                    ? ""
+                                    : dr.GetString(dr.GetOrdinal("UsuarioMail")),
+                                TotalGastado = Convert.ToDecimal(dr["TotalGastado"])
+
+                            });
+                            Debug.WriteLine(reporte.GastosUsuarios);
+                        }
+                    }
+                }
+            }
+            Debug.WriteLine($"Total del grupo: {reporte.TotalGrupo}");
+
+            
+            return reporte.GastosUsuarios.Any() ? reporte : null;
+        }
+        public IEnumerable<GastoDTO> GetByGrupoId(int grupoId)
+        {
+            var lista = new List<GastoDTO>();
+
+            using (SqlConnection con = new SqlConnection(@"Server=localhost\SQLEXPRESS;
+                                Initial Catalog=Planificador;
+                                Integrated Security=true;
+                                TrustServerCertificate=True"))
+            {
+                con.Open();
+
+                string sql = @"
+            SELECT 
+                gas.Id,
+                gas.CategoriaGastoId,
+                cat.Tipo AS CategoriaGastoNombre,
+                gas.TareaId,
+                tar.Nombre AS TareaNombre,
+                gas.UsuarioId,
+                u.Nombre AS UsuarioNombre,
+                u.Mail AS UsuarioMail
+                gas.Monto,
+                gas.Descripcion,
+                gas.FechaHora,
+                gas.FechaAlta
+            FROM Gastos gas
+            INNER JOIN Tareas tar ON gas.TareaId = tar.Id
+            INNER JOIN CategoriaGastos cat ON cat.Id = gas.CategoriaGastoId
+            INNER JOIN Usuarios u ON u.Id = gas.UsuarioId
+            INNER JOIN Planes p ON tar.PlanId = p.Id
+            WHERE p.GrupoId = @grupoId
+            ORDER BY gas.FechaHora DESC;
+        ";
+
+                using (SqlCommand cmd = new SqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@grupoId", grupoId);
+                    using (SqlDataReader dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new GastoDTO
+                            {
+                                Id = dr.GetInt32(dr.GetOrdinal("Id")),
+                                CategoriaGastoId = dr.GetInt32(dr.GetOrdinal("CategoriaGastoId")),
+                                CategoriaGastoNombre = dr.GetString(dr.GetOrdinal("CategoriaGastoNombre")),
+                                TareaId = dr.GetInt32(dr.GetOrdinal("TareaId"))
+                                    ,
+                                TareaNombre = dr.GetString(dr.GetOrdinal("TareaNombre")),
+                                UsuarioId = dr.GetInt32(dr.GetOrdinal("UsuarioId")),
+                                UsuarioNombre = dr.GetString(dr.GetOrdinal("UsuarioNombre")),
+                                UsuarioMail=dr.GetString(dr.GetOrdinal("UsuarioMail")),
+                                   
+                                Monto = (float)dr.GetFloat(dr.GetOrdinal("Monto")),
+                                Descripcion = dr.IsDBNull(dr.GetOrdinal("Descripcion"))
+                                    ? ""
+                                    : dr.GetString(dr.GetOrdinal("Descripcion")),
+                                FechaHora = dr.GetDateTime(dr.GetOrdinal("FechaHora")),
+                                FechaAlta = dr.GetDateTime(dr.GetOrdinal("FechaAlta"))
+                            });
+                        }
+                    }
+                }
+            }
+
+            return lista;
+        }
+
     }
 }

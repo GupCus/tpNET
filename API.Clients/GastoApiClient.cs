@@ -1,6 +1,7 @@
 ﻿using DTOs;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -110,7 +111,6 @@ namespace API.Clients
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
         }
 
-        // Obtiene todos los gastos de todas las tareas de todos los planes de un grupo
         public static async Task<IEnumerable<GastoDTO>> GetByGrupoIdAsync(int grupoId)
         {
             try
@@ -120,6 +120,20 @@ namespace API.Clients
                     return await response.Content.ReadFromJsonAsync<IEnumerable<GastoDTO>>() ?? new List<GastoDTO>();
                 var error = await response.Content.ReadAsStringAsync();
                 throw new Exception($"Error al obtener gastos del grupo {grupoId}. Status: {response.StatusCode}, Detalle: {error}");
+            }
+            catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
+            catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }
+        }
+        public static async Task<ReporteGastosGrupoDto> GetReporteByGrupoIdAsync(int grupoId)
+        {
+            try
+            {
+                var response = await client.GetAsync($"api/reportes/gastos-grupo/{grupoId}");
+                if (response.IsSuccessStatusCode)
+                    return await response.Content.ReadFromJsonAsync<ReporteGastosGrupoDto>() ?? new ReporteGastosGrupoDto();
+                var error = await response.Content.ReadAsStringAsync();
+                Debug.WriteLine("error en apiclient:" + error);
+                throw new Exception($"Error al obtener reporte del grupo {grupoId}. Status: {response.StatusCode}, Detalle: {error}");
             }
             catch (HttpRequestException ex) { throw new Exception($"Error de conexión: {ex.Message}", ex); }
             catch (TaskCanceledException ex) { throw new Exception($"Timeout: {ex.Message}", ex); }

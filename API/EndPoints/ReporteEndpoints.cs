@@ -10,13 +10,12 @@ namespace API.EndPoints
     {
         public static void MapReporteEndpoints(this WebApplication app)
         {
-            // Devuelve todos los gastos de todas las tareas de todos los planes de un grupo
-            app.MapGet("/api/reportes/gastos-grupo/{grupoId:int}", (int grupoId, GastoService gastoService) =>
+            app.MapGet("api/reportes/gastos-grupo/{grupoId:int}", (int grupoId, GastoService gastoService) =>
             {
-                var items = gastoService.GetByGrupoId(grupoId);
-                return Results.Ok(items);
+                var reporte = gastoService.GetReporteByGrupoId(grupoId);
+                return Results.Ok(reporte);
             })
-            .WithName("GetGastosByGrupo")
+            .WithName("GetReporteByGrupo")
             .Produces<IEnumerable<GastoDTO>>(StatusCodes.Status200OK)
             .WithOpenApi();
         }
