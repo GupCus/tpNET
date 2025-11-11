@@ -187,7 +187,7 @@ namespace Repository
                 tar.Nombre AS TareaNombre,
                 gas.UsuarioId,
                 u.Nombre AS UsuarioNombre,
-                u.Mail AS UsuarioMail
+                u.Mail AS UsuarioMail,
                 gas.Monto,
                 gas.Descripcion,
                 gas.FechaHora,
