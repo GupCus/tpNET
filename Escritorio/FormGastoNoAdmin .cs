@@ -16,7 +16,7 @@ namespace Escritorio
         private List<GastoDTO> gastosDelGrupo;
 
         private ContextMenuStrip menuContextual;
-        private int? editingGastoId = null; // null = modo creación, tiene valor = modo edición
+        private int? editingGastoId = null;
 
         public FormGastoNoAdmin(int grupoId)
         {

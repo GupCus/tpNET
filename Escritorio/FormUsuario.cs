@@ -152,7 +152,7 @@ namespace Escritorio
 
                 try
                 {
-                    Eliminar.Enabled = false; // evitar múltiples clicks
+                    Eliminar.Enabled = false; 
                     await UsuarioApiClient.DeleteAsync(id);
                     await this.GetUsuarios();
                     Eliminar.Text = "Eliminar";
@@ -160,7 +160,6 @@ namespace Escritorio
                 }
                 catch (Exception)
                 {
-                    // Mostrar mensaje genérico al usuario en caso de cualquier error al eliminar
                     MessageBox.Show("Error al eliminar el usuario.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally

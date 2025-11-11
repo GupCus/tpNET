@@ -40,7 +40,6 @@ namespace Escritorio
             }
         }
 
-        // Sanitiza la tarea para evitar nulos
         private TareaDTO LimpiarTarea()
         {
             TareaDTO t = new()

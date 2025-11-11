@@ -14,7 +14,7 @@ namespace Escritorio
         private int grupoId;
         private List<PlanDTO> planesDelGrupo;
         private ContextMenuStrip menuContextual;
-        private int? editingPlanId = null; // null = modo creación, tiene valor = modo edición
+        private int? editingPlanId = null;
 
         public FormPlanNoAdmin(int grupoId)
         {
@@ -26,7 +26,6 @@ namespace Escritorio
         private async void FormPlanNoAdmin_Load(object sender, EventArgs e)
         {
             ConfigurarMenuContextual();
-            // asegurarnos de que al click derecho se seleccione la fila
             dgvPlanes.CellMouseDown += dgvPlanes_CellMouseDown;
 
             await CargarPlanes();
@@ -47,7 +46,6 @@ namespace Escritorio
             dgvPlanes.ContextMenuStrip = menuContextual;
         }
 
-        // Selecciona la fila bajo el cursor cuando se hace click derecho para que la acción del menú actúe sobre esa fila
         private void dgvPlanes_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right && e.RowIndex >= 0)
@@ -126,7 +124,6 @@ namespace Escritorio
                     return;
                 }
 
-                // Validación: la fecha de inicio no puede ser mayor que la fecha de baja
                 var fechaInicio = DateOnly.FromDateTime(dtpFechaInicio.Value.Date);
                 var fechaBaja = DateOnly.FromDateTime(dtpFechaFin.Value.Date);
 
@@ -163,7 +160,6 @@ namespace Escritorio
             }
         }
 
-        // Método llamado desde el menú contextual "Editar Plan"
         private void EditarPlanDesdeMenuContextual()
         {
             if (dgvPlanes.CurrentRow == null)
@@ -173,7 +169,6 @@ namespace Escritorio
                 return;
             }
 
-            // Obtener el ID desde la celda oculta/visible (según diseño)
             if (!int.TryParse(dgvPlanes.CurrentRow.Cells[0].Value?.ToString(), out int planId))
             {
                 MessageBox.Show("No se pudo obtener el ID del plan seleccionado", "Error",
@@ -189,12 +184,10 @@ namespace Escritorio
                 return;
             }
 
-            // Llenar el formulario con los datos del plan y pasar a modo edición
             editingPlanId = plan.Id;
             txtNombre.Text = plan.Nombre;
             txtDescripcion.Text = plan.Descripcion;
 
-            // Intentar asignar las fechas (manejar DateOnly/DateTime)
             try
             {
                 dtpFechaInicio.Value = plan.FechaInicio is DateOnly dInicio
@@ -239,7 +232,6 @@ namespace Escritorio
                 return;
             }
 
-            // Validación fechas
             var fechaInicioDt = dtpFechaInicio.Value.Date;
             var fechaFinDt = dtpFechaFin.Value.Date;
 
@@ -258,7 +250,6 @@ namespace Escritorio
                     Id = editingPlanId.Value,
                     Nombre = nombre,
                     Descripcion = descripcion,
-                    // El endpoint PUT /planes espera PlanUpdateDTO; usar DateTime para las fechas (coincide con uso en FormPlan)
                     FechaInicio = dtpFechaInicio.Value,
                     FechaFin = dtpFechaFin.Value,
                     GrupoId = this.grupoId
@@ -269,7 +260,6 @@ namespace Escritorio
                 MessageBox.Show("Plan actualizado correctamente", "Éxito",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                // Resetear estado de edición
                 editingPlanId = null;
                 btnNuevoPlan.Text = "Crear Plan";
                 LimpiarCampos();
@@ -288,7 +278,6 @@ namespace Escritorio
             txtDescripcion.Clear();
             dtpFechaInicio.Value = DateTime.Now;
             dtpFechaFin.Value = DateTime.Now.AddMonths(1);
-            // Si estaba en modo edición, salir de él
             editingPlanId = null;
             btnNuevoPlan.Text = "Crear Plan";
         }

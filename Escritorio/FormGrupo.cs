@@ -79,7 +79,6 @@ namespace Escritorio
                 return;
             }
 
-            // Confirmado por el usuario
             if (dataGridView1.CurrentRow == null || !(dataGridView1.CurrentRow.DataBoundItem is GrupoDTO gDto))
             {
                 MessageBox.Show("Seleccione un grupo para eliminar.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -92,7 +91,7 @@ namespace Escritorio
 
             try
             {
-                btnEliminar.Enabled = false; // evitar múltiples clicks
+                btnEliminar.Enabled = false;
                 await GrupoApiClient.DeleteAsync(id);
                 await CargarGrupos();
                 btnEliminar.Text = "ELIMINAR GRUPO";
@@ -100,7 +99,6 @@ namespace Escritorio
             }
             catch (Exception)
             {
-                // Mensaje genérico solo para la operación de eliminar
                 MessageBox.Show("Error al eliminar el grupo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
